@@ -44,8 +44,8 @@ public class Main extends Application {
 	private TextField userNameField_su;
 	private TextField passwordField_su;
 	private TextField passwordField2;
-	private String jdbcUrl2 = "jdbc:sqlite:/Users/zuberbuhler/School/Summer2021/CS160/sqliteTesting/sqlite-tools-osx-x86-3350500/schema_v1.db";
-	private String jdbcUrl3 = "jdbc:sqlite:/schema_v1.db";
+	//private String jdbcUrl2 = "jdbc:sqlite:/Users/zuberbuhler/School/Summer2021/CS160/sqliteTesting/sqlite-tools-osx-x86-3350500/schema_v1.db";
+	private String jdbcUrl3 = "jdbc:sqlite:/application/schema_v1.db";
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -367,7 +367,7 @@ public class Main extends Application {
 					{
 						//choose either jdbcUrl or jdbcUrl2
 						//Connection connection = DriverManager.getConnection(jdbcUrl);
-						Connection connection = DriverManager.getConnection(jdbcUrl2);
+						Connection connection = DriverManager.getConnection(jdbcUrl3);
 						
 						String sql = "SELECT * FROM logins";
 						String sql_1 = "insert into logins (username, pass_word) values ('" + username.toString() + "', '" + pass_word.toString() + "')";
