@@ -1,0 +1,10 @@
+Tasks | 1 |
+Hw#1 | 06/06 | CS100 | True |
+TimeLogs | 7 |
+2021-05-31 | Monday | 0.0 |
+2021-06-00 | Tuesday | 0.0 |
+2021-06-00 | Wednesday | 0.0 |
+2021-06-01 | Thursday | 0.0 |
+2021-06-02 | Friday | 0.0 |
+2021-06-03 | Saturday | 0.0025 |
+2021-06-04 | Sunday | 0.0 |

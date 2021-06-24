@@ -1,0 +1,10 @@
+Tasks | 1 |
+test | 05-22 | CS100 | False |
+TimeLogs | 7 |
+2021-05-17 | Monday | 0.0 |
+2021-05-18 | Tuesday | 0.0 |
+2021-05-18 | Wednesday | 0.0 |
+2021-05-19 | Thursday | 0.0 |
+2021-05-20 | Friday | 0.0 |
+2021-05-21 | Saturday | 0.0019 |
+2021-05-22 | Sunday | 0.0 |

@@ -1,0 +1,11 @@
+Tasks | 2 |
+Test | Test | Test | True |
+test2 | test2 | test2 | False |
+TimeLogs | 7 |
+2021-06-21 | Monday | 0.0 |
+2021-06-22 | Tuesday | 0.0 |
+2021-06-22 | Wednesday | 0.0 |
+2021-06-23 | Thursday | 0.0 |
+2021-06-24 | Friday | 0.0 |
+2021-06-25 | Saturday | 0.0 |
+2021-06-26 | Sunday | 0.0 |

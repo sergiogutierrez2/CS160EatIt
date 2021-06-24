@@ -1,0 +1,9 @@
+Tasks | 0 |
+TimeLogs | 7 |
+2021-05-10 | Monday | 0.0 |
+2021-05-11 | Tuesday | 0.0 |
+2021-05-11 | Wednesday | 0.0 |
+2021-05-12 | Thursday | 0.1006 |
+2021-05-13 | Friday | 0.0 |
+2021-05-14 | Saturday | 0.0 |
+2021-05-15 | Sunday | 0.0 |
