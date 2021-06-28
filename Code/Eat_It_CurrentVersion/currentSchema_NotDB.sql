@@ -1,7 +1,7 @@
 CREATE TABLE logins (
-        user_id INTEGER PRIMARY KEY autoincrement,
-        username varchar(20) NOT NULL UNIQUE,
-pass_word varchar(20) NOT NULL
+	user_id INTEGER PRIMARY KEY autoincrement,
+	username varchar(20) NOT NULL UNIQUE,
+	pass_word varchar(20) NOT NULL
 );
 CREATE TABLE ingredient (
   user_id INTEGER not null,

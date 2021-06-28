@@ -1,0 +1,159 @@
+package application;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class LoginGUI {
+	
+	private DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+	private RegistrationGUI registrationGUI;
+	private Scene login_scene;
+	private Text errorMessageLogin;
+	private TextField userNameField, passwordField;
+	private Button signUpBtn, loginBtn;
+	private String jdbcUrl3 = "jdbc:sqlite:schema_v1.db";
+	
+	public LoginGUI(Stage stage)
+	{
+		double mainRectWidth = 1100, mainRectHeight = 650;
+		
+		Image imgBackground = new Image(getClass().getResourceAsStream("/application/resources/login_reg_background.png"));
+		ImageView background_1 = new ImageView(imgBackground);
+		
+		errorMessageLogin = new Text("");
+		errorMessageLogin.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
+		errorMessageLogin.setFill(Color.RED); 
+
+		// loginSetUp();
+		userNameField = new TextField("Enter User Name");
+		userNameField.setPrefWidth(200);
+		userNameField.setMaxWidth(200);
+
+		passwordField = new TextField("Enter Password");
+		passwordField.setPrefWidth(200);
+		passwordField.setMaxWidth(200);
+
+		/* create the buttons for sing up page */
+		signUpBtn = new Button("Sign Up");
+		loginBtn = new Button("Login  ");
+		
+		signUpBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		signUpBtn.setCursor(Cursor.HAND);
+
+		loginBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		loginBtn.setCursor(Cursor.HAND);
+
+
+		Image img = new Image(getClass().getResourceAsStream("/application/resources/Eat_It_Logo_300px.png"));
+		ImageView imgView = new ImageView(img);
+	
+		HBox signUp_LoginButton_HBox = new HBox();
+		signUp_LoginButton_HBox.getChildren().addAll(loginBtn, signUpBtn);
+		HBox.setMargin(signUp_LoginButton_HBox, new Insets(30, 20, 10, 10));
+		signUp_LoginButton_HBox.setSpacing(10d);
+		signUp_LoginButton_HBox.setAlignment(Pos.CENTER);
+
+		/* add all other members vertically */
+		VBox inputFields_VBox = new VBox();
+		inputFields_VBox.getChildren().addAll(imgView, errorMessageLogin, userNameField, passwordField, signUp_LoginButton_HBox);
+		inputFields_VBox.setAlignment(Pos.CENTER);
+		inputFields_VBox.setSpacing(10d);
+
+
+
+		/* Put Vertical Box in the Stack Pane */
+		StackPane loginPane = new StackPane();
+		loginPane.getChildren().addAll(background_1, inputFields_VBox);
+		
+		login_scene = new Scene(loginPane, mainRectWidth, mainRectHeight);
+		
+		// *********************************
+		// Event Listeners Set Up
+		// *********************************
+		
+		signUpBtn.setOnAction(e->{
+			
+			System.out.println("Sign Up Button Pressed");
+			stage.setScene(registrationGUI.getSignUpScene());
+			stage.setTitle("Sign Up Page");
+		
+		});
+		
+		loginBtn.setOnAction(e-> {
+			
+			String username = getUserNameString();
+			String pass_word = getPasswordString();
+			
+			boolean invalidCredentialsFlag = dbm.isCredentialsValid(username, pass_word);
+			
+			if(invalidCredentialsFlag)
+			{
+				getLoginErrorMessageText().setText("Invalid Credentials");
+			}
+			else {
+				getLoginErrorMessageText().setText("");
+				System.out.println("Login Successful");
+			}
+				
+		});
+	}
+	
+	public Scene getLoginScene() 
+	{
+		return login_scene;
+	}
+	
+	public Text getLoginErrorMessageText() 
+	{
+		return errorMessageLogin;
+	}
+	
+	public String getUserNameString()
+	{
+		return userNameField.getText().toString();
+	}
+	
+	public String getPasswordString()
+	{
+		return passwordField.getText().toString();
+	}
+	
+	public Button getLoginButton()
+	{
+		return loginBtn;
+	}
+	
+	public Button getSignUpButton()
+	{
+		return signUpBtn;
+	}
+	
+	public void setRegistrationGUI(RegistrationGUI registrationGUI)
+	{
+		this.registrationGUI = registrationGUI;
+	}
+	
+	
+
+}
