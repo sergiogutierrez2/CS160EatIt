@@ -13,8 +13,8 @@ public class InventoryList{
 
 	@Override
 	public String toString() { 
-        String s = "Inventory List: [";
-        s = s + list.toString() + "]";
+        String s = "Inventory List of " + usert.getUser() + ": ";
+        s = s + list.toString();
 	return s;
          }
 
