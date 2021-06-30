@@ -7,7 +7,7 @@ pass_word varchar(20) NOT NULL
 create table ingredient (
   user_id INTEGER not null,
   item_num INTEGER PRIMARY KEY autoincrement NOT NULL UNIQUE check (item_num > 0),
-  ingredient_name varchar(20) NOT NULL UNIQUE,
+  ingredient_name varchar(20) NOT NULL,
   expiration_date varchar(20),
   par_amount int NOT NULL,
   quantity int NOT NULL,

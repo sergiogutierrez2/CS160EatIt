@@ -1,4 +1,4 @@
-package application;
+package application.GUI;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import application.DatabaseManager;
+import application.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -46,11 +48,13 @@ public class LoginGUI {
 		errorMessageLogin.setFill(Color.RED); 
 
 		// loginSetUp();
-		userNameField = new TextField("Enter User Name");
+		userNameField = new TextField();
+		userNameField.setPromptText("Enter User Name");
 		userNameField.setPrefWidth(200);
 		userNameField.setMaxWidth(200);
 
-		passwordField = new TextField("Enter Password");
+		passwordField = new TextField();
+		passwordField.setPromptText("Enter Password");
 		passwordField.setPrefWidth(200);
 		passwordField.setMaxWidth(200);
 
@@ -104,16 +108,24 @@ public class LoginGUI {
 			
 			String username = getUserNameString();
 			String pass_word = getPasswordString();
+			boolean isValidCredentials = dbm.isCredentialsValid(username, pass_word);
 			
-			boolean invalidCredentialsFlag = dbm.isCredentialsValid(username, pass_word);
-			
-			if(invalidCredentialsFlag)
+			if(!isValidCredentials)
 			{
 				getLoginErrorMessageText().setText("Invalid Credentials");
 			}
-			else {
+			else 
+			{
+				
 				getLoginErrorMessageText().setText("");
 				System.out.println("Login Successful");
+				User user = dbm.getUser();
+				HomepageGUI homepageGUI = new HomepageGUI(stage, user, login_scene);
+				stage.setScene(homepageGUI.getHomepageGUIscene());
+				stage.setTitle("Homepage");
+				
+				userNameField.clear();
+				passwordField.clear();
 			}
 				
 		});

@@ -35,6 +35,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import application.GUI.HomepageGUI;
+import application.GUI.InventoryListGUI;
+import application.GUI.LoginGUI;
+import application.GUI.RegistrationGUI;
+
 
 
 
@@ -49,7 +54,19 @@ public class Main extends Application {
 			loginGUI.setRegistrationGUI(registrationGUI);
 			
 			
+			
+			//TESTING
+			//HomepageGUI homepageGUI = new HomepageGUI(primaryStage);
+			//InventoryListGUI inventoryListGUI = new InventoryListGUI(new User("1", "zuber1", "password"));
+			
+			//primaryStage.setScene(homepageGUI.getHomepageGUIscene());
+			
+			//primaryStage.setScene(inventoryListGUI.getScene());
+			
+			//TESTING
+			
 			primaryStage.setScene(loginGUI.getLoginScene());
+			
 			primaryStage.setTitle("Login Page");
 			primaryStage.show();
 		} catch(Exception e) {

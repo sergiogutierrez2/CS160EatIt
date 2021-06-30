@@ -1,4 +1,4 @@
-package application;
+package application.GUI;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import application.DatabaseManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -35,15 +36,18 @@ public class RegistrationGUI {
 		ImageView background_2 = new ImageView(imgBackground_signUp);
 
 		// loginSetUp();
-		userNameField = new TextField("Enter User Name");
+		userNameField = new TextField();
+		userNameField.setPromptText("Enter a Username");
 		userNameField.setPrefWidth(200);
 		userNameField.setMaxWidth(200);
 
-		passwordField1 = new TextField("Enter New Password");
+		passwordField1 = new TextField();
+		passwordField1.setPromptText("Enter New Password");
 		passwordField1.setPrefWidth(200);
 		passwordField1.setMaxWidth(200);
 		
-		passwordField2 = new TextField("Re-Enter New Password");
+		passwordField2 = new TextField();
+		passwordField2.setPromptText("Re-enter New Password");
 		passwordField2.setPrefWidth(200);
 		passwordField2.setMaxWidth(200);
 
@@ -100,8 +104,18 @@ public class RegistrationGUI {
 								+ "password: " + pass_word.toString() + "\n"
 								+ "reEnterPass: " + reEnterPass.toString());
 				
-			dbm.insertCredentials(username, pass_word, reEnterPass);		
+			dbm.insertCredentials(username, pass_word, reEnterPass);	
 			dbm.printCredentials();
+			dbm.isCredentialsValid(username, pass_word); //sets the User user variable
+			
+			HomepageGUI homepageGUI = new HomepageGUI(stage, dbm.getUser(), loginGUI.getLoginScene());
+			stage.setScene(homepageGUI.getHomepageGUIscene());
+			stage.setTitle("Homepage");
+			
+			userNameField.clear();
+			passwordField1.clear();
+			passwordField2.clear();
+			
 
 		});
 		
