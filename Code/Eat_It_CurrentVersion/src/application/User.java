@@ -17,6 +17,11 @@ public class User {
 		return this;
 	}
 	
+	public String getUsername()
+	{
+		return username;
+	}
+	
 	public void setUserInfo(String acc_id, String username, String password)
 	{
 		this.acc_id = acc_id;
