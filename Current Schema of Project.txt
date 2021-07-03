@@ -18,8 +18,8 @@ create table ingredient (
 
 create table recipes (
 user_id INTEGER not null,
-recipe_num INTEGER PRIMARY KEY autoincrement NOT NULL UNIQUE check (recipe_num > 0),
-recipe_name varchar(50) NOT NULL UNIQUE,
+recipe_num INTEGER PRIMARY KEY NOT NULL check (recipe_num > 0),
+recipe_name varchar(50) NOT NULL,
 cook_time varchar(20),
 prep_time varchar(20),
 executable int NOT NULL,

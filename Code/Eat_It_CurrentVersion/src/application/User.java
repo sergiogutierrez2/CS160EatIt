@@ -1,7 +1,6 @@
 package application;
 
 public class User {
-
 	private String acc_id;
 	private String username;
 	private String password;

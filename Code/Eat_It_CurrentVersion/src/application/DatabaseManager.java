@@ -308,8 +308,6 @@ public class DatabaseManager {
 		}
 	}
 	
-	
-	
 	public ObservableList<Item> getCurrentInventory(User user)
 	{
 		System.out.println("Getting Current Inventory");
@@ -326,7 +324,7 @@ public class DatabaseManager {
 			ResultSet result = statement.executeQuery(sql);
 			while (result.next()) 
 			{
-				 
+				
 				Integer user_id = result.getInt("user_id"); //specified attribute name is "user_id" in sql db
 				String item_num = result.getString("item_num"); //specified attribute name is "username" in sql db
 				String ingredient_name = result.getString("ingredient_name"); //specified attribute name is "pass_word" in sql db
@@ -338,7 +336,7 @@ public class DatabaseManager {
 				System.out.println(user_id + " | " + item_num + " | " + ingredient_name
 									+ " | " + expiration_date + " | " + par_amount
 									+ " | " + quantity + " | " + quantity_type );
-				currentInventoryList.add(new Item(ingredient_name, expiration_date, quantity.toString(), par_amount.toString(), quantity_type));
+				currentInventoryList.add(new Item(item_num.toString(),ingredient_name, expiration_date, quantity.toString(), par_amount.toString(), quantity_type));
 			}
 			
 			statement.close();
@@ -384,8 +382,5 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
 
 }

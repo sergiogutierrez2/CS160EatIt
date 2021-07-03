@@ -18,6 +18,8 @@ class DatabaseManagerTest {
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 		
 		assertFalse(dbm.getConnectedStatus(), "connect status should be false initially, but was found to be true");
+		
+		//assertFunction(expectedValue, ActualValue);
 	}
 	
 	@Test

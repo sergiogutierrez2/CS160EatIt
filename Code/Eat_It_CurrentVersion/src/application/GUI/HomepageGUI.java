@@ -1,6 +1,7 @@
 package application.GUI;
 
 import application.User;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -8,7 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class HomepageGUI {
@@ -39,20 +43,29 @@ public class HomepageGUI {
 		hbox_TopLogo_Logout.setSpacing(1100);
 		hbox_TopLogo_Logout.setAlignment(Pos.CENTER);
 		
-		VBox vbox = new VBox();
-		vbox.getChildren().add(hbox_TopLogo_Logout);
+		VBox entireHomePage_VBox = new VBox();
+		entireHomePage_VBox.getChildren().add(hbox_TopLogo_Logout);
 		
 		InventoryListGUI inventoryListGUI = new InventoryListGUI(user);
 		
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();
-		vbox_inventoryListGUI.setPrefSize(500, 500);
+		vbox_inventoryListGUI.setPrefSize(300, 500);
+		vbox_inventoryListGUI.setPrefWidth(300);
 		
-		HBox hbox = new HBox(vbox_inventoryListGUI);
+		Rectangle background = new Rectangle(800,800);
+		background.setArcHeight(40.0);
+		background.setArcWidth(40.0);
+		background.setFill(Color.web("#DEE7EC",1));
 		
-		vbox.getChildren().add(hbox);
+		StackPane inventoryListBox = new StackPane();
+		inventoryListBox.getChildren().addAll(background, vbox_inventoryListGUI);
+		
+		HBox hbox = new HBox(inventoryListBox);
+		hbox.setPadding(new Insets(10, 0, 0, 10));
+		entireHomePage_VBox.getChildren().add(hbox);
 		
 		
-		homepageScene = new Scene(vbox, mainWidth, mainHeight);
+		homepageScene = new Scene(entireHomePage_VBox, mainWidth, mainHeight);
 		
 		logoutBtn.setOnAction(e-> {
 			
