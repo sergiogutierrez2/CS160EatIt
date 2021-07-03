@@ -42,5 +42,6 @@ class InventoryListTest {
 		assertEquals(output2, "Inventory List of Tony: [itemName: Apple, ExpDate: 03/04/2021, quantity: 34, parAmount: 4, amountType: single unit, itemName: Orange, ExpDate: 05/05/2021, quantity: 76, parAmount: 3, amountType: single unit, itemName: Banana, ExpDate: 08/09/2021, quantity: 287, parAmount: 5, amountType: single unit]");
 		assertEquals(output3, "Inventory List of Tony: [itemName: Banana, ExpDate: 08/09/2021, quantity: 287, parAmount: 5, amountType: single unit, itemName: Watermelon, ExpDate: 10/09/2021, quantity: 21, parAmount: 1, amountType: single unit]");
 	}
+	
 }
 
