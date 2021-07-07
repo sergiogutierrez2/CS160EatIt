@@ -147,20 +147,22 @@ public class DatabaseManager {
 		}
 	}
 	
-	public boolean containsIngredient(User user, String ingredient)
+	//if item number already exists then containsItemNum should be true
+	public boolean containsItemNum(User user, String item_num)
 	{
+		System.out.println("check if user containsItemNum: " + item_num);
 		if(!connectedStatus)
 		{
 			connectToDatabase();
 		}
-		String sql = "SELECT user_id, ingredient_name FROM ingredient where user_id = ? and ingredient_name = ?";
+		String sql = "SELECT user_id, item_num FROM ingredient where user_id = ? and item_num = ?";
 		
 		try {
 			PreparedStatement pstmt = connection.prepareStatement(sql);
 		
 			pstmt.setInt(1, Integer.parseInt(user.getAcc_id()));
 		
-			pstmt.setString(2, ingredient);
+			pstmt.setInt(2, Integer.parseInt(item_num));
 			
 			ResultSet result;
 			
@@ -170,13 +172,13 @@ public class DatabaseManager {
 			
 			while (result.next()) 
 			{
-				System.out.println("DBMS: Ingredient should be valid!");
+				System.out.println("DBMS: Item Number already exists!");
 				containsIngredientFlag = true;
 				int user_id = result.getInt("user_id");
-				String ingredient_db = result.getString("ingredient_name"); //specified attribute name is "username" in sql db
+				int itemNum = result.getInt("item_num"); //specified attribute name is "username" in sql db
 				
 				
-				System.out.println("From DBMS: " + user_id + " | " + ingredient_db);
+				System.out.println("From DBMS: " + user_id + " | " + itemNum);
 				
 			}
 			
@@ -185,12 +187,62 @@ public class DatabaseManager {
 			
 			if(!containsIngredientFlag)
 			{
-				System.out.println("From DBMS: " + user.getAcc_id() + " | " + ingredient + " is not contained in DB");
+				System.out.println("From DBMS: " + user.getAcc_id() + " | " + item_num + " is not contained in DB");
 			}
 			
 			return containsIngredientFlag;
 		} catch (SQLException e) {
 			System.out.println("Failed to check ingredient: " + e.getErrorCode());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean containsRecipeNum(User user, String recipe_num)
+	{
+		System.out.println("check if user containRecipeNum: " + recipe_num);
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		String sql = "SELECT user_id, recipe_num FROM recipes where user_id = ? and recipe_num = ?";
+		
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(sql);
+		
+			pstmt.setInt(1, Integer.parseInt(user.getAcc_id()));
+		
+			pstmt.setInt(2, Integer.parseInt(recipe_num));
+			
+			ResultSet result;
+			
+			result = pstmt.executeQuery();
+			
+			boolean containsIngredientFlag = false;
+			
+			while (result.next()) 
+			{
+				System.out.println("DBMS: Item Number already exists!");
+				containsIngredientFlag = true;
+				int user_id = result.getInt("user_id");
+				int recipeNum = result.getInt("recipe_num"); //specified attribute name is "username" in sql db
+				
+				
+				System.out.println("From DBMS: " + user_id + " | " + recipeNum);
+				
+			}
+			
+			pstmt.close();
+			result.close();
+			
+			if(!containsIngredientFlag)
+			{
+				System.out.println("From DBMS: " + user.getAcc_id() + " | " + recipe_num + " is not contained in DB");
+			}
+			
+			return containsIngredientFlag;
+		} catch (SQLException e) {
+			System.out.println("Failed to check recipe: " + e.getErrorCode());
 			e.printStackTrace();
 			return false;
 		}
@@ -256,19 +308,26 @@ public class DatabaseManager {
 		}
 	}
 	
-	public boolean insertIngredient(String user_id, String ingredient_name, String expiration_date, String par_amount, String quantity, String quantity_type)
+	public boolean insertIngredient(User user, String item_num, String ingredient_name, 
+									String expiration_date, String par_amount, String quantity, String quantity_type)
 	{
 		System.out.println("Inserting Ingredient");
 		
+		if( containsItemNum(user, item_num) )
+		{
+			return false;
+		}
 		
 		if(!connectedStatus)
 		{
 			connectToDatabase();
 		}
-		String sql = "insert into ingredient (user_id, ingredient_name, expiration_date, par_amount, quantity, quantity_type) values ('" + user_id 
-				+ "', '" + ingredient_name + "', '" + expiration_date + "', '" + par_amount + "', '" + quantity + "', '" + quantity_type + "')";
+		String sql = "insert into ingredient (user_id, item_num, ingredient_name, expiration_date, par_amount, quantity, quantity_type) values ('" 
+				+ user.getAcc_id() + "', '" + item_num + "', '" + ingredient_name + "', '" + expiration_date + "', '" 
+				+ par_amount + "', '" + quantity + "', '" + quantity_type + "')";
 		
 		try {
+			
 			Statement statement = connection.createStatement();
 			
 			statement.execute(sql);
@@ -276,6 +335,7 @@ public class DatabaseManager {
 			statement.close();
 			
 			return true;
+			
 		} catch (SQLException e) {
 			System.out.println("Failed to insert ingredient: " + e.getErrorCode());
 			e.printStackTrace();
@@ -284,16 +344,16 @@ public class DatabaseManager {
 		}
 	}
 	
-	public void deleteIngredient(User user, String ingredientName)
+	public void deleteIngredient(User user, String item_num)
 	{
-		System.out.println("Deleting Credentials");
+		System.out.println("Deleting Ingredient " + item_num );
 		
 		if(!connectedStatus)
 		{
 			connectToDatabase();
 		}
 		
-		String sql = "DELETE FROM ingredient WHERE user_id = '" + user.getAcc_id() + "' AND ingredient_name = '" + ingredientName + "'";
+		String sql = "DELETE FROM ingredient WHERE user_id = '" + user.getAcc_id() + "' AND item_num = '" + item_num + "'";
 		
 		try {
 			Statement statement = connection.createStatement();
@@ -308,6 +368,145 @@ public class DatabaseManager {
 		}
 	}
 	
+	public boolean insertRecipe(User user, String recipe_num, String recipe_name, 
+			String cook_time, String prep_time, String executable)
+	{
+		System.out.println("Inserting Recipe");
+
+		if( containsRecipeNum(user, recipe_num) )
+		{
+			return false;
+		}
+
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		String sql = "insert into recipes (user_id, recipe_num, recipe_name, cook_time, prep_time, executable) values ('"
+				+ user.getAcc_id() + "', '" + recipe_num + "', '" + recipe_name + "', '" + cook_time + "', '" 
+				+ prep_time + "', '" + executable + "')";
+
+		try {
+
+			Statement statement = connection.createStatement();
+
+			statement.execute(sql);
+
+			statement.close();
+
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Failed to insert Recipe: " + e.getErrorCode());
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+	
+	public void deleteRecipe(User user, String recipe_num)
+	{
+		System.out.println("Deleting Ingredient " + recipe_num );
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM recipes WHERE user_id = '" + user.getAcc_id() + "' AND recipe_num = '" + recipe_num + "'";
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			statement.execute(sql);
+			
+			statement.close();
+		} catch (SQLException e) {
+			System.out.println("Failed to delete recipe: " + e.getErrorCode());
+			e.printStackTrace();
+			
+		}
+	}
+	
+	public String autogenerateRecipeNum(User user)
+	{
+		System.out.println("autogenerateItemNum()");
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		int autoGenRecipeNum = 1;
+		
+		String sql = "select recipe_num from recipes where user_id = '" + user.getAcc_id() + "' ORDER BY recipe_num DESC";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				
+				
+				String item_num = result.getString("recipe_num"); //specified attribute name is "username" in sql db
+			
+				System.out.println(item_num );
+				autoGenRecipeNum = Integer.parseInt(item_num) + 1;
+				
+				return String.valueOf(autoGenRecipeNum);
+			}
+			
+			statement.close();
+			result.close();
+			
+			return String.valueOf(autoGenRecipeNum);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return String.valueOf(autoGenRecipeNum);
+	}
+	
+	//return highest item_num plus one
+	public String autogenerateItemNum(User user)
+	{
+		System.out.println("autogenerateItemNum()");
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		int autoGenItemNum = 1;
+		
+		String sql = "select item_num from ingredient where user_id = '" + user.getAcc_id() + "' ORDER BY item_num DESC";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				
+				
+				String item_num = result.getString("item_num"); //specified attribute name is "username" in sql db
+			
+				System.out.println(item_num );
+				autoGenItemNum = Integer.parseInt(item_num) + 1;
+				
+				return String.valueOf(autoGenItemNum);
+			}
+			
+			statement.close();
+			result.close();
+			
+			return String.valueOf(autoGenItemNum);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return String.valueOf(autoGenItemNum);
+	}
+	
 	public ObservableList<Item> getCurrentInventory(User user)
 	{
 		System.out.println("Getting Current Inventory");
@@ -318,7 +517,7 @@ public class DatabaseManager {
 			connectToDatabase();
 		}
 		
-		String sql = "SELECT * FROM ingredient WHERE user_id = '" + user.getAcc_id() + "'";
+		String sql = "SELECT * FROM ingredient WHERE user_id = '" + user.getAcc_id() + "' ORDER BY item_num ASC";
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
@@ -326,7 +525,7 @@ public class DatabaseManager {
 			{
 				
 				Integer user_id = result.getInt("user_id"); //specified attribute name is "user_id" in sql db
-				String item_num = result.getString("item_num"); //specified attribute name is "username" in sql db
+				Integer item_num = result.getInt("item_num"); //specified attribute name is "username" in sql db
 				String ingredient_name = result.getString("ingredient_name"); //specified attribute name is "pass_word" in sql db
 				String expiration_date = result.getString("expiration_date");
 				Integer par_amount = result.getInt("par_amount");
@@ -349,6 +548,48 @@ public class DatabaseManager {
 		
 		
 		return currentInventoryList;
+	}
+	
+	public ObservableList<Recipe> getCurrentRecipeList(User user)
+	{
+		System.out.println("Getting Recipe List for user: " + user.getUsername());
+		ObservableList<Recipe> recipeList = FXCollections.observableArrayList();
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "SELECT * FROM recipes WHERE user_id = '" + user.getAcc_id() + "'";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				
+				Integer user_id = result.getInt("user_id"); //specified attribute name is "user_id" in sql db
+				Integer recipe_num = result.getInt("recipe_num"); //specified attribute name is "username" in sql db
+				String recipe_name = result.getString("recipe_name"); //specified attribute name is "pass_word" in sql db
+				String cook_time = result.getString("cook_time");
+				String prep_time = result.getString("prep_time");
+				Integer executable = result.getInt("executable");
+			
+				System.out.println(user_id + " | " + recipe_num + " | " + recipe_name
+									+ " | " + cook_time + " | " + prep_time
+									+ " | " + executable );
+				recipeList.add(new Recipe( recipe_num.toString(), recipe_name, cook_time, prep_time, executable.toString() ) );
+			}
+			
+			statement.close();
+			result.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return recipeList;
 	}
 	
 	public void printCredentials()

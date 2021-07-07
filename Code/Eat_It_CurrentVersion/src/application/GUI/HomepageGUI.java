@@ -1,5 +1,7 @@
 package application.GUI;
 
+import java.net.URL;
+
 import application.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -47,28 +49,54 @@ public class HomepageGUI {
 		entireHomePage_VBox.getChildren().add(hbox_TopLogo_Logout);
 		
 		InventoryListGUI inventoryListGUI = new InventoryListGUI(user);
+		RecipeListGUI recipeListGUI = new RecipeListGUI(user);
 		
+		VBox vbox_recipeListGUI = recipeListGUI.getVBox();
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();
-		vbox_inventoryListGUI.setPrefSize(300, 500);
-		vbox_inventoryListGUI.setPrefWidth(300);
+		//vbox_inventoryListGUI.setPrefSize(300, 500);
 		
-		Rectangle background = new Rectangle(800,800);
-		background.setArcHeight(40.0);
-		background.setArcWidth(40.0);
-		background.setFill(Color.web("#DEE7EC",1));
+		vbox_recipeListGUI.setMaxWidth(275);
+		vbox_recipeListGUI.setMaxHeight(600);
 		
-		StackPane inventoryListBox = new StackPane();
-		inventoryListBox.getChildren().addAll(background, vbox_inventoryListGUI);
+		vbox_inventoryListGUI.setMaxWidth(325);
+		vbox_inventoryListGUI.setMaxHeight(600);
 		
-		HBox hbox = new HBox(inventoryListBox);
+		
+		Rectangle inventoryList_background = new Rectangle(345,550);
+		inventoryList_background.setArcHeight(40.0);
+		inventoryList_background.setArcWidth(40.0);
+		inventoryList_background.setFill(Color.web("#e3e3e3",1));
+		
+		Rectangle recipeList_background = new Rectangle(295,550);
+		recipeList_background.setArcHeight(40.0);
+		recipeList_background.setArcWidth(40.0);
+		recipeList_background.setFill(Color.web("#e3e3e3",1));
+		
+		StackPane inventoryListStackPane = new StackPane();
+		inventoryListStackPane.getChildren().addAll(inventoryList_background, vbox_inventoryListGUI);
+		inventoryListStackPane.setAlignment(Pos.CENTER);
+		
+		StackPane recipeListStackPane = new StackPane();
+		recipeListStackPane.getChildren().addAll(recipeList_background, vbox_recipeListGUI);
+		recipeListStackPane.setAlignment(Pos.CENTER);
+		
+		HBox hbox = new HBox(inventoryListStackPane, recipeListStackPane );
 		hbox.setPadding(new Insets(10, 0, 0, 10));
+		hbox.setSpacing(5);
 		entireHomePage_VBox.getChildren().add(hbox);
 		
 		
 		homepageScene = new Scene(entireHomePage_VBox, mainWidth, mainHeight);
 		
+		
+		
+		URL url = this.getClass().getResource("/application/application.css");
+		System.out.println(url.toString());
+		String css = url.toExternalForm();
+		homepageScene.getStylesheets().add(css);
+		
+		
 		logoutBtn.setOnAction(e-> {
-			
 			this.user = null;
 			stage.setScene(loginScene);
 			stage.setTitle("Login Page");

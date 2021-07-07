@@ -22,18 +22,13 @@ public class Item{
 	
 	@Override
 	public String toString() 
-	{  
-//		System.out.println( item_name + " " 
-//							+ item_Exp + " " 
-//							+ item_Quantity + " "
-//							+ item_Par + " "
-//							+ item_Quantity_Type);
-//		  
-		return ("itemName: " + item_name 
+	{  	  
+		return ("\n[item_num: " + item_num
+				+ " itemName: " + item_name 
 				+  ", ExpDate: " + item_Exp
 				+ ", quantity: " + item_Quantity 
 				+ ", parAmount: " + item_Par 
-				+ ", amountType: " + item_Quantity_Type );
+				+ ", amountType: " + item_Quantity_Type + "]");
 	}
 	
 	public String getItem_num()
@@ -63,6 +58,32 @@ public class Item{
 	{
 		return item_Quantity_Type;
 	}
+
+	public void setItem_num(String item_num) {
+		this.item_num = item_num;
+	}
+
+	public void setItem_name(String item_name) {
+		this.item_name = item_name;
+	}
+
+	public void setItem_Exp(String item_Exp) {
+		this.item_Exp = item_Exp;
+	}
+
+	public void setItem_Quantity(String item_Quantity) {
+		this.item_Quantity = item_Quantity;
+	}
+
+	public void setItem_Par(String item_Par) {
+		this.item_Par = item_Par;
+	}
+
+	public void setItem_Quantity_Type(String item_Quantity_Type) {
+		this.item_Quantity_Type = item_Quantity_Type;
+	}
+	
+	
 	
 	
 }

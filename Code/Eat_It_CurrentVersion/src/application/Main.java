@@ -47,23 +47,13 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		try {
-			
+		try 
+		{
 			LoginGUI loginGUI = new LoginGUI(primaryStage);
+			
 			RegistrationGUI registrationGUI = new RegistrationGUI(primaryStage, loginGUI);
+			
 			loginGUI.setRegistrationGUI(registrationGUI);
-			
-			
-			
-			//TESTING
-			//HomepageGUI homepageGUI = new HomepageGUI(primaryStage);
-			//InventoryListGUI inventoryListGUI = new InventoryListGUI(new User("1", "zuber1", "password"));
-			
-			//primaryStage.setScene(homepageGUI.getHomepageGUIscene());
-			
-			//primaryStage.setScene(inventoryListGUI.getScene());
-			
-			//TESTING
 			
 			primaryStage.setScene(loginGUI.getLoginScene());
 			

@@ -1,27 +1,29 @@
 package application.jUnitTests;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+
+import application.InventoryList;
+import application.RecipeItem;
+import application.User;
 
 class InventoryListTest {
 
 	@Test
 	void testToString() {
-		User u1 = new User("350", "Marco", "12345");
-		User u2 = new User("200", "Tony", "6789");
 		
-		Item fruitOne = new Item("14", "Apple", "03/04/2021", "34", "4", "single unit");
-		Item fruitTwo = new Item("46", "Orange", "05/05/2021", "76", "3", "single unit");
-		Item fruitThree = new Item("3", "Banana", "08/09/2021", "287", "5", "single unit");
-		Item fruitFour = new Item("24", "Watermelon", "10/09/2021", "21", "1", "single unit");
+		RecipeItem fruitOne = new RecipeItem("14", "Apple", "34");
+		RecipeItem fruitTwo = new RecipeItem("46", "Orange", "3");
+		RecipeItem fruitThree = new RecipeItem("3", "Banana", "5");
+		RecipeItem fruitFour = new RecipeItem("24", "Watermelon", "1");
 		
-		InventoryList test = new InventoryList(u1);
-		InventoryList test2 = new InventoryList(u2);
-		InventoryList test3 = new InventoryList(u2);
+		InventoryList test = new InventoryList();
+		InventoryList test2 = new InventoryList();
+		InventoryList test3 = new InventoryList();
 		
 		test.addItem(fruitOne);
-		test.removeItem(fruitOne);
+		test.removeItem("14", "Apple");
 		test.addItem(fruitTwo);
 		test.addItem(fruitThree);
 		
@@ -30,7 +32,7 @@ class InventoryListTest {
 		test2.addItem(fruitThree);
 		
 		test3.addItem(fruitOne);
-		test3.removeItem(fruitOne);
+		test3.removeItem("14", "Apple");
 		test3.addItem(fruitThree);
 		test3.addItem(fruitFour);
 		
@@ -38,9 +40,20 @@ class InventoryListTest {
 		String output2 = test2.toString();
 		String output3 = test3.toString();
 		
-		assertEquals(output, "Inventory List of Marco: [itemName: Orange, ExpDate: 05/05/2021, quantity: 76, parAmount: 3, amountType: single unit, itemName: Banana, ExpDate: 08/09/2021, quantity: 287, parAmount: 5, amountType: single unit]");
-		assertEquals(output2, "Inventory List of Tony: [itemName: Apple, ExpDate: 03/04/2021, quantity: 34, parAmount: 4, amountType: single unit, itemName: Orange, ExpDate: 05/05/2021, quantity: 76, parAmount: 3, amountType: single unit, itemName: Banana, ExpDate: 08/09/2021, quantity: 287, parAmount: 5, amountType: single unit]");
-		assertEquals(output3, "Inventory List of Tony: [itemName: Banana, ExpDate: 08/09/2021, quantity: 287, parAmount: 5, amountType: single unit, itemName: Watermelon, ExpDate: 10/09/2021, quantity: 21, parAmount: 1, amountType: single unit]");
+		System.out.println(output);
+		System.out.println(output2);
+		System.out.println(output3);
+		
+		assertEquals("Inventory List: [\n"
+				+ "[item_num: 46 itemName: Orange, ExpDate: 3], \n"
+				+ "[item_num: 3 itemName: Banana, ExpDate: 5]]", output);
+		assertEquals("Inventory List: [\n"
+				+ "[item_num: 14 itemName: Apple, ExpDate: 34], \n"
+				+ "[item_num: 46 itemName: Orange, ExpDate: 3], \n"
+				+ "[item_num: 3 itemName: Banana, ExpDate: 5]]" , output2);
+		assertEquals("Inventory List: [\n"
+				+ "[item_num: 3 itemName: Banana, ExpDate: 5], \n"
+				+ "[item_num: 24 itemName: Watermelon, ExpDate: 1]]", output3);
 	}
 	
 }

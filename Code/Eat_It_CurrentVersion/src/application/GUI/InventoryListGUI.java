@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 public class InventoryListGUI {
@@ -52,6 +53,7 @@ public class InventoryListGUI {
 		public void createTable() {
 			tableView = new TableView();
 		    tableView.setEditable(true);
+		    tableView.setBackground(null);
 		    
 		    TableViewSelectionModel<Item> selectionModel = tableView.getSelectionModel();
 		    selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
@@ -64,79 +66,56 @@ public class InventoryListGUI {
 		    column0.setMinWidth(30);
 		    column0.setMaxWidth(30);
 		    
-		    column0.setCellFactory(tc -> {
-
-		        TableCell<Item, String> cell =new TableCell<Item, String>() {
-		            @Override
-		            protected void updateItem(String item, boolean empty) {
-		                super.updateItem(item, empty);
-		                setText(empty ? "" : item);
-		            }
-		        };
-
-		        // maybe choose a more suitable name here...
-		        cell.setFont(Font.font("Arial", FontWeight.THIN, 12));
-		        return cell ;
-		    });
-		    
 		    
 		    TableColumn<Item, String> column1 = new TableColumn<>("Item Name");
 		    column1.setCellValueFactory(new PropertyValueFactory<>("item_name"));
 		    column1.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column1.setMinWidth(90);
-		    column1.setMaxWidth(100);
-		    column1.setCellFactory(tc -> {
-
-		        TableCell<Item, String> cell =new TableCell<Item, String>() {
-		            @Override
-		            protected void updateItem(String item, boolean empty) {
-		                super.updateItem(item, empty);
-		                setText(empty ? "" : item);
-		            }
-		        };
-
-		        // maybe choose a more suitable name here...
-		        cell.setFont(Font.font("Arial", FontWeight.THIN, 12));
-		        return cell ;
-		    });
+		    column1.setMinWidth(60);
+		    column1.setMaxWidth(90);
+		    column1.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
+	            @Override
+	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
+	                
+	                t.getRowValue().setItem_name(t.getNewValue());
+	                
+	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+	                
+	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
+	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
+	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
+	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
+	                
+	                dbm.getCurrentInventory(user);
+	                
+	                
+	            }
+	        });
+		  
 		    //
 		    TableColumn<Item, String> column2 = new TableColumn<>("Expiration Date");
 		    column2.setCellValueFactory(new PropertyValueFactory<>("item_Exp"));
 		    column2.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column2.setMinWidth(99);
-		    column2.setMaxWidth(100);
-		    column2.setCellFactory(tc -> {
-
-		        TableCell<Item, String> cell =new TableCell<Item, String>() {
-		            @Override
-		            protected void updateItem(String item, boolean empty) {
-		                super.updateItem(item, empty);
-		                setText(empty ? "" : item);
-		            }
-		        };
-
-		        // maybe choose a more suitable name here...
-		        cell.setFont(Font.font("Arial", FontWeight.THIN, 12));
-		        return cell ;
-		    });
+		    column2.setMinWidth(70);
+		    column2.setMaxWidth(70);
+		   
 		    
 		    TableColumn<Item, String> column3 = new TableColumn<>("Quantity");
 		    column3.setCellValueFactory(new PropertyValueFactory<>("item_Quantity"));
 		    column3.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column3.setMinWidth(79);
-		    column3.setMaxWidth(80);
+		    column3.setMinWidth(50);
+		    column3.setMaxWidth(50);
 		    
 		    TableColumn<Item, String> column4 = new TableColumn<>("PAR");
 		    column4.setCellValueFactory(new PropertyValueFactory("item_Par"));
 		    column4.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column4.setMinWidth(40);
-		    column4.setMaxWidth(60);
+		    column4.setMinWidth(30);
+		    column4.setMaxWidth(30);
 		    
 		    TableColumn<Item, String> column5 = new TableColumn<>("Amount\nType");
 		    column5.setCellValueFactory(new PropertyValueFactory<>("item_Quantity_Type"));
 		    column5.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column5.setMinWidth(70);
-		    column5.setMaxWidth(80);
+		    column5.setMinWidth(60);
+		    column5.setMaxWidth(60);
 		    
 		    
 		    
@@ -172,6 +151,15 @@ public class InventoryListGUI {
 		    addAmount_Type.setPromptText("Amount_Type");
 		    addAmount_Type.setFont(Font.font("Arial", FontWeight.BOLD, 10));
 		    
+		    Text errorMessage = new Text("");
+			errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
+			errorMessage.setFill(Color.RED); 
+			
+			Button autoGenItemNumberBtn = new Button("Generate Item #");
+			autoGenItemNumberBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 10px; -fx-font-size: 9px; -fx-text-fill: #ffffff");
+			autoGenItemNumberBtn.setCursor(Cursor.HAND);
+			    
+		    
 		    Button addButton = new Button("Add");
 		    addButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    addButton.setCursor(Cursor.HAND);
@@ -181,23 +169,32 @@ public class InventoryListGUI {
 		    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    deleteButton.setCursor(Cursor.HAND);
 		    
+		    Button updateButton = new Button("Update");
+		    updateButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    updateButton.setCursor(Cursor.HAND);
 		    	    
 		    HBox hb = new HBox();
 		    hb.getChildren().addAll(addItemNum, 
 		    						addItemName, 
 		    						addExpirationDate);
+		    hb.setAlignment(Pos.CENTER);
 		    HBox hb_2 = new HBox();
 		    hb_2.getChildren().addAll(addPARAmount, 
 	    							addQuantity, 
 	    							addAmount_Type);
+		    hb_2.setAlignment(Pos.CENTER);
+		    
 		    hb_2.setSpacing(5);
 		    hb.setSpacing(5);
 		    
-		    HBox hb_1 = new HBox(addButton, deleteButton);
+		    HBox hb_1 = new HBox(autoGenItemNumberBtn, addButton, deleteButton, updateButton);
 		    hb_1.setAlignment(Pos.CENTER);
+		    hb_1.setSpacing(5);
 		    	    
-		    vbox = new VBox(hb, hb_2, hb_1, tableView);
+		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, tableView);
 		    vbox.setSpacing(5);
+		    vbox.setAlignment(Pos.CENTER);
+		    vbox.setBackground(null);
 		    
 		    scene = new Scene(vbox, mainWidth, mainHeight);
 		    
@@ -205,7 +202,11 @@ public class InventoryListGUI {
 		     * Event Listeners Start
 		     * ********************************** */
 		    
-		    
+		    autoGenItemNumberBtn.setOnAction(e -> 
+		    {
+		    	addItemNum.setText(dbm.autogenerateItemNum(user));
+		    	
+		    });
 		    
 		    addButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		@Override
@@ -219,6 +220,7 @@ public class InventoryListGUI {
     						|| addAmount_Type.getText().equals("") )
 	    			{
 	    				System.out.println("User did not fill in all of the fields!");
+	    				errorMessage.setText("Please fill in all text fields!");
 	    			}
 	    			else
 	    			{
@@ -235,34 +237,52 @@ public class InventoryListGUI {
 	    			
 	    				Item tmpItem = new Item(item_num, item_name, item_Exp, item_Par, item_Quantity, item_Quantity_Type);
 		    			
-		    			tableView.getItems().add(tmpItem);
-		    			dbm.insertIngredient(user.getAcc_id(), item_name, item_Exp, item_Par, item_Quantity, item_Quantity_Type);
 		    			
-		    			addItemName.clear();
-		    			addExpirationDate.clear();
-		    			addPARAmount.clear();
-		    			addQuantity.clear();
-		    			addAmount_Type.clear();
+		    			Boolean successfulInsertion = dbm.insertIngredient(user, item_num, item_name, item_Exp, item_Par, item_Quantity, item_Quantity_Type);
+		    		
+		    			if(successfulInsertion)
+		    			{
+		    				tableView.getItems().add(tmpItem);
+		    				addItemNum.clear();
+		    				addItemName.clear();
+			    			addExpirationDate.clear();
+			    			addPARAmount.clear();
+			    			addQuantity.clear();
+			    			addAmount_Type.clear();
+			    			errorMessage.setText("");
+		    			}
+		    			else
+		    			{
+		    				errorMessage.setText("Failed to insert! Change Item Number!");
+		    			}
 	    			}
 	    		}
-	    });
+		    });
 		    
 		    deleteButton.setOnAction(e -> 
 		    {
 		    	ObservableList<Item> tmpList = tableView.getSelectionModel().getSelectedItems();
 		    	for(Item item : tmpList)
 		    	{
-		    		dbm.deleteIngredient(user, item.getItem_name());
+		    		dbm.deleteIngredient(user, item.getItem_num());
 		    	}
-		    	
 		    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
-		    	
+		    });
+		    
+		    deleteButton.setOnAction(e -> 
+		    {
+		    	ObservableList<Item> tmpList = tableView.getSelectionModel().getSelectedItems();
+		    	for(Item item : tmpList)
+		    	{
+		    		dbm.deleteIngredient(user, item.getItem_num());
+		    	}
+		    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 		    });
 		    
 		    /* **********************************
 		     * Event Listeners End
 		     * ********************************** */
-	  }
+    	}
 	    
 	    public Scene getScene()
 	    {
