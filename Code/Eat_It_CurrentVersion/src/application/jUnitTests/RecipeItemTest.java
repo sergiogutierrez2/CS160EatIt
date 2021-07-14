@@ -11,9 +11,9 @@ class RecipeItemTest {
 	@Test
 	void constructorAndGettersTest() 
 	{
-		RecipeItem rItem = new RecipeItem("1", "recipeItemName", "3");
+		RecipeItem rItem = new RecipeItem("1", "1", "recipeItemName", "3");
 		
-		assertTrue(rItem.getItem_num().equals("1"));
+		assertTrue(rItem.getRecipe_num().equals("1"));
 		assertTrue(rItem.getItem_name().equals("recipeItemName"));
 		assertTrue(rItem.getItem_quantity().equals("3"));
 		
@@ -22,16 +22,16 @@ class RecipeItemTest {
 	@Test
 	void setItem_numTest() 
 	{
-		RecipeItem rItem = new RecipeItem("1", "recipeItemName", "3");
+		RecipeItem rItem = new RecipeItem("1", "1", "recipeItemName", "3");
 		
-		rItem.setItem_num("2");
-		assertTrue(rItem.getItem_num().equals("2"));
+		rItem.setRecipe_num("2");
+		assertTrue(rItem.getRecipe_num().equals("2"));
 	}
 	
 	@Test
 	void setItem_nameTest() 
 	{
-		RecipeItem rItem = new RecipeItem("1", "recipeItemName", "3");
+		RecipeItem rItem = new RecipeItem("1", "1", "recipeItemName", "3");
 		
 		rItem.setItem_name("recipeItemName_2");
 		
@@ -41,7 +41,7 @@ class RecipeItemTest {
 	@Test
 	void setItem_quantityTest() 
 	{
-		RecipeItem rItem = new RecipeItem("1", "recipeItemName", "3");
+		RecipeItem rItem = new RecipeItem("1", "1", "recipeItemName", "3");
 		
 		rItem.setItem_quantity("4");
 		

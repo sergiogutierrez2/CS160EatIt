@@ -38,10 +38,8 @@ import java.util.Scanner;
 import application.GUI.HomepageGUI;
 import application.GUI.InventoryListGUI;
 import application.GUI.LoginGUI;
+import application.GUI.RecipeIngredientList_TableViewGUI;
 import application.GUI.RegistrationGUI;
-
-
-
 
 public class Main extends Application {
 	
@@ -55,7 +53,20 @@ public class Main extends Application {
 			
 			loginGUI.setRegistrationGUI(registrationGUI);
 			
+			
+			//START TESTS
+//			Recipe recipe = new Recipe("1", "Pasta", "30 min", "10 min", "0");
+//			User user = new User("1", "zuber1", "password");
+//			RecipeIngredientList_TableViewGUI temp = new RecipeIngredientList_TableViewGUI(user, recipe);
+//			primaryStage.setScene(temp.getScene());
+			//END TESTS
+			
+			
+			
+			
 			primaryStage.setScene(loginGUI.getLoginScene());
+			
+			
 			
 			primaryStage.setTitle("Login Page");
 			primaryStage.show();

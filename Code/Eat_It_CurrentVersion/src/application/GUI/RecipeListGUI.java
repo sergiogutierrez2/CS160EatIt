@@ -3,10 +3,6 @@ package application.GUI;
 import application.DatabaseManager;
 import application.Recipe;
 import application.User;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,13 +11,10 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView.TableViewSelectionModel;
-import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
@@ -31,7 +24,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.util.Callback;
+import javafx.stage.Stage;
 
 public class RecipeListGUI {
 	
@@ -43,9 +36,12 @@ public class RecipeListGUI {
 	    private ObservableList<Recipe> tableData;
 	    private TableView tableView;
 	    private User user;
+	    private Recipe currentRecipe;
+	    private TableView mainInventoryListTable;
 	    
-	    public RecipeListGUI(User user) {
+	    public RecipeListGUI(User user, TableView mainInventoryListTable) {
 	    	this.user = user;
+	    	this.mainInventoryListTable = mainInventoryListTable;
 	    	createTable();
 	    }
 	    
@@ -56,7 +52,7 @@ public class RecipeListGUI {
 		    tableView.setBackground(null);
 		    
 		    TableViewSelectionModel<Recipe> selectionModel = tableView.getSelectionModel();
-		    selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
+		    selectionModel.setSelectionMode(SelectionMode.SINGLE);
 		    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
 
 		    // COlUMNS
@@ -134,6 +130,9 @@ public class RecipeListGUI {
 		    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    deleteButton.setCursor(Cursor.HAND);
 		    
+		    Button addRecipeIngredients = new Button("Add\nIngredients");
+		    addRecipeIngredients.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    addRecipeIngredients.setCursor(Cursor.HAND);
 		    	    
 		    HBox hb = new HBox();
 		    hb.getChildren().addAll(addRecipeNumber, 
@@ -147,7 +146,7 @@ public class RecipeListGUI {
 		    hb_2.setSpacing(5);
 		    hb.setSpacing(5);
 		    
-		    HBox hb_1 = new HBox(autoGenRecipeNumberBtn, addButton, deleteButton);
+		    HBox hb_1 = new HBox(autoGenRecipeNumberBtn, addButton, deleteButton, addRecipeIngredients);
 		    hb_1.setAlignment(Pos.CENTER);
 		    hb_1.setSpacing(5);
 		    	    
@@ -165,6 +164,86 @@ public class RecipeListGUI {
 		    autoGenRecipeNumberBtn.setOnAction(e -> 
 		    {
 		    	addRecipeNumber.setText(dbm.autogenerateRecipeNum(user));
+		    	
+		    });
+		    
+		    addRecipeIngredients.setOnAction(e -> 
+		    {
+		    	//if the input fields are all filled then that means that 
+		    	//the user wants to add ingredients to the recipe that they are 
+		    	//currently working on.
+		    	
+		    	currentRecipe = null;
+		    	
+		    	if( addRecipeNumber.getText().equals("")
+    					|| addRecipeName.getText().equals("") 
+    					|| addCookTime.getText().equals("") 
+    					|| addPrepTime.getText().equals("") )
+    			{
+		    		ObservableList<Recipe> tmpList = tableView.getSelectionModel().getSelectedItems();
+			    	for(Recipe recipe : tmpList)
+			    	{
+			    		currentRecipe = recipe;
+			    	}
+			    	if(currentRecipe == null)
+			    	{
+			    		errorMessage.setText("Select a recipe or enter data in all the fields");
+			    	}
+			    	else 
+			    	{
+			    		Stage addIngredToRecipeStage = new Stage();
+		    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable);
+		    			
+		    			addIngredToRecipeStage.setScene(popUpMenu.getScene());
+		    			addIngredToRecipeStage.setTitle("Add Ingredients Pop Up");
+		    			addIngredToRecipeStage.show();
+			    	}
+    			}
+		    	else
+		    	{
+		    		String recipe_num = addRecipeNumber.getText(), recipe_name = addRecipeName.getText(), 
+    						cook_time = addCookTime.getText(), prep_time = addPrepTime.getText();	
+		    		
+		    		if( !(dbm.containsRecipeNum(user, recipe_num)) )
+		    		{
+		    			currentRecipe = new Recipe(recipe_num, recipe_name, cook_time, prep_time);
+			    		
+			    		Boolean successfulInsertion = false;
+	    				
+	    				successfulInsertion = dbm.insertRecipe(user, recipe_num, recipe_name, cook_time, prep_time, "0");
+		    		
+	    				
+		    			if(successfulInsertion)
+		    			{
+		    				tableView.getItems().add(currentRecipe);
+		    				addRecipeNumber.clear();
+		    				addRecipeName.clear();
+			    			addCookTime.clear();
+			    			addPrepTime.clear();
+			    			errorMessage.setText("");
+			    			
+			    			Stage addIngredToRecipeStage = new Stage();
+			    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable);
+		    			}
+		    			else
+		    			{
+		    				errorMessage.setText("Failed to insert");
+		    			}
+		    		}
+		    		else
+		    		{
+		    			errorMessage.setText("This recipe number already exists! Choose another!");
+		    		}
+		    		
+		    	}
+		    	
+		    	//if not all of the input fields are full, then it means that 
+		    	//they might not want to add recipe ingredients to the current 
+		    	//recipe that they are working on.
+		    			
+		    			//in this case we should check to see if they selected
+		    			//any recipe currently in the list because that means that
+		    			//they probably want to add recipe ingredients to the selected recipe
 		    	
 		    });
 		    
@@ -240,6 +319,4 @@ public class RecipeListGUI {
 	    {
 	    	return null;
 	    }
-	    
-
 }

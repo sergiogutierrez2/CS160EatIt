@@ -248,6 +248,113 @@ public class DatabaseManager {
 		}
 	}
 	
+	public boolean containsRecipeIngredient(User user, String recipe_num, String item_num)
+	{
+		System.out.println("START checking if user's recipe num: " + recipe_num + ", contains ingredient: " + item_num);
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		String sql = "SELECT user_id, recipe_num, item_num FROM ingredientlist where user_id = ? and recipe_num = ? and item_num = ?";
+		
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(sql);
+		
+			pstmt.setInt(1, Integer.parseInt(user.getAcc_id()));
+		
+			pstmt.setInt(2, Integer.parseInt(recipe_num));
+			
+			pstmt.setInt(3, Integer.parseInt(item_num));
+			
+			ResultSet result;
+			
+			result = pstmt.executeQuery();
+			
+			boolean containsIngredientFlag = false;
+			
+			while (result.next()) 
+			{
+				System.out.println("DBMS: Ingredient already exists in recipe");
+				containsIngredientFlag = true;
+				
+				int user_id = result.getInt("user_id");
+				int recipeNum = result.getInt("recipe_num");
+				int itemNum = result.getInt("item_num");
+				
+				System.out.println("From DBMS: " + user_id + " | " + recipeNum + " | " + itemNum);
+			}
+			
+			pstmt.close();
+			result.close();
+			
+			if(!containsIngredientFlag)
+			{
+				System.out.println("From DBMS: " + user.getAcc_id() + " | " + recipe_num + " | " + item_num + " is not contained in DB");
+			}
+			
+			System.out.println("END containsRecipeIngredient()");
+			
+			return containsIngredientFlag;
+			
+		} catch (SQLException e) {
+			System.out.println("Failed to check recipe: " + e.getErrorCode());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean containsRecipeStep(User user, String recipe_num, String step_num)
+	{
+		System.out.println("checking if user's recipe steps table for recipe: " + recipe_num + ", contains step number: " + step_num);
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		String sql = "SELECT user_id, recipe_num, step_num FROM recipeSteps where user_id = ? and recipe_num = ? and step_num = ?";
+		
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(sql);
+		
+			pstmt.setInt(1, Integer.parseInt(user.getAcc_id()));
+		
+			pstmt.setInt(2, Integer.parseInt(recipe_num));
+			
+			pstmt.setInt(3, Integer.parseInt(step_num));
+			
+			ResultSet result;
+			
+			result = pstmt.executeQuery();
+			
+			boolean containsIngredientFlag = false;
+			
+			while (result.next()) 
+			{
+				System.out.println("DBMS: Recipe Step already exists in recipe");
+				containsIngredientFlag = true;
+				
+				int user_id = result.getInt("user_id");
+				int recipeNum = result.getInt("recipe_num"); //specified attribute name is "username" in sql db
+				String stepNum = result.getString("step_num");
+				
+				System.out.println("From DBMS: " + user_id + " | " + recipeNum + " | " + stepNum);
+			}
+			
+			pstmt.close();
+			result.close();
+			
+			if(!containsIngredientFlag)
+			{
+				System.out.println("From DBMS: " + user.getAcc_id() + " | " + recipe_num + " | " + step_num + " is not contained in DB");
+			}
+			
+			return containsIngredientFlag;
+		} catch (SQLException e) {
+			System.out.println("Failed to check recipe: " + e.getErrorCode());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public boolean insertCredentials(String username, String password1, String password2)
 	{
 		System.out.println("Inserting Credentials");
@@ -406,7 +513,7 @@ public class DatabaseManager {
 	
 	public void deleteRecipe(User user, String recipe_num)
 	{
-		System.out.println("Deleting Ingredient " + recipe_num );
+		System.out.println("Deleting recipe from recipe_num: " + recipe_num );
 		
 		if(!connectedStatus)
 		{
@@ -428,6 +535,126 @@ public class DatabaseManager {
 		}
 	}
 	
+	public boolean insertRecipeIngredient(User user, String recipe_num, String item_num, String ingredient_name, String quantity)
+	{
+		System.out.println("Inserting ingredient into Recipe: " + recipe_num);
+
+		if( containsRecipeIngredient(user, recipe_num, item_num) )
+		{
+			return false;
+		}
+
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "insert into ingredientlist (user_id, recipe_num, item_num, ingredient_name, amount) values ('"
+				+ user.getAcc_id() + "', '" + recipe_num + "', '" + item_num + "', '" + ingredient_name  + "', '" + quantity + "')";
+
+		try {
+
+			Statement statement = connection.createStatement();
+
+			statement.execute(sql);
+
+			statement.close();
+
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Failed to insert Recipe: " + e.getErrorCode());
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+	
+	public void deleteRecipeIngredient(User user, String recipe_num, String item_num)
+	{
+		System.out.println( "Deleting Ingredient from recipe: " + recipe_num );
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM ingredientlist WHERE user_id = '" + user.getAcc_id() + "' AND recipe_num = '" + recipe_num 
+						+ "' AND item_num = '" + item_num + "'";
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			statement.execute(sql);
+			
+			statement.close();
+		} catch (SQLException e) {
+			System.out.println("Failed to delete ingredient from recipe ingredient list: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+
+	public boolean insertRecipeSteps(User user, String recipe_num, String step_num, String step_desc)
+	{
+		System.out.println("Inserting step into RecipeSteps: " + recipe_num);
+
+		if( containsRecipeStep(user, recipe_num, step_num) )
+		{
+			return false;
+		}
+
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "insert into recipeSteps (user_id, recipe_num, step_num, step_desc) values ('"
+				+ user.getAcc_id() + "', '" + recipe_num + "', '" + step_num  + "', '" + step_desc + "')";
+
+		try {
+
+			Statement statement = connection.createStatement();
+
+			statement.execute(sql);
+
+			statement.close();
+
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Failed to insert Recipe: " + e.getErrorCode());
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+	
+	public void deleteRecipeSteps(User user, String recipe_num, String step_num)
+	{
+		System.out.println( "Deleting recipeStep: " + step_num + ", from recipe: " + recipe_num );
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM recipeSteps WHERE user_id = '" + user.getAcc_id() +  "' AND recipe_num = '" + recipe_num 
+						+ "' AND step_num = '" + step_num + "'";
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			statement.execute(sql);
+			
+			statement.close();
+		} catch (SQLException e) {
+			System.out.println("Failed to delete step from recipeStep Table: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+	
+	
+
 	public String autogenerateRecipeNum(User user)
 	{
 		System.out.println("autogenerateItemNum()");
@@ -458,8 +685,8 @@ public class DatabaseManager {
 			result.close();
 			
 			return String.valueOf(autoGenRecipeNum);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		
@@ -498,8 +725,9 @@ public class DatabaseManager {
 			result.close();
 			
 			return String.valueOf(autoGenItemNum);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		
@@ -542,7 +770,6 @@ public class DatabaseManager {
 			result.close();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -584,12 +811,84 @@ public class DatabaseManager {
 			result.close();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		
 		return recipeList;
+	}
+	
+	public ObservableList<RecipeItem> getRecipesIngredientList(User user, Recipe recipe)
+	{
+		System.out.println("Getting Ingredient List for Recipe: " + recipe.getRecipe_name());
+		ObservableList<RecipeItem> ingredientList = FXCollections.observableArrayList();
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "SELECT * FROM ingredientlist WHERE user_id = '" + user.getAcc_id() + "' AND recipe_num = '" + recipe.getRecipe_num() + "'";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				Integer user_id = result.getInt("user_id");
+				Integer recipe_num = result.getInt("recipe_num"); //specified attribute name is "username" in sql db
+				Integer item_sum = result.getInt("item_num");
+				String ingredient_name = result.getString("ingredient_name"); //specified attribute name is "pass_word" in sql db
+				Integer amount = result.getInt("amount");
+			
+				System.out.println( user_id.toString() + " | " + recipe_num + " | " + ingredient_name + " | " + amount);
+				ingredientList.add(new RecipeItem( recipe_num.toString(), item_sum.toString(), ingredient_name, amount.toString() ) );
+			}
+			
+			statement.close();
+			result.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return ingredientList;
+	}
+	
+	public ObservableList<RecipeStep> getRecipesStepList(User user, Recipe recipe)
+	{
+		System.out.println("Getting Recipe Step List for Recipe: " + recipe.getRecipe_name());
+		ObservableList<RecipeStep> ingredientList = FXCollections.observableArrayList();
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "SELECT * FROM recipeSteps WHERE user_id = '" + user.getAcc_id() + "' AND recipe_num = '" + recipe.getRecipe_num() + "'";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				Integer user_id = result.getInt("user_id");
+				Integer recipe_num = result.getInt("recipe_num"); //specified attribute name is "username" in sql db
+				Integer step_num = result.getInt("step_num"); //specified attribute name is "pass_word" in sql db
+				String step_desc = result.getString("step_desc");
+			
+				System.out.println( user_id.toString() + " | " + recipe_num + " | " + step_num + " | " + step_desc);
+				ingredientList.add(new RecipeStep( recipe_num.toString(), step_num.toString(), step_desc ) );
+			}
+			
+			statement.close();
+			result.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return ingredientList;
 	}
 	
 	public void printCredentials()
@@ -619,7 +918,6 @@ public class DatabaseManager {
 			result.close();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

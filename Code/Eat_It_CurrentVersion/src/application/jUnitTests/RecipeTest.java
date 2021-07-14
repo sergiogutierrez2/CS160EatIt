@@ -46,9 +46,9 @@ class RecipeTest {
 		
 		Recipe recipeObj = new Recipe("1", "Spaghetti", "30 min", "10 min", "0");
 		
-		recipeObj.addItemToRecipe(new RecipeItem("1", "Pasta", "2"));
+		recipeObj.addItemToRecipe(new RecipeItem("1", "1", "Pasta", "2"));
 		
-		recipeObj.addItemToRecipe(new RecipeItem("2", "Tomato", "5"));
+		recipeObj.addItemToRecipe(new RecipeItem("2", "1", "Tomato", "5"));
 		
 		recipeObj.printIList();
 		

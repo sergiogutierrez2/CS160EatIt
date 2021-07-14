@@ -13,10 +13,10 @@ class InventoryListTest {
 	@Test
 	void testToString() {
 		
-		RecipeItem fruitOne = new RecipeItem("14", "Apple", "34");
-		RecipeItem fruitTwo = new RecipeItem("46", "Orange", "3");
-		RecipeItem fruitThree = new RecipeItem("3", "Banana", "5");
-		RecipeItem fruitFour = new RecipeItem("24", "Watermelon", "1");
+		RecipeItem fruitOne = new RecipeItem("14", "1", "Apple", "34");
+		RecipeItem fruitTwo = new RecipeItem("46", "1", "Orange", "3");
+		RecipeItem fruitThree = new RecipeItem("3", "1", "Banana", "5");
+		RecipeItem fruitFour = new RecipeItem("24", "1", "Watermelon", "1");
 		
 		InventoryList test = new InventoryList();
 		InventoryList test2 = new InventoryList();
@@ -54,6 +54,7 @@ class InventoryListTest {
 		assertEquals("Inventory List: [\n"
 				+ "[item_num: 3 itemName: Banana, ExpDate: 5], \n"
 				+ "[item_num: 24 itemName: Watermelon, ExpDate: 1]]", output3);
+		
 	}
 	
 }

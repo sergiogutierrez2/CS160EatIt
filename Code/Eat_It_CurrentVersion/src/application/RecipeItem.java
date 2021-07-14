@@ -2,24 +2,39 @@ package application;
 
 public class RecipeItem 
 {
+	private String recipe_num;
 	private String item_num;
 	private String item_name;
 	private String item_quantity;
 	
-	public RecipeItem(String item_num, String item_name, String item_quantity)
+	public RecipeItem(String recipe_num, String item_num, String item_name, String item_quantity)
 	{
+		this.recipe_num = recipe_num;
 		this.item_num = item_num;
 		this.item_name = item_name;
 		this.item_quantity = item_quantity;
 	}
 
+	
+	public String getRecipe_num() {
+		return recipe_num;
+	}
+
+	public void setRecipe_num(String recipe_num) {
+		this.recipe_num = recipe_num;
+	}
+	
+	
+
 	public String getItem_num() {
 		return item_num;
 	}
 
+
 	public void setItem_num(String item_num) {
 		this.item_num = item_num;
 	}
+
 
 	public String getItem_name() {
 		return item_name;
@@ -40,7 +55,7 @@ public class RecipeItem
 	@Override
 	public String toString() 
 	{  	  
-		return ("\n[item_num: " + item_num
+		return ("\n[item_num: " + recipe_num
 				+ " itemName: " + item_name 
 				+  ", ExpDate: " + item_quantity + "]");
 	}

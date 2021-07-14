@@ -49,7 +49,7 @@ public class HomepageGUI {
 		entireHomePage_VBox.getChildren().add(hbox_TopLogo_Logout);
 		
 		InventoryListGUI inventoryListGUI = new InventoryListGUI(user);
-		RecipeListGUI recipeListGUI = new RecipeListGUI(user);
+		RecipeListGUI recipeListGUI = new RecipeListGUI(user, inventoryListGUI.getTableView());
 		
 		VBox vbox_recipeListGUI = recipeListGUI.getVBox();
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();
@@ -86,9 +86,8 @@ public class HomepageGUI {
 		entireHomePage_VBox.getChildren().add(hbox);
 		
 		
+		
 		homepageScene = new Scene(entireHomePage_VBox, mainWidth, mainHeight);
-		
-		
 		
 		URL url = this.getClass().getResource("/application/application.css");
 		System.out.println(url.toString());
@@ -110,5 +109,7 @@ public class HomepageGUI {
 	{
 		return homepageScene;
 	}
+	
+	
 
 }
