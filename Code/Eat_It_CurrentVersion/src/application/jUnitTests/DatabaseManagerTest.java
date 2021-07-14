@@ -257,11 +257,11 @@ class DatabaseManagerTest {
 		
 		dbm.insertRecipeIngredient(user, "1", "1", "noodles", "1");
 		
-		assertTrue(dbm.containsRecipeIngredient(user, "1", "noodles"));
+		assertTrue(dbm.containsRecipeIngredient(user, "1", "1"));
 		
 		dbm.getRecipesIngredientList(user, recipe);
 		
-		dbm.deleteRecipeIngredient(user, "1", "noodles");
+		dbm.deleteRecipeIngredient(user, "1", "1");
 		
 		dbm.getRecipesIngredientList(user, recipe);
 		
@@ -292,11 +292,11 @@ class DatabaseManagerTest {
 		
 		dbm.getRecipesIngredientList(user, recipe);
 		
-		assertTrue(dbm.containsRecipeIngredient(user, "1", "noodles"));
+		assertTrue(dbm.containsRecipeIngredient(user, "1", "1"));
 		
-		dbm.deleteRecipeIngredient(user, "1", "noodles");
+		dbm.deleteRecipeIngredient(user, "1", "1");
 		
-		assertFalse(dbm.containsRecipeIngredient(user, "1", "noodles"));
+		assertFalse(dbm.containsRecipeIngredient(user, "1", "1"));
 
 		dbm.deleteRecipe(user, recipe.getRecipe_num());
 		
