@@ -26,16 +26,20 @@ executable int NOT NULL,
 foreign key (user_id) references logins(user_id)
 );
 
-create table ingredientlist (
+CREATE TABLE ingredientlist (
+  user_id Integer NOT NULL,
   recipe_num INTEGER,
   ingredient_name varchar(20),
   amount int NOT NULL check (amount > 0),
-  foreign key (recipe_num) references recipes(recipe_num)
+  foreign key (recipe_num) references recipes(recipe_num),
+foreign key (user_id) references logins(user_id)
   );
-  
-create table recipeSteps (
+
+CREATE TABLE recipeSteps (
+  user_id Integer NOT NULL,
   recipe_num INTEGER,
   step_num int NOT NULL,
   step_desc varchar(200),
-  foreign key (recipe_num) references recipes(recipe_num)
+  foreign key (recipe_num) references recipes(recipe_num),
+foreign key (user_id) references logins(user_id)
   );
