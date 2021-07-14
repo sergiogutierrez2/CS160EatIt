@@ -80,7 +80,10 @@ public class HomepageGUI {
 		recipeListStackPane.getChildren().addAll(recipeList_background, vbox_recipeListGUI);
 		recipeListStackPane.setAlignment(Pos.CENTER);
 		
-		HBox hbox = new HBox(inventoryListStackPane, recipeListStackPane );
+		TitledPane ingredientsPane = new TitledPane("Ingredients", inventoryListStackPane);
+		TitledPane recipesListPane = new TitledPane("Recipe List", recipeListStackPane);
+		
+		HBox hbox = new HBox(ingredientsPane, recipesListPane);
 		hbox.setPadding(new Insets(10, 0, 0, 10));
 		hbox.setSpacing(5);
 		entireHomePage_VBox.getChildren().add(hbox);
