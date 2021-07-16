@@ -1,11 +1,5 @@
 package application.GUI;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import application.DatabaseManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class RegistrationGUI {
@@ -57,7 +50,6 @@ public class RegistrationGUI {
 	            }
 	        }
 	    });
-
 
 		passwordField1 = new TextField();
 		passwordField1.setPromptText("Enter New Password");

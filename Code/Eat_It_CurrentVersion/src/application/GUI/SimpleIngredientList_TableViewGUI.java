@@ -60,7 +60,7 @@ public class SimpleIngredientList_TableViewGUI
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void createTable() {
 		tableView = new TableView();
-	    tableView.setEditable(true);
+	    tableView.setEditable(false);
 	    tableView.setBackground(null);
 	    
 	    TableViewSelectionModel<Item> selectionModel = tableView.getSelectionModel();
@@ -79,12 +79,18 @@ public class SimpleIngredientList_TableViewGUI
 	    column1.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
 	    column1.setMinWidth(60);
 	    column1.setMaxWidth(90);
+	    
+	    TableColumn<Item, String> column2 = new TableColumn<>("Item Quantity");
+	    column2.setCellValueFactory(new PropertyValueFactory<>("item_Quantity"));
+	    column2.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
+	    column2.setMinWidth(90);
+	    column2.setMaxWidth(90);
 	  
 	    tableData = dbm.getCurrentInventory(user);
 	    
 	    tableView.getItems().addAll(tableData);
 	    
-	    tableView.getColumns().addAll(column0, column1);
+	    tableView.getColumns().addAll(column0, column1, column2);
 	    
 	    	    
 	    vbox = new VBox(tableView);

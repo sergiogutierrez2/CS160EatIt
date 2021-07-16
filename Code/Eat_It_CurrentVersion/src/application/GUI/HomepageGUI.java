@@ -29,7 +29,6 @@ public class HomepageGUI {
 	{
 		// we need to pass in a user somehow, but for now im just making one
 		this.user = user;
-		//
 		
 		Image img = new Image(getClass().getResourceAsStream("/application/resources/Eat_It_Logo_300px.png"));
 		ImageView imgView = new ImageView(img);
@@ -56,19 +55,18 @@ public class HomepageGUI {
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();
 		//vbox_inventoryListGUI.setPrefSize(300, 500);
 		
-		vbox_recipeListGUI.setMaxWidth(275);
+		vbox_recipeListGUI.setMaxWidth(325);
 		vbox_recipeListGUI.setMaxHeight(600);
 		
 		vbox_inventoryListGUI.setMaxWidth(325);
 		vbox_inventoryListGUI.setMaxHeight(600);
-		
 		
 		Rectangle inventoryList_background = new Rectangle(345,550);
 		inventoryList_background.setArcHeight(40.0);
 		inventoryList_background.setArcWidth(40.0);
 		inventoryList_background.setFill(Color.web("#e3e3e3",1));
 		
-		Rectangle recipeList_background = new Rectangle(295,550);
+		Rectangle recipeList_background = new Rectangle(350,550);
 		recipeList_background.setArcHeight(40.0);
 		recipeList_background.setArcWidth(40.0);
 		recipeList_background.setFill(Color.web("#e3e3e3",1));
@@ -82,14 +80,14 @@ public class HomepageGUI {
 		recipeListStackPane.setAlignment(Pos.CENTER);
 		
 		TitledPane ingredientsPane = new TitledPane("Ingredients", inventoryListStackPane);
+		ingredientsPane.setMinWidth(350);
 		TitledPane recipesListPane = new TitledPane("Recipe List", recipeListStackPane);
+		recipesListPane.setMinWidth(400);
 		
 		HBox hbox = new HBox(ingredientsPane, recipesListPane);
 		hbox.setPadding(new Insets(10, 0, 0, 10));
 		hbox.setSpacing(5);
 		entireHomePage_VBox.getChildren().add(hbox);
-		
-		
 		
 		homepageScene = new Scene(entireHomePage_VBox, mainWidth, mainHeight);
 		
@@ -98,22 +96,15 @@ public class HomepageGUI {
 		String css = url.toExternalForm();
 		homepageScene.getStylesheets().add(css);
 		
-		
 		logoutBtn.setOnAction(e-> {
 			this.user = null;
 			stage.setScene(loginScene);
 			stage.setTitle("Login Page");
-				
 		});
-		
-		
 	}
 	
 	public Scene getHomepageGUIscene()
 	{
 		return homepageScene;
 	}
-	
-	
-
 }

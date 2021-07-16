@@ -53,7 +53,6 @@ public class Main extends Application {
 			
 			loginGUI.setRegistrationGUI(registrationGUI);
 			
-			
 			//START TESTS
 //			Recipe recipe = new Recipe("1", "Pasta", "30 min", "10 min", "0");
 //			User user = new User("1", "zuber1", "password");
@@ -61,16 +60,14 @@ public class Main extends Application {
 //			primaryStage.setScene(temp.getScene());
 			//END TESTS
 			
-			
-			
-			
 			primaryStage.setScene(loginGUI.getLoginScene());
-			
-			
 			
 			primaryStage.setTitle("Login Page");
 			primaryStage.show();
-		} catch(Exception e) {
+			
+		} 
+		catch(Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}

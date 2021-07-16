@@ -101,7 +101,6 @@ public class RecipeListGUI {
 		    TextField addRecipeNumber = new TextField();
 		    addRecipeNumber.setPromptText("Recipe Number");
 		    addRecipeNumber.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addRecipeNumber.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -120,7 +119,6 @@ public class RecipeListGUI {
 		    TextField addRecipeName = new TextField();
 		    addRecipeName.setPromptText("Recipe Name");
 		    addRecipeName.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addRecipeName.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -135,7 +133,6 @@ public class RecipeListGUI {
 		    TextField addCookTime = new TextField();
 		    addCookTime.setPromptText("Cook Time");
 		    addCookTime.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addCookTime.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -148,11 +145,9 @@ public class RecipeListGUI {
 		        }
 		    });
 		    
-		    
 		    TextField addPrepTime = new TextField();
 		    addPrepTime.setPromptText("Prep Time");
 		    addPrepTime.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addPrepTime.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -164,7 +159,6 @@ public class RecipeListGUI {
 		            }
 		        }
 		    });
-		    
 		    
 		    Text errorMessage = new Text("");
 			errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));

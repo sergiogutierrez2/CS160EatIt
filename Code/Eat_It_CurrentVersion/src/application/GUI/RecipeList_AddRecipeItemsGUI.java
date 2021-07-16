@@ -38,6 +38,7 @@ public class RecipeList_AddRecipeItemsGUI {
 		
 		SimpleIngredientList_TableViewGUI simpleIngredListGUI = new SimpleIngredientList_TableViewGUI(user);
 		RecipeIngredientList_TableViewGUI recipeIngredListGUI = new RecipeIngredientList_TableViewGUI(user, recipe);
+		RecipeSteps_TableViewGUI recipeSteps_TableViewGUI = new RecipeSteps_TableViewGUI(user, recipe);
 		
 		inventoryListTableView = simpleIngredListGUI.getTableView();
 		Button addIngredientToRecipe = new Button("Add Ingredient");
@@ -81,17 +82,22 @@ public class RecipeList_AddRecipeItemsGUI {
 		addIngredientToItemListBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		addIngredientToItemListBtn.setCursor(Cursor.HAND);
 		
-		HBox mainHBox = new HBox(simpleIngredListGUI.getVBox(), addIngredientToRecipe, recipeIngredListGUI.getVBox());
+		HBox mainHBox = new HBox(simpleIngredListGUI.getVBox(), addIngredientToRecipe, recipeIngredListGUI.getVBox(), recipeSteps_TableViewGUI.getVBox() );
 		mainHBox.setAlignment(Pos.CENTER);
+		mainHBox.setSpacing(50);
 		
-		HBox newItemTextFields = new HBox(addIngredientToItemListBtn, autoGenItemNumberBtn, addItemNum, addItemName, addExpirationDate, addPARAmount, addQuantity, addAmount_Type);
-		newItemTextFields.setAlignment(Pos.CENTER);
+		HBox newItemTextFields_1 = new HBox(addIngredientToItemListBtn, autoGenItemNumberBtn, addItemNum, addItemName, addExpirationDate);
+		newItemTextFields_1.setAlignment(Pos.CENTER);
+		HBox newItemTextFields_2 = new HBox( addPARAmount, addQuantity, addAmount_Type);
+		newItemTextFields_2.setAlignment(Pos.CENTER);
+		
+		VBox newItemTextFields_vBox = new VBox(newItemTextFields_1, newItemTextFields_2);
 		
 		VBox mainVBox = new VBox();
-		mainVBox.getChildren().addAll(mainHBox, errorMessage, newItemTextFields);
+		mainVBox.getChildren().addAll(mainHBox, errorMessage, newItemTextFields_vBox);
 		mainVBox.setAlignment(Pos.CENTER);
 		
-		Rectangle inventoryList_background = new Rectangle(1000, 600);
+		Rectangle inventoryList_background = new Rectangle(1200, 600);
 		inventoryList_background.setArcHeight(40.0);
 		inventoryList_background.setArcWidth(40.0);
 		inventoryList_background.setFill(Color.web("#e3e3e3",1));

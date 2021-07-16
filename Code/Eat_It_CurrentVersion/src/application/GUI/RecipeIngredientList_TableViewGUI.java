@@ -66,18 +66,17 @@ public class RecipeIngredientList_TableViewGUI
 	    column0.setMinWidth(50);
 	    column0.setMaxWidth(50);
 	    
-	    
 	    TableColumn<RecipeItem, String> column1 = new TableColumn<>("Ingredient Name");
 	    column1.setCellValueFactory(new PropertyValueFactory<>("item_name"));
 	    column1.setCellFactory(TextFieldTableCell.<RecipeItem>forTableColumn());
-	    column1.setMinWidth(80);
-	    column1.setMaxWidth(80);
+	    column1.setMinWidth(100);
+	    column1.setMaxWidth(100);
 	  
 	    TableColumn<RecipeItem, String> column2 = new TableColumn<>("Item Quantity");
 	    column2.setCellValueFactory(new PropertyValueFactory<>("item_quantity"));
 	    column2.setCellFactory(TextFieldTableCell.<RecipeItem>forTableColumn());
-	    column2.setMinWidth(50);
-	    column2.setMaxWidth(50);
+	    column2.setMinWidth(90);
+	    column2.setMaxWidth(90);
 	   
 	    //make a dbm function to get a Olist of the ingredients for the recipe
 	    tableData = dbm.getRecipesIngredientList(user, recipe);
@@ -152,9 +151,9 @@ public class RecipeIngredientList_TableViewGUI
     	//the db then add them to the table view.
     	for(Item item : selectedList)
     	{
-    		if(dbm.insertRecipeIngredient(user, recipe.getRecipe_num(), item.getItem_num(), item.getItem_name(), item.getItem_Quantity()))
+    		if(dbm.insertRecipeIngredient(user, recipe.getRecipe_num(), item.getItem_num(), item.getItem_name(), "1"))
     		{
-    			tableView.getItems().add(new RecipeItem(recipe.getRecipe_num(), item.getItem_num(), item.getItem_name(), item.getItem_Quantity()));
+    			tableView.getItems().add(new RecipeItem(recipe.getRecipe_num(), item.getItem_num(), item.getItem_name(), "1"));
     		}
     		else {
     			errorMessage.setText("Failed to insert one or more item: Duplicate error");

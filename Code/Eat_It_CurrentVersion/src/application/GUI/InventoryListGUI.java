@@ -198,13 +198,9 @@ public class InventoryListGUI {
 		    
 		    tableView.getColumns().addAll(column0, column1, column2, column3, column4, column5);
 		    
-		    
-		    /* ** TEXTFIELD CODE BEGINS HERE *** */
-		    
 		    TextField addItemNum = new TextField();
 		    addItemNum.setPromptText("Item Number");
 		    addItemNum.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addItemNum.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -223,7 +219,6 @@ public class InventoryListGUI {
 		    TextField addItemName = new TextField();
 		    addItemName.setPromptText("Item Name");
 		    addItemName.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addItemName.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -254,11 +249,9 @@ public class InventoryListGUI {
 		        }
 		    });
 		    
-		    
 		    TextField addPARAmount = new TextField();
 		    addPARAmount.setPromptText("PAR Amount");
 		    addPARAmount.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addPARAmount.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -277,7 +270,6 @@ public class InventoryListGUI {
 		    TextField addQuantity = new TextField();
 		    addQuantity.setPromptText("Quantity");
 		    addQuantity.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addQuantity.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -296,7 +288,6 @@ public class InventoryListGUI {
 		    TextField addAmount_Type = new TextField();
 		    addAmount_Type.setPromptText("Amount_Type");
 		    addAmount_Type.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    
 		    addAmount_Type.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
@@ -384,7 +375,6 @@ public class InventoryListGUI {
 	    				System.out.println("User did not fill in all of the fields!");
 	    				errorMessage.setText("Please fill in all text fields!");
 	    			}
-
 	    			else
 	    			{
 	    				String item_num = addItemNum.getText();
