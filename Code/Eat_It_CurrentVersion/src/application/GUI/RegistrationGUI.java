@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import application.DatabaseManager;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -40,16 +42,62 @@ public class RegistrationGUI {
 		userNameField.setPromptText("Enter a Username");
 		userNameField.setPrefWidth(200);
 		userNameField.setMaxWidth(200);
+		userNameField.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            
+	        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
+	        		userNameField.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
+	            }
+	        	
+	            if (userNameField.getText().length() > 20) {
+	                String s = userNameField.getText().substring(0, 20);
+	                userNameField.setText(s);
+	            }
+	        }
+	    });
+
 
 		passwordField1 = new TextField();
 		passwordField1.setPromptText("Enter New Password");
 		passwordField1.setPrefWidth(200);
 		passwordField1.setMaxWidth(200);
+		passwordField1.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            
+	        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
+	        		passwordField1.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
+	            }
+	        	
+	            if (passwordField1.getText().length() > 20) {
+	                String s = passwordField1.getText().substring(0, 20);
+	                passwordField1.setText(s);
+	            }
+	        }
+	    });
 		
 		passwordField2 = new TextField();
 		passwordField2.setPromptText("Re-enter New Password");
 		passwordField2.setPrefWidth(200);
 		passwordField2.setMaxWidth(200);
+		passwordField2.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            
+	        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
+	        		passwordField2.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
+	            }
+	        	
+	            if (passwordField2.getText().length() > 20) {
+	                String s = passwordField2.getText().substring(0, 20);
+	                passwordField2.setText(s);
+	            }
+	        }
+	    });
 
 		cancelBtn = new Button("Cancel");
 		registerBtn = new Button("Register");
