@@ -125,8 +125,8 @@ public class RecipeListGUI {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
 		            String newValue) {				        	
-		            if (addRecipeName.getText().length() > 4) {
-		                String s = addRecipeName.getText().substring(0, 4);
+		            if (addRecipeName.getText().length() > 14) {
+		                String s = addRecipeName.getText().substring(0, 14);
 		                addRecipeName.setText(s);
 		            }
 		        }
