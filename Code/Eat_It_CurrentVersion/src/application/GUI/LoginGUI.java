@@ -8,6 +8,8 @@ import java.sql.SQLException;
 
 import application.DatabaseManager;
 import application.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -52,11 +54,41 @@ public class LoginGUI {
 		userNameField.setPromptText("Enter User Name");
 		userNameField.setPrefWidth(200);
 		userNameField.setMaxWidth(200);
+		userNameField.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            
+	        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
+	        		userNameField.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
+	            }
+	        	
+	            if (userNameField.getText().length() > 20) {
+	                String s = userNameField.getText().substring(0, 20);
+	                userNameField.setText(s);
+	            }
+	        }
+	    });
 
 		passwordField = new TextField();
 		passwordField.setPromptText("Enter Password");
 		passwordField.setPrefWidth(200);
 		passwordField.setMaxWidth(200);
+		passwordField.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            
+	        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
+	        		passwordField.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
+	            }
+	        	
+	            if (passwordField.getText().length() > 20) {
+	                String s = passwordField.getText().substring(0, 20);
+	                passwordField.setText(s);
+	            }
+	        }
+	    });
 
 		/* create the buttons for sing up page */
 		signUpBtn = new Button("Sign Up");
