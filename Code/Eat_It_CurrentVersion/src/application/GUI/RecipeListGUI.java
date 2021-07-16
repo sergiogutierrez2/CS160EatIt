@@ -3,6 +3,8 @@ package application.GUI;
 import application.DatabaseManager;
 import application.Recipe;
 import application.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -100,17 +102,69 @@ public class RecipeListGUI {
 		    addRecipeNumber.setPromptText("Recipe Number");
 		    addRecipeNumber.setFont(Font.font("Arial", FontWeight.BOLD, 10));
 		    
+		    addRecipeNumber.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {		
+		            if (!newValue.matches("\\d*")) {
+		            	addRecipeNumber.setText(newValue.replaceAll("[^\\d]", ""));
+		            }
+		        	
+		            if (addRecipeNumber.getText().length() > 4) {
+		                String s = addRecipeNumber.getText().substring(0, 4);
+		                addRecipeNumber.setText(s);
+		            }
+		        }
+		    });
+		    
 		    TextField addRecipeName = new TextField();
 		    addRecipeName.setPromptText("Recipe Name");
 		    addRecipeName.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    
+		    addRecipeName.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {				        	
+		            if (addRecipeName.getText().length() > 4) {
+		                String s = addRecipeName.getText().substring(0, 4);
+		                addRecipeName.setText(s);
+		            }
+		        }
+		    });
 		    
 		    TextField addCookTime = new TextField();
 		    addCookTime.setPromptText("Cook Time");
 		    addCookTime.setFont(Font.font("Arial", FontWeight.BOLD, 10));
 		    
+		    addCookTime.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {		
+
+		            if (addCookTime.getText().length() > 12) {
+		                String s = addCookTime.getText().substring(0, 12);
+		                addCookTime.setText(s);
+		            }
+		        }
+		    });
+		    
+		    
 		    TextField addPrepTime = new TextField();
 		    addPrepTime.setPromptText("Prep Time");
 		    addPrepTime.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    
+		    addPrepTime.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {		
+		        	
+		            if (addPrepTime.getText().length() > 8) {
+		                String s = addPrepTime.getText().substring(0, 8);
+		                addPrepTime.setText(s);
+		            }
+		        }
+		    });
+		    
 		    
 		    Text errorMessage = new Text("");
 			errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
