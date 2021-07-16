@@ -198,29 +198,120 @@ public class InventoryListGUI {
 		    
 		    tableView.getColumns().addAll(column0, column1, column2, column3, column4, column5);
 		    
+		    
+		    /* ** TEXTFIELD CODE BEGINS HERE *** */
+		    
 		    TextField addItemNum = new TextField();
 		    addItemNum.setPromptText("Item Number");
 		    addItemNum.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    
+		    addItemNum.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {
+		            if (!newValue.matches("\\d*")) {
+		            	addItemNum.setText(newValue.replaceAll("[^\\d]", ""));
+		            }
+		            
+		            if (addItemNum.getText().length() > 8) {
+		                String s = addItemNum.getText().substring(0, 8);
+		                addItemNum.setText(s);
+		            }
+		        }
+		    });
 		    
 		    TextField addItemName = new TextField();
 		    addItemName.setPromptText("Item Name");
 		    addItemName.setFont(Font.font("Arial", FontWeight.BOLD, 10));
 		    
+		    addItemName.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {		            
+		            if (addItemName.getText().length() > 14) {
+		                String s = addItemName.getText().substring(0, 14);
+		                addItemName.setText(s);
+		            }
+		        }
+		    });
+		    
 		    TextField addExpirationDate = new TextField();
 		    addExpirationDate.setPromptText("Expiration Date");
 		    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    addExpirationDate.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {
+		             
+		            if (!newValue.matches("\\d") && !newValue.matches("/")) {
+		            	addExpirationDate.setText(newValue.replaceAll("[^\\d/]", ""));
+		            }
+		        	
+		            if (addExpirationDate.getText().length() > 8) {
+		                String s = addExpirationDate.getText().substring(0, 8);
+		                addExpirationDate.setText(s);
+		            } 		            
+		        }
+		    });
+		    
 		    
 		    TextField addPARAmount = new TextField();
 		    addPARAmount.setPromptText("PAR Amount");
 		    addPARAmount.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    
+		    addPARAmount.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {
+		            if (!newValue.matches("\\d*")) {
+		            	addPARAmount.setText(newValue.replaceAll("[^\\d]", ""));
+		            }
+		            
+		            if (addPARAmount.getText().length() > 4) {
+		                String s = addPARAmount.getText().substring(0, 4);
+		                addPARAmount.setText(s);
+		            }
+		        }
+		    });
 		  
 		    TextField addQuantity = new TextField();
 		    addQuantity.setPromptText("Quantity");
 		    addQuantity.setFont(Font.font("Arial", FontWeight.BOLD, 10));
 		    
+		    addQuantity.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {
+		            if (!newValue.matches("\\d*")) {
+		            	addQuantity.setText(newValue.replaceAll("[^\\d]", ""));
+		            }
+		            
+		            if (addQuantity.getText().length() > 4) {
+		                String s = addQuantity.getText().substring(0, 4);
+		                addQuantity.setText(s);
+		            }
+		        }
+		    });
+		    
 		    TextField addAmount_Type = new TextField();
 		    addAmount_Type.setPromptText("Amount_Type");
 		    addAmount_Type.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    
+		    addAmount_Type.textProperty().addListener(new ChangeListener<String>() {
+		        @Override
+		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		            String newValue) {
+		            
+		        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
+		        		addAmount_Type.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
+		            }
+		        	
+		            if (addAmount_Type.getText().length() > 8) {
+		                String s = addAmount_Type.getText().substring(0, 8);
+		                addAmount_Type.setText(s);
+		            }
+		        }
+		    });
 		    
 		    Text errorMessage = new Text("");
 			errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
@@ -293,6 +384,7 @@ public class InventoryListGUI {
 	    				System.out.println("User did not fill in all of the fields!");
 	    				errorMessage.setText("Please fill in all text fields!");
 	    			}
+
 	    			else
 	    			{
 	    				String item_num = addItemNum.getText();
