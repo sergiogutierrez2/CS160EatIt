@@ -1,5 +1,8 @@
 package application.GUI;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import application.DatabaseManager;
 import application.Item;
 import application.User;
@@ -14,6 +17,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -32,6 +37,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 public class InventoryListGUI {
 	
@@ -64,7 +70,7 @@ public class InventoryListGUI {
 		    column0.setCellValueFactory(new PropertyValueFactory<>("item_num"));
 		    column0.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
 		    column0.setMinWidth(30);
-		    column0.setMaxWidth(30);
+		    column0.setMaxWidth(80);
 		    column0.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
@@ -152,7 +158,7 @@ public class InventoryListGUI {
 		    column4.setCellValueFactory(new PropertyValueFactory("item_Par"));
 		    column4.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
 		    column4.setMinWidth(30);
-		    column4.setMaxWidth(30);
+		    column4.setMaxWidth(40);
 		    column4.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
@@ -230,24 +236,39 @@ public class InventoryListGUI {
 		        }
 		    });
 		    
-		    TextField addExpirationDate = new TextField();
+		   /* TextField addExpirationDate = new TextField();
 		    addExpirationDate.setPromptText("Expiration Date");
 		    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10));
 		    addExpirationDate.textProperty().addListener(new ChangeListener<String>() {
 		        @Override
 		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
 		            String newValue) {
-		             
-		            if (!newValue.matches("\\d") && !newValue.matches("/")) {
+		        	
+		        	if (!newValue.matches("\\d") && !newValue.matches("/")) {
 		            	addExpirationDate.setText(newValue.replaceAll("[^\\d/]", ""));
 		            }
+
+		            if (newValue.matches("\\d")) {
+		            	addExpirationDate.setText(newValue.replaceAll(newValue, newValue + "/"));
+		            } 
 		        	
 		            if (addExpirationDate.getText().length() > 8) {
 		                String s = addExpirationDate.getText().substring(0, 8);
 		                addExpirationDate.setText(s);
-		            } 		            
+		            } 	
 		        }
-		    });
+		    }); */
+		    
+		    DatePicker addExpirationDate;
+		    addExpirationDate = new DatePicker();
+		    addExpirationDate.setPromptText("Expiration Date");
+		    addExpirationDate.setMaxWidth(400);
+		    addExpirationDate.setMaxHeight(400);
+		    addExpirationDate.setMinHeight(05.);
+		    addExpirationDate.setMinWidth(05.);
+		    addExpirationDate.setPrefHeight(16.);
+		    addExpirationDate.setPrefWidth(120.);
+		    addExpirationDate.setStyle("-fx-font-size: 10 Arial");
 		    
 		    TextField addPARAmount = new TextField();
 		    addPARAmount.setPromptText("PAR Amount");
@@ -367,7 +388,7 @@ public class InventoryListGUI {
 	    			
 	    			if( addItemNum.getText().equals("")
 	    					|| addItemName.getText().equals("") 
-	    					|| addExpirationDate.getText().equals("") 
+	    					|| addExpirationDate.getEditor().getText().equals("") 
 	    					|| addPARAmount.getText().equals("") 
 	    					|| addQuantity.getText().equals("") 
     						|| addAmount_Type.getText().equals("") )
@@ -379,7 +400,7 @@ public class InventoryListGUI {
 	    			{
 	    				String item_num = addItemNum.getText();
 	    				String item_name = addItemName.getText(), 
-	    						item_Exp = addExpirationDate.getText(), 
+	    						item_Exp = addExpirationDate.getEditor().getText(),
 	    						item_Quantity_Type = addAmount_Type.getText();
 	    				String item_Par = addPARAmount.getText(), 
 	    						item_Quantity = addQuantity.getText();
@@ -398,7 +419,7 @@ public class InventoryListGUI {
 		    				tableView.getItems().add(tmpItem);
 		    				addItemNum.clear();
 		    				addItemName.clear();
-			    			addExpirationDate.clear();
+			    			addExpirationDate.setValue(null);
 			    			addPARAmount.clear();
 			    			addQuantity.clear();
 			    			addAmount_Type.clear();
