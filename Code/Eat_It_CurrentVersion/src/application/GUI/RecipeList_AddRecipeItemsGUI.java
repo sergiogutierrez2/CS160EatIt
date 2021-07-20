@@ -4,12 +4,15 @@ import application.DatabaseManager;
 import application.Item;
 import application.Recipe;
 import application.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -46,26 +49,105 @@ public class RecipeList_AddRecipeItemsGUI {
 		TextField addItemNum = new TextField();
 	    addItemNum.setPromptText("Item Number");
 	    addItemNum.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+	    addItemNum.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            if (!newValue.matches("\\d*")) {
+	            	addItemNum.setText(newValue.replaceAll("[^\\d]", ""));
+	            }
+	            
+	            if (addItemNum.getText().length() > 8) {
+	                String s = addItemNum.getText().substring(0, 8);
+	                addItemNum.setText(s);
+	            }
+	        }
+	    });
 	    
 	    TextField addItemName = new TextField();
 	    addItemName.setPromptText("Item Name");
 	    addItemName.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+	    addItemName.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {		            
+	            if (addItemName.getText().length() > 14) {
+	                String s = addItemName.getText().substring(0, 14);
+	                addItemName.setText(s);
+	            }
+	        }
+	    });
 	    
-	    TextField addExpirationDate = new TextField();
+	    /* TextField addExpirationDate = new TextField();
 	    addExpirationDate.setPromptText("Expiration Date");
-	    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+	    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10)); */
+	    
+	    DatePicker addExpirationDate;
+	    addExpirationDate = new DatePicker();
+	    addExpirationDate.setPromptText("Expiration Date");
+	    addExpirationDate.setMaxWidth(400);
+	    addExpirationDate.setMaxHeight(100);
+	    addExpirationDate.setMinHeight(005.);
+	    addExpirationDate.setMinWidth(03.);
+	    addExpirationDate.setPrefHeight(2.);
+	    addExpirationDate.setPrefWidth(123.);
+	    addExpirationDate.setStyle("-fx-font-size: 10 Arial");
+	    //addExpirationDate.setStyle("-fx-pref-height: -10");
 	    
 	    TextField addPARAmount = new TextField();
 	    addPARAmount.setPromptText("PAR Amount");
 	    addPARAmount.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+	    addPARAmount.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            if (!newValue.matches("\\d*")) {
+	            	addPARAmount.setText(newValue.replaceAll("[^\\d]", ""));
+	            }
+	            
+	            if (addPARAmount.getText().length() > 4) {
+	                String s = addPARAmount.getText().substring(0, 4);
+	                addPARAmount.setText(s);
+	            }
+	        }
+	    });
 	  
 	    TextField addQuantity = new TextField();
 	    addQuantity.setPromptText("Quantity");
 	    addQuantity.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+	    addQuantity.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            if (!newValue.matches("\\d*")) {
+	            	addQuantity.setText(newValue.replaceAll("[^\\d]", ""));
+	            }
+	            
+	            if (addQuantity.getText().length() > 4) {
+	                String s = addQuantity.getText().substring(0, 4);
+	                addQuantity.setText(s);
+	            }
+	        }
+	    });
 	    
 	    TextField addAmount_Type = new TextField();
 	    addAmount_Type.setPromptText("Amount_Type");
 	    addAmount_Type.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+	    addAmount_Type.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            
+	        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
+	        		addAmount_Type.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
+	            }
+	        	
+	            if (addAmount_Type.getText().length() > 8) {
+	                String s = addAmount_Type.getText().substring(0, 8);
+	                addAmount_Type.setText(s);
+	            }
+	        }
+	    });
 	    
 	    Text errorMessage = new Text("");
 		errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
@@ -119,7 +201,7 @@ public class RecipeList_AddRecipeItemsGUI {
     			
     			if( addItemNum.getText().equals("")
     					|| addItemName.getText().equals("") 
-    					|| addExpirationDate.getText().equals("") 
+    					|| addExpirationDate.getEditor().getText().equals("") 
     					|| addPARAmount.getText().equals("") 
     					|| addQuantity.getText().equals("") 
 						|| addAmount_Type.getText().equals("") )
@@ -131,7 +213,7 @@ public class RecipeList_AddRecipeItemsGUI {
     			{
     				String item_num = addItemNum.getText();
     				String item_name = addItemName.getText(), 
-    						item_Exp = addExpirationDate.getText(), 
+    						item_Exp = addExpirationDate.getEditor().getText(),
     						item_Quantity_Type = addAmount_Type.getText();
     				String item_Par = addPARAmount.getText(), 
     						item_Quantity = addQuantity.getText();
@@ -151,7 +233,7 @@ public class RecipeList_AddRecipeItemsGUI {
 	    				mainInventoryListTable.getItems().add(tmpItem);
 	    				addItemNum.clear();
 	    				addItemName.clear();
-		    			addExpirationDate.clear();
+	    				addExpirationDate.setValue(null);
 		    			addPARAmount.clear();
 		    			addQuantity.clear();
 		    			addAmount_Type.clear();
