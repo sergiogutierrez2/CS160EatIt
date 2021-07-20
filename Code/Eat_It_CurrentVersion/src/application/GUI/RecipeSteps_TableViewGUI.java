@@ -5,6 +5,8 @@ import application.Item;
 import application.Recipe;
 import application.RecipeStep;
 import application.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -94,6 +96,20 @@ public class RecipeSteps_TableViewGUI
 	    addStep = new TextField();
 	    addStep.setPromptText("Enter Step Number");
 	    addStep.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+	    addStep.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	            if (!newValue.matches("\\d*")) {
+	            	addStep.setText(newValue.replaceAll("[^\\d]", ""));
+	            }
+	            
+	            if (addStep.getText().length() > 3) {
+	                String s = addStep.getText().substring(0, 3);
+	                addStep.setText(s);
+	            }
+	        }
+	    });
 	    
 	    addDesc = new TextArea();
 	    addDesc.setPromptText("Enter a Description of the Step");
@@ -101,6 +117,17 @@ public class RecipeSteps_TableViewGUI
 	    addDesc.setMaxHeight(80);
 	    addDesc.setMaxWidth(100);
 	    addDesc.setWrapText(true);
+	    addDesc.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	        	
+	            if (addDesc.getText().length() > 140) {
+	                String s = addDesc.getText().substring(0, 140);
+	                addDesc.setText(s);
+	            }
+	        }
+	    });
 	    
 	    
 	    
