@@ -55,18 +55,18 @@ public class HomepageGUI {
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();
 		//vbox_inventoryListGUI.setPrefSize(300, 500);
 		
-		vbox_recipeListGUI.setMaxWidth(325);
+		vbox_recipeListGUI.setMaxWidth(375);
 		vbox_recipeListGUI.setMaxHeight(600);
 		
-		vbox_inventoryListGUI.setMaxWidth(325);
+		vbox_inventoryListGUI.setMaxWidth(375);
 		vbox_inventoryListGUI.setMaxHeight(600);
 		
-		Rectangle inventoryList_background = new Rectangle(345,550);
+		Rectangle inventoryList_background = new Rectangle(400,550);
 		inventoryList_background.setArcHeight(40.0);
 		inventoryList_background.setArcWidth(40.0);
 		inventoryList_background.setFill(Color.web("#e3e3e3",1));
 		
-		Rectangle recipeList_background = new Rectangle(350,550);
+		Rectangle recipeList_background = new Rectangle(400,550);
 		recipeList_background.setArcHeight(40.0);
 		recipeList_background.setArcWidth(40.0);
 		recipeList_background.setFill(Color.web("#e3e3e3",1));
