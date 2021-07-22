@@ -4,15 +4,12 @@ import application.DatabaseManager;
 import application.Item;
 import application.Recipe;
 import application.User;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -25,6 +22,9 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.control.DatePicker;
 
 public class RecipeList_AddRecipeItemsGUI {
 
@@ -46,6 +46,10 @@ public class RecipeList_AddRecipeItemsGUI {
 		inventoryListTableView = simpleIngredListGUI.getTableView();
 		Button addIngredientToRecipe = new Button("Add Ingredient");
 		
+		Text recipeNameTitle = new Text(recipe.getRecipe_name());
+		
+		recipeNameTitle.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 30));
+		
 		TextField addItemNum = new TextField();
 	    addItemNum.setPromptText("Item Number");
 	    addItemNum.setFont(Font.font("Arial", FontWeight.BOLD, 10));
@@ -56,7 +60,7 @@ public class RecipeList_AddRecipeItemsGUI {
 	            if (!newValue.matches("\\d*")) {
 	            	addItemNum.setText(newValue.replaceAll("[^\\d]", ""));
 	            }
-	            
+
 	            if (addItemNum.getText().length() > 8) {
 	                String s = addItemNum.getText().substring(0, 8);
 	                addItemNum.setText(s);
@@ -77,7 +81,7 @@ public class RecipeList_AddRecipeItemsGUI {
 	            }
 	        }
 	    });
-	    
+
 	    /* TextField addExpirationDate = new TextField();
 	    addExpirationDate.setPromptText("Expiration Date");
 	    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10)); */
@@ -104,7 +108,7 @@ public class RecipeList_AddRecipeItemsGUI {
 	            if (!newValue.matches("\\d*")) {
 	            	addPARAmount.setText(newValue.replaceAll("[^\\d]", ""));
 	            }
-	            
+
 	            if (addPARAmount.getText().length() > 4) {
 	                String s = addPARAmount.getText().substring(0, 4);
 	                addPARAmount.setText(s);
@@ -122,7 +126,7 @@ public class RecipeList_AddRecipeItemsGUI {
 	            if (!newValue.matches("\\d*")) {
 	            	addQuantity.setText(newValue.replaceAll("[^\\d]", ""));
 	            }
-	            
+
 	            if (addQuantity.getText().length() > 4) {
 	                String s = addQuantity.getText().substring(0, 4);
 	                addQuantity.setText(s);
@@ -137,11 +141,11 @@ public class RecipeList_AddRecipeItemsGUI {
 	        @Override
 	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
 	            String newValue) {
-	            
+
 	        	if (!newValue.matches("\\d*") || !newValue.matches("\\sa-zA-Z")) {
 	        		addAmount_Type.setText(newValue.replaceAll("[^\\da-zA-Z]", ""));
 	            }
-	        	
+
 	            if (addAmount_Type.getText().length() > 8) {
 	                String s = addAmount_Type.getText().substring(0, 8);
 	                addAmount_Type.setText(s);
@@ -152,6 +156,7 @@ public class RecipeList_AddRecipeItemsGUI {
 	    Text errorMessage = new Text("");
 		errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
 		errorMessage.setFill(Color.RED); 
+		
 	    Button addIgredToRecipeIngredList = new Button("Add");
 	    addIgredToRecipeIngredList.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 	    addIgredToRecipeIngredList.setCursor(Cursor.HAND);
@@ -176,7 +181,7 @@ public class RecipeList_AddRecipeItemsGUI {
 		VBox newItemTextFields_vBox = new VBox(newItemTextFields_1, newItemTextFields_2);
 		
 		VBox mainVBox = new VBox();
-		mainVBox.getChildren().addAll(mainHBox, errorMessage, newItemTextFields_vBox);
+		mainVBox.getChildren().addAll(recipeNameTitle, mainHBox, errorMessage, newItemTextFields_vBox);
 		mainVBox.setAlignment(Pos.CENTER);
 		
 		Rectangle inventoryList_background = new Rectangle(1200, 600);

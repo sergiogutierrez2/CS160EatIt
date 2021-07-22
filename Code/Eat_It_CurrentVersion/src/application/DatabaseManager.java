@@ -248,6 +248,55 @@ public class DatabaseManager {
 		}
 	}
 	
+	public boolean isInIngredientListTable(User user, String item_num)
+	{
+		System.out.println("check if user has item_num: " + item_num + ", any where in ingredient list table.");
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		String sql = "SELECT user_id, item_num FROM ingredientlist where user_id = ? and item_num = ?";
+		
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(sql);
+		
+			pstmt.setInt(1, Integer.parseInt(user.getAcc_id()));
+		
+			pstmt.setInt(2, Integer.parseInt(item_num));
+			
+			ResultSet result;
+			
+			result = pstmt.executeQuery();
+			
+			boolean containsIngredientFlag = false;
+			
+			while (result.next()) 
+			{
+				System.out.println("DBMS: Item Number exists!");
+				containsIngredientFlag = true;
+				int user_id = result.getInt("user_id");
+				int itemNum = result.getInt("item_num"); 
+				
+				System.out.println("From DBMS: " + user_id + " | " + itemNum);
+				
+			}
+			
+			pstmt.close();
+			result.close();
+			
+			if(!containsIngredientFlag)
+			{
+				System.out.println("From DBMS: " + user.getAcc_id() + " | " + item_num + " is not contained in DB");
+			}
+			
+			return containsIngredientFlag;
+		} catch (SQLException e) {
+			System.out.println("Failed to check ingredientlist for item num. error: " + e.getErrorCode());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public boolean containsRecipeIngredient(User user, String recipe_num, String item_num)
 	{
 		System.out.println("START checking if user's recipe num: " + recipe_num + ", contains ingredient: " + item_num);
@@ -511,6 +560,41 @@ public class DatabaseManager {
 		}
 	}
 	
+	public boolean insertRecipe(User user, Recipe recipe)
+	{
+		System.out.println("Inserting Recipe");
+
+		if( containsRecipeNum(user, recipe.getRecipe_num()) )
+		{
+			return false;
+		}
+
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		String sql = "insert into recipes (user_id, recipe_num, recipe_name, cook_time, prep_time, executable) values ('"
+				+ user.getAcc_id() + "', '" + recipe.getRecipe_num() + "', '" + recipe.getRecipe_name() + "', '" + recipe.getCook_time() + "', '" 
+				+ recipe.getPrep_time() + "', '" + recipe.getExecutable() + "')";
+
+		try {
+
+			Statement statement = connection.createStatement();
+
+			statement.execute(sql);
+
+			statement.close();
+
+			return true;
+
+		} catch (SQLException e) {
+			System.out.println("Failed to insert Recipe: " + e.getErrorCode());
+			e.printStackTrace();
+
+			return false;
+		}
+	}
+	
 	public void deleteRecipe(User user, String recipe_num)
 	{
 		System.out.println("Deleting recipe from recipe_num: " + recipe_num );
@@ -652,9 +736,19 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
+	public void updateExec()
+	{
+		//you need to get a list of the recipes:
+			//getCurrentRecipeList(User user)
+		
+		//get ingredient list:
+			//getCurrentInventory(User user)
+		
+		
+		
+	}
+	
 	public String autogenerateRecipeNum(User user)
 	{
 		System.out.println("autogenerateItemNum()");
@@ -891,6 +985,66 @@ public class DatabaseManager {
 		return ingredientList;
 	}
 	
+	/**
+	 * This method takes in a boolean and if true returns those recipes that are executable. If boolean is false
+	 * then returns the recipes are are not executable.
+	 * @param execOrNot This boolean determines whether the list is the executable recipes or not executable recipes.
+	 * @return Returns an ObservableList containing desired recipes.
+	 */
+	public ObservableList<Recipe> getExecutableRecipes(User user, boolean execOrNot)
+	{
+		System.out.println("Getting Executable Recipe List for user: " + user.getUsername());
+		ObservableList<Recipe> recipeList = FXCollections.observableArrayList();
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "SELECT * FROM recipes WHERE user_id = '" + user.getAcc_id() + "'";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				
+				Integer user_id = result.getInt("user_id"); //specified attribute name is "user_id" in sql db
+				Integer recipe_num = result.getInt("recipe_num"); //specified attribute name is "username" in sql db
+				String recipe_name = result.getString("recipe_name"); //specified attribute name is "pass_word" in sql db
+				String cook_time = result.getString("cook_time");
+				String prep_time = result.getString("prep_time");
+				Integer executable = result.getInt("executable");
+			
+				System.out.println(user_id + " | " + recipe_num + " | " + recipe_name
+									+ " | " + cook_time + " | " + prep_time
+									+ " | " + executable );
+				if(execOrNot)
+				{
+					if(executable.toString().equals("1"))
+					{
+						recipeList.add(new Recipe( recipe_num.toString(), recipe_name, cook_time, prep_time, executable.toString() ) );
+					}
+				}
+				else
+				{
+					if(executable.toString().equals("0"))
+					{
+						recipeList.add(new Recipe( recipe_num.toString(), recipe_name, cook_time, prep_time, executable.toString() ) );
+					}
+				}
+			}
+			
+			statement.close();
+			result.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return recipeList;
+	}
+	
 	public void printCredentials()
 	{
 		System.out.println("Printing Credentials");
@@ -920,6 +1074,14 @@ public class DatabaseManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void printRecipeObservableList(ObservableList<Recipe> recipeList)
+	{
+		for(Recipe tempR : recipeList)
+			{
+				System.out.println(tempR.toString());
+			}
 	}
 
 }

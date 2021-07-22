@@ -50,13 +50,13 @@
 }
 
 .table-row-cell:odd{
-    -fx-background-color: #ebf7ff;
+    -fx-background-color: #A2E8DD;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0.0em;
 }
 
 .table-row-cell:even{
-    -fx-background-color: #fffeeb;
+    -fx-background-color: #D6D1CD;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0.0em;
 }

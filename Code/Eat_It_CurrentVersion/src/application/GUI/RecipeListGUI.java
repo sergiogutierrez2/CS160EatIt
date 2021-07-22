@@ -1,6 +1,7 @@
 package application.GUI;
 
 import application.DatabaseManager;
+import application.Item;
 import application.Recipe;
 import application.User;
 import javafx.beans.value.ChangeListener;
@@ -63,6 +64,25 @@ public class RecipeListGUI {
 		    column0.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
 		    column0.setMinWidth(40);
 		    column0.setMaxWidth(40);
+		    column0.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
+	            @Override
+	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
+	                
+	            	// t.getNewValue() this is what needs to be filtered.
+	            	
+	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+	                
+	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+	                
+	                dbm.deleteRecipe( user, t.getRowValue().getRecipe_num() );
+	                
+	                dbm.insertRecipe( user, t.getRowValue().getRecipe_num(), t.getRowValue().getRecipe_name(),
+	                		t.getRowValue().getCook_time(), t.getRowValue().getPrep_time(), t.getRowValue().getExecutable() );	
+	                
+	                dbm.getCurrentInventory(user);
+	                
+	            }
+	        });
 		    
 		    
 		    TableColumn<Recipe, String> column1 = new TableColumn<>("Recipe Name");
@@ -70,6 +90,25 @@ public class RecipeListGUI {
 		    column1.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
 		    column1.setMinWidth(80);
 		    column1.setMaxWidth(80);
+		    column1.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
+	            @Override
+	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
+	                
+	            	// t.getNewValue() this is what needs to be filtered.
+	            	
+	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+	                
+	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+	                
+	                dbm.deleteRecipe( user, t.getRowValue().getRecipe_num() );
+	                
+	                dbm.insertRecipe( user, t.getRowValue().getRecipe_num(), t.getRowValue().getRecipe_name(),
+	                		t.getRowValue().getCook_time(), t.getRowValue().getPrep_time(), t.getRowValue().getExecutable() );	
+	                
+	                dbm.getCurrentInventory(user);
+	                
+	            }
+	        });
 		  
 		    //
 		    TableColumn<Recipe, String> column2 = new TableColumn<>("Cook Time");
@@ -77,6 +116,25 @@ public class RecipeListGUI {
 		    column2.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
 		    column2.setMinWidth(50);
 		    column2.setMaxWidth(50);
+		    column2.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
+	            @Override
+	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
+	                
+	            	// t.getNewValue() this is what needs to be filtered.
+	            	
+	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+	                
+	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+	                
+	                dbm.deleteRecipe( user, t.getRowValue().getRecipe_num() );
+	                
+	                dbm.insertRecipe( user, t.getRowValue().getRecipe_num(), t.getRowValue().getRecipe_name(),
+	                		t.getRowValue().getCook_time(), t.getRowValue().getPrep_time(), t.getRowValue().getExecutable() );	
+	                
+	                dbm.getCurrentInventory(user);
+	                
+	            }
+	        });
 		   
 		    
 		    TableColumn<Recipe, String> column3 = new TableColumn<>("Prep Time");
@@ -84,18 +142,56 @@ public class RecipeListGUI {
 		    column3.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
 		    column3.setMinWidth(50);
 		    column3.setMaxWidth(50);
+		    column3.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
+	            @Override
+	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
+	                
+	            	// t.getNewValue() this is what needs to be filtered.
+	            	
+	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+	                
+	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+	                
+	                dbm.deleteRecipe( user, t.getRowValue().getRecipe_num() );
+	                
+	                dbm.insertRecipe( user, t.getRowValue().getRecipe_num(), t.getRowValue().getRecipe_name(),
+	                		t.getRowValue().getCook_time(), t.getRowValue().getPrep_time(), t.getRowValue().getExecutable() );	
+	                
+	                dbm.getCurrentInventory(user);
+	                
+	            }
+	        });
 		    
-		    TableColumn<Recipe, String> column4 = new TableColumn<>("Exec?");
-		    column4.setCellValueFactory(new PropertyValueFactory("executable"));
-		    column4.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
-		    column4.setMinWidth(30);
-		    column4.setMaxWidth(30);
+//		    TableColumn<Recipe, String> column4 = new TableColumn<>("Exec?");
+//		    column4.setCellValueFactory(new PropertyValueFactory("executable"));
+//		    column4.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
+//		    column4.setMinWidth(30);
+//		    column4.setMaxWidth(30);
+//		    column4.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
+//	            @Override
+//	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
+//	                
+//	            	// t.getNewValue() this is what needs to be filtered.
+//	            	
+//	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+//	                
+//	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+//	                
+//	                dbm.deleteRecipe( user, t.getRowValue().getRecipe_num() );
+//	                
+//	                dbm.insertRecipe( user, t.getRowValue().getRecipe_num(), t.getRowValue().getRecipe_name(),
+//	                		t.getRowValue().getCook_time(), t.getRowValue().getPrep_time(), t.getRowValue().getExecutable() );	
+//	                
+//	                dbm.getCurrentInventory(user);
+//	                
+//	            }
+//	        });
 		    
 		    tableData = dbm.getCurrentRecipeList(user);
 		    
 		    tableView.getItems().addAll(tableData);
 		    
-		    tableView.getColumns().addAll(column0, column1, column2, column3, column4);
+		    tableView.getColumns().addAll(column0, column1, column2, column3);
 		    
 		    
 		    TextField addRecipeNumber = new TextField();
@@ -181,6 +277,15 @@ public class RecipeListGUI {
 		    Button addRecipeIngredients = new Button("Add\nIngredients");
 		    addRecipeIngredients.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    addRecipeIngredients.setCursor(Cursor.HAND);
+		    
+		    TextField searchRecipe = new TextField();
+		    searchRecipe.setPromptText("Search Recipe");
+		    searchRecipe.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    
+		    Button searchRecipebtn = new Button("Search");
+		    searchRecipebtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    searchRecipebtn.setCursor(Cursor.HAND);
+		    
 		    	    
 		    HBox hb = new HBox();
 		    hb.getChildren().addAll(addRecipeNumber, 
@@ -191,6 +296,12 @@ public class RecipeListGUI {
 		    hb_2.getChildren().addAll(addPrepTime);
 		    hb_2.setAlignment(Pos.CENTER);
 		    
+		    HBox hb_3 = new HBox();
+		    hb_3.getChildren().addAll(searchRecipe, searchRecipebtn);
+		    hb_3.setAlignment(Pos.CENTER);
+		    
+		    hb_3.setSpacing(5);
+		    
 		    hb_2.setSpacing(5);
 		    hb.setSpacing(5);
 		    
@@ -198,7 +309,7 @@ public class RecipeListGUI {
 		    hb_1.setAlignment(Pos.CENTER);
 		    hb_1.setSpacing(5);
 		    	    
-		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, tableView);
+		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, hb_3, tableView);
 		    vbox.setSpacing(5);
 		    vbox.setAlignment(Pos.CENTER);
 		    vbox.setBackground(null);
@@ -346,6 +457,22 @@ public class RecipeListGUI {
 		    		dbm.deleteRecipe(user, recipe.getRecipe_num());
 		    	}
 		    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+		    	
+		    	//this is where database needs to update ingredientlist tables and recipe steps tables.
+		    	//get recipe number of what was deleted.
+		    		//deleteIngedientList()
+		    		//dbm.deleteRecipeSteps(User user, String recipe_num)
+		    });
+		    
+		    searchRecipebtn.setOnAction(e -> 
+		    {
+		    	ObservableList<Recipe> tmpList = dbm.getCurrentRecipeList(user);
+		    	tableView.getItems().clear();
+		    	for(Recipe recipe : tmpList)
+		    	{
+		    		if (recipe.getRecipe_name().contains(searchRecipe.getText()) ) tableView.getItems().add(recipe);
+		    	}
+		    	//tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 		    });
 		    
 		    /* **********************************

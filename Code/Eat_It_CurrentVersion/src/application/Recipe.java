@@ -120,5 +120,19 @@ public class Recipe
 	{
 		return iList.getSize();
 	}
+	
+	@Override
+	public String toString()
+	{
+		String s = "";
+		s += "[";
+		s += this.getRecipe_num() + ", ";
+		s += this.getRecipe_name() + ", ";
+		s += this.getPrep_time() + ", ";
+		s += this.getCook_time() + ", ";
+		s += this.getExecutable() + "]";
+		
+		return s;
+	}
 
 }

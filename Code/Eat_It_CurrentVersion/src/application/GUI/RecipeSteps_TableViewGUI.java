@@ -5,8 +5,6 @@ import application.Item;
 import application.Recipe;
 import application.RecipeStep;
 import application.User;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,9 +22,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 public class RecipeSteps_TableViewGUI 
 {
@@ -103,7 +105,7 @@ public class RecipeSteps_TableViewGUI
 	            if (!newValue.matches("\\d*")) {
 	            	addStep.setText(newValue.replaceAll("[^\\d]", ""));
 	            }
-	            
+
 	            if (addStep.getText().length() > 3) {
 	                String s = addStep.getText().substring(0, 3);
 	                addStep.setText(s);
@@ -121,7 +123,7 @@ public class RecipeSteps_TableViewGUI
 	        @Override
 	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
 	            String newValue) {
-	        	
+
 	            if (addDesc.getText().length() > 140) {
 	                String s = addDesc.getText().substring(0, 140);
 	                addDesc.setText(s);
@@ -129,11 +131,14 @@ public class RecipeSteps_TableViewGUI
 	        }
 	    });
 	    
+	    errorMessage = new Text("");
+		errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
+		errorMessage.setFill(Color.RED); 
 	    
 	    
 	    HBox hbox = new HBox(addButton, deleteButton);
 	    hbox.setAlignment(Pos.CENTER);
-	    VBox addStep_VBox = new VBox(hbox, addStep, addDesc);
+	    VBox addStep_VBox = new VBox(errorMessage, hbox, addStep, addDesc);
 	    addStep_VBox.setAlignment(Pos.CENTER);
 	   
 	    

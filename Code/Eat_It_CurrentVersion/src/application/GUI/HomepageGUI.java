@@ -48,8 +48,10 @@ public class HomepageGUI {
 		VBox entireHomePage_VBox = new VBox();
 		entireHomePage_VBox.getChildren().add(hbox_TopLogo_Logout);
 		
-		InventoryListGUI inventoryListGUI = new InventoryListGUI(user);
+		ExecutableAndNotExecGUI_View executableAndNotExecGUI_View = new ExecutableAndNotExecGUI_View(user);
+		InventoryListGUI inventoryListGUI = new InventoryListGUI(user, executableAndNotExecGUI_View);
 		RecipeListGUI recipeListGUI = new RecipeListGUI(user, inventoryListGUI.getTableView());
+		
 		
 		VBox vbox_recipeListGUI = recipeListGUI.getVBox();
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();
@@ -60,6 +62,11 @@ public class HomepageGUI {
 		
 		vbox_inventoryListGUI.setMaxWidth(375);
 		vbox_inventoryListGUI.setMaxHeight(600);
+		
+		Rectangle mainBackground = new Rectangle(1320,770);
+		mainBackground.setArcHeight(40.0);
+		mainBackground.setArcWidth(40.0);
+		mainBackground.setFill(Color.web("#CDD3CE",1));
 		
 		Rectangle inventoryList_background = new Rectangle(400,550);
 		inventoryList_background.setArcHeight(40.0);
@@ -84,12 +91,17 @@ public class HomepageGUI {
 		TitledPane recipesListPane = new TitledPane("Recipe List", recipeListStackPane);
 		recipesListPane.setMinWidth(400);
 		
-		HBox hbox = new HBox(ingredientsPane, recipesListPane);
+		TitledPane execView = executableAndNotExecGUI_View.getTitledPane();
+		
+		HBox hbox = new HBox(ingredientsPane, recipesListPane, execView);
 		hbox.setPadding(new Insets(10, 0, 0, 10));
 		hbox.setSpacing(5);
 		entireHomePage_VBox.getChildren().add(hbox);
 		
-		homepageScene = new Scene(entireHomePage_VBox, mainWidth, mainHeight);
+		StackPane mainPane = new StackPane(mainBackground, entireHomePage_VBox);
+		
+		homepageScene = new Scene(mainPane, mainWidth, mainHeight);
+	
 		
 		URL url = this.getClass().getResource("/application/application.css");
 		System.out.println(url.toString());

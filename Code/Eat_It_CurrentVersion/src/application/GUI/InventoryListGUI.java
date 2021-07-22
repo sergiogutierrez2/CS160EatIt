@@ -1,8 +1,5 @@
 package application.GUI;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import application.DatabaseManager;
 import application.Item;
 import application.User;
@@ -17,8 +14,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -37,6 +32,10 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.util.StringConverter;
 
 public class InventoryListGUI {
@@ -49,9 +48,10 @@ public class InventoryListGUI {
 	    private ObservableList<Item> tableData;
 	    private TableView tableView;
 	    private User user;
-	    
-	    public InventoryListGUI(User user) {
+	    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
+	    public InventoryListGUI(User user, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
+	    	this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
 	    	createTable();
 	    }
 	    
@@ -75,16 +75,35 @@ public class InventoryListGUI {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
 	                
-	                t.getRowValue().setItem_num(t.getNewValue());
-	                
-	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
-	                
-	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
-	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
-	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
-	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
-	                
-	                dbm.getCurrentInventory(user);
+	            	// t.getNewValue() this is what needs to be filtered.
+	            	System.out.println("New Value:" + t.getNewValue().toString());
+	            	System.out.println("Old Value:" + t.getOldValue().toString());
+	            	
+	            	if(dbm.isInIngredientListTable(user, t.getRowValue().getItem_num()) || dbm.containsItemNum(user, t.getNewValue()) )
+	            	{
+	            		//dont allow change!
+	            		System.out.println("Dont Change!");
+	            		t.getRowValue().setItem_num(t.getOldValue());
+	            		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+	            	}
+	            	else {
+	            		
+	            	
+	            	
+		                t.getRowValue().setItem_num(t.getNewValue()); //changes cell object's value to new entry
+		                
+		                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+		                
+		                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
+		                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
+		                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
+		                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
+		                
+		                dbm.getCurrentInventory(user);
+		                
+		                executableAndNotExecGUI_View.updateTables();
+		                
+	            	}
 	            }
 	        });
 		    
@@ -107,6 +126,8 @@ public class InventoryListGUI {
 	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
 	                
 	                dbm.getCurrentInventory(user);
+	                
+	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		  
@@ -129,6 +150,8 @@ public class InventoryListGUI {
 	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
 	                
 	                dbm.getCurrentInventory(user);
+	                
+	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		    
@@ -151,6 +174,8 @@ public class InventoryListGUI {
 	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
 	                
 	                dbm.getCurrentInventory(user);
+	                
+	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		    
@@ -173,6 +198,8 @@ public class InventoryListGUI {
 	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
 	                
 	                dbm.getCurrentInventory(user);
+	                
+	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		    
@@ -195,6 +222,8 @@ public class InventoryListGUI {
 	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
 	                
 	                dbm.getCurrentInventory(user);
+	                
+	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		  
@@ -236,28 +265,24 @@ public class InventoryListGUI {
 		        }
 		    });
 		    
-		   /* TextField addExpirationDate = new TextField();
-		    addExpirationDate.setPromptText("Expiration Date");
-		    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-		    addExpirationDate.textProperty().addListener(new ChangeListener<String>() {
-		        @Override
-		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
-		            String newValue) {
-		        	
-		        	if (!newValue.matches("\\d") && !newValue.matches("/")) {
-		            	addExpirationDate.setText(newValue.replaceAll("[^\\d/]", ""));
-		            }
-
-		            if (newValue.matches("\\d")) {
-		            	addExpirationDate.setText(newValue.replaceAll(newValue, newValue + "/"));
-		            } 
-		        	
-		            if (addExpirationDate.getText().length() > 8) {
-		                String s = addExpirationDate.getText().substring(0, 8);
-		                addExpirationDate.setText(s);
-		            } 	
-		        }
-		    }); */
+//		    TextField addExpirationDate = new TextField();
+//		    addExpirationDate.setPromptText("Expiration Date");
+//		    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+//		    addExpirationDate.textProperty().addListener(new ChangeListener<String>() {
+//		        @Override
+//		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+//		            String newValue) {
+//		             
+//		            if (!newValue.matches("\\d") && !newValue.matches("/")) {
+//		            	addExpirationDate.setText(newValue.replaceAll("[^\\d/]", ""));
+//		            }
+//		        	
+//		            if (addExpirationDate.getText().length() > 8) {
+//		                String s = addExpirationDate.getText().substring(0, 8);
+//		                addExpirationDate.setText(s);
+//		            } 		            
+//		        }
+//		    });
 		    
 		    DatePicker addExpirationDate;
 		    addExpirationDate = new DatePicker();
@@ -344,6 +369,14 @@ public class InventoryListGUI {
 		    Button updateButton = new Button("Update");
 		    updateButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    updateButton.setCursor(Cursor.HAND);
+		    
+		    TextField searchItem = new TextField();
+		    searchItem.setPromptText("Search Inventory");
+		    searchItem.setFont(Font.font("Arial", FontWeight.BOLD, 10));
+		    
+		    Button searchItembtn = new Button("Search");
+		    searchItembtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    searchItembtn.setCursor(Cursor.HAND);
 		    	    
 		    HBox hb = new HBox();
 		    hb.getChildren().addAll(addItemNum, 
@@ -358,6 +391,11 @@ public class InventoryListGUI {
 		    
 		    hb_2.setAlignment(Pos.CENTER);
 		    
+		    HBox hb_3 = new HBox();
+		    hb_3.getChildren().addAll(searchItem, searchItembtn);
+		    hb_3.setAlignment(Pos.CENTER);
+		    hb_3.setSpacing(5);
+		    
 		    hb_2.setSpacing(5);
 		    hb.setSpacing(5);
 		    
@@ -365,7 +403,7 @@ public class InventoryListGUI {
 		    hb_1.setAlignment(Pos.CENTER);
 		    hb_1.setSpacing(5);
 		    	    
-		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, tableView);
+		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, hb_3,  tableView);
 		    vbox.setSpacing(5);
 		    vbox.setAlignment(Pos.CENTER);
 		    vbox.setBackground(null);
@@ -400,7 +438,7 @@ public class InventoryListGUI {
 	    			{
 	    				String item_num = addItemNum.getText();
 	    				String item_name = addItemName.getText(), 
-	    						item_Exp = addExpirationDate.getEditor().getText(),
+	    						item_Exp = addExpirationDate.getEditor().getText(), 
 	    						item_Quantity_Type = addAmount_Type.getText();
 	    				String item_Par = addPARAmount.getText(), 
 	    						item_Quantity = addQuantity.getText();
@@ -419,7 +457,7 @@ public class InventoryListGUI {
 		    				tableView.getItems().add(tmpItem);
 		    				addItemNum.clear();
 		    				addItemName.clear();
-			    			addExpirationDate.setValue(null);
+		    				addExpirationDate.setValue(null);
 			    			addPARAmount.clear();
 			    			addQuantity.clear();
 			    			addAmount_Type.clear();
@@ -430,6 +468,7 @@ public class InventoryListGUI {
 		    				errorMessage.setText("Failed to insert! Change Item Number!");
 		    			}
 	    			}
+	    			executableAndNotExecGUI_View.updateTables();
 	    		}
 		    });
 		    
@@ -441,17 +480,21 @@ public class InventoryListGUI {
 		    		dbm.deleteIngredient(user, item.getItem_num());
 		    	}
 		    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+		    	
+		    	executableAndNotExecGUI_View.updateTables();
 		    });
 		    
-		    deleteButton.setOnAction(e -> 
+		    searchItembtn.setOnAction(e -> 
 		    {
-		    	ObservableList<Item> tmpList = tableView.getSelectionModel().getSelectedItems();
+		    	ObservableList<Item> tmpList = dbm.getCurrentInventory(user);
+		    	tableView.getItems().clear();
 		    	for(Item item : tmpList)
 		    	{
-		    		dbm.deleteIngredient(user, item.getItem_num());
+		    		if (item.getItem_name().contains(searchItem.getText()) ) tableView.getItems().add(item);
 		    	}
-		    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+		    	//tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 		    });
+		    
 		    
 		    /* **********************************
 		     * Event Listeners End
