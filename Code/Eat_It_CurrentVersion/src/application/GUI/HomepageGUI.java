@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 
 public class HomepageGUI {
 	
-	private double mainWidth = 1280, mainHeight = 720;
+	private double mainWidth = 1380, mainHeight = 720;
 	private Scene homepageScene;
 	Button logoutBtn;
 	private User user;

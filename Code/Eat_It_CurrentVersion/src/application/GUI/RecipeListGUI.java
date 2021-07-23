@@ -96,7 +96,7 @@ public class RecipeListGUI {
 	                
 	            	// t.getNewValue() this is what needs to be filtered.
 	            	
-	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+	                t.getRowValue().setRecipe_name(t.getNewValue()); //changes cell object's value to new entry
 	                
 	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
 	                
@@ -122,7 +122,7 @@ public class RecipeListGUI {
 	                
 	            	// t.getNewValue() this is what needs to be filtered.
 	            	
-	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+	                t.getRowValue().setCook_time(t.getNewValue()); //changes cell object's value to new entry
 	                
 	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
 	                
@@ -148,7 +148,7 @@ public class RecipeListGUI {
 	                
 	            	// t.getNewValue() this is what needs to be filtered.
 	            	
-	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
+	                t.getRowValue().setPrep_time(t.getNewValue()); //changes cell object's value to new entry
 	                
 	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
 	                

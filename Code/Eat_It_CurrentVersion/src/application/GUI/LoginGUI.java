@@ -15,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,7 +35,8 @@ public class LoginGUI {
 	private RegistrationGUI registrationGUI;
 	private Scene login_scene;
 	private Text errorMessageLogin;
-	private TextField userNameField, passwordField;
+	private TextField userNameField;
+	private PasswordField passwordField;
 	private Button signUpBtn, loginBtn;
 	private String jdbcUrl3 = "jdbc:sqlite:schema_v1.db";
 	
@@ -70,7 +72,7 @@ public class LoginGUI {
 	        }
 	    });
 
-		passwordField = new TextField();
+		passwordField = new PasswordField();
 		passwordField.setPromptText("Enter Password");
 		passwordField.setPrefWidth(200);
 		passwordField.setMaxWidth(200);

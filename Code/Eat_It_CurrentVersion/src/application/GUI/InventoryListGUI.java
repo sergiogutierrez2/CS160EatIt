@@ -366,9 +366,9 @@ public class InventoryListGUI {
 		    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    deleteButton.setCursor(Cursor.HAND);
 		    
-		    Button updateButton = new Button("Update");
-		    updateButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
-		    updateButton.setCursor(Cursor.HAND);
+//		    Button updateButton = new Button("Update");
+//		    updateButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+//		    updateButton.setCursor(Cursor.HAND);
 		    
 		    TextField searchItem = new TextField();
 		    searchItem.setPromptText("Search Inventory");
@@ -399,7 +399,7 @@ public class InventoryListGUI {
 		    hb_2.setSpacing(5);
 		    hb.setSpacing(5);
 		    
-		    HBox hb_1 = new HBox(autoGenItemNumberBtn, addButton, deleteButton, updateButton);
+		    HBox hb_1 = new HBox(autoGenItemNumberBtn, addButton, deleteButton);
 		    hb_1.setAlignment(Pos.CENTER);
 		    hb_1.setSpacing(5);
 		    	    

@@ -8,19 +8,28 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class RegistrationGUI {
 	
 	private DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 	private Scene signUp_scene;
-	private TextField userNameField, passwordField1, passwordField2;
+	private TextField userNameField;
+	private PasswordField passwordField1;
+	private PasswordField passwordField2;
+	
 	private Button cancelBtn, registerBtn;
 	private String jdbcUrl3 = "jdbc:sqlite:schema_v1.db";
 	
@@ -51,7 +60,7 @@ public class RegistrationGUI {
 	        }
 	    });
 
-		passwordField1 = new TextField();
+		passwordField1 = new PasswordField();
 		passwordField1.setPromptText("Enter New Password");
 		passwordField1.setPrefWidth(200);
 		passwordField1.setMaxWidth(200);
@@ -71,7 +80,7 @@ public class RegistrationGUI {
 	        }
 	    });
 		
-		passwordField2 = new TextField();
+		passwordField2 = new PasswordField();
 		passwordField2.setPromptText("Re-enter New Password");
 		passwordField2.setPrefWidth(200);
 		passwordField2.setMaxWidth(200);
@@ -103,15 +112,20 @@ public class RegistrationGUI {
 		Image img_signUp = new Image(getClass().getResourceAsStream("/application/resources/Eat_It_Logo_300px.png"));
 		ImageView imgView_signUp = new ImageView(img_signUp);
 	
+		
 		HBox cancel_registerButton_HBox = new HBox();
 		cancel_registerButton_HBox.getChildren().addAll(cancelBtn, registerBtn);
 		HBox.setMargin(cancel_registerButton_HBox, new Insets(30, 20, 10, 10));
 		cancel_registerButton_HBox.setSpacing(10d);
 		cancel_registerButton_HBox.setAlignment(Pos.CENTER);
+		
+		Text errorMessage = new Text("");
+		errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
+		errorMessage.setFill(Color.RED); 
 
 		/* add all other members vertically */
 		VBox inputFields_VBox_signUp = new VBox();
-		inputFields_VBox_signUp.getChildren().addAll(imgView_signUp, userNameField, passwordField1, passwordField2, cancel_registerButton_HBox);
+		inputFields_VBox_signUp.getChildren().addAll(imgView_signUp, userNameField, passwordField1, passwordField2, errorMessage, cancel_registerButton_HBox);
 		inputFields_VBox_signUp.setAlignment(Pos.CENTER);
 		inputFields_VBox_signUp.setSpacing(10d);
 
@@ -130,10 +144,18 @@ public class RegistrationGUI {
 			System.out.println("Cancel Button Pressed");
 			stage.setScene(loginGUI.getLoginScene());
 			stage.setTitle("Login Page");
+			errorMessage.setText("");
+			userNameField.clear();
+			passwordField1.clear();
+			passwordField2.clear();
 			
 		});
 		
 		registerBtn.setOnAction(e->{
+			
+			errorMessage.setText("");
+			
+			
 			System.out.println("register");
 			
 			String username = getUserNameString();
@@ -144,17 +166,27 @@ public class RegistrationGUI {
 								+ "password: " + pass_word.toString() + "\n"
 								+ "reEnterPass: " + reEnterPass.toString());
 				
-			dbm.insertCredentials(username, pass_word, reEnterPass);	
-			dbm.printCredentials();
-			dbm.isCredentialsValid(username, pass_word); //sets the User user variable
 			
-			HomepageGUI homepageGUI = new HomepageGUI(stage, dbm.getUser(), loginGUI.getLoginScene());
-			stage.setScene(homepageGUI.getHomepageGUIscene());
-			stage.setTitle("Homepage");
+			if(dbm.insertCredentials(username, pass_word, reEnterPass))
+			{
+				dbm.printCredentials();
+				dbm.isCredentialsValid(username, pass_word); //sets the User user variable
+				
+				HomepageGUI homepageGUI = new HomepageGUI(stage, dbm.getUser(), loginGUI.getLoginScene());
+				stage.setScene(homepageGUI.getHomepageGUIscene());
+				stage.setTitle("Homepage");
+				
+				errorMessage.setText("");
+				userNameField.clear();
+				passwordField1.clear();
+				passwordField2.clear();
+			}
+			else
+			{
+				errorMessage.setText("Username already taken: " + username);
 			
-			userNameField.clear();
-			passwordField1.clear();
-			passwordField2.clear();
+			}
+			
 			
 
 		});

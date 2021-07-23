@@ -52,7 +52,7 @@ public class RecipeIngredientList_TableViewGUI
 	public void createTable() 
     {
 		tableView = new TableView();
-	    tableView.setEditable(false);
+	    tableView.setEditable(true);
 	    tableView.setBackground(null);
 	    
 	    TableViewSelectionModel<RecipeItem> selectionModel = tableView.getSelectionModel();
@@ -65,18 +65,51 @@ public class RecipeIngredientList_TableViewGUI
 	    column0.setCellFactory(TextFieldTableCell.<RecipeItem>forTableColumn());
 	    column0.setMinWidth(50);
 	    column0.setMaxWidth(50);
+	    column0.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<RecipeItem, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<RecipeItem, String> t) {
+                t.getRowValue().setRecipe_num(t.getOldValue());
+        		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+            }
+        });
 	    
 	    TableColumn<RecipeItem, String> column1 = new TableColumn<>("Ingredient Name");
 	    column1.setCellValueFactory(new PropertyValueFactory<>("item_name"));
 	    column1.setCellFactory(TextFieldTableCell.<RecipeItem>forTableColumn());
 	    column1.setMinWidth(100);
 	    column1.setMaxWidth(100);
+	    column1.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<RecipeItem, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<RecipeItem, String> t) {
+                t.getRowValue().setItem_name(t.getOldValue());
+        		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+            }
+        });
 	  
 	    TableColumn<RecipeItem, String> column2 = new TableColumn<>("Item Quantity");
 	    column2.setCellValueFactory(new PropertyValueFactory<>("item_quantity"));
 	    column2.setCellFactory(TextFieldTableCell.<RecipeItem>forTableColumn());
 	    column2.setMinWidth(90);
 	    column2.setMaxWidth(90);
+	    column2.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<RecipeItem, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<RecipeItem, String> t) {
+                
+            	// t.getNewValue() this is what needs to be filtered.
+            	
+                t.getRowValue().setItem_quantity(t.getNewValue()); //changes cell object's value to new entry
+                
+                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+                
+                dbm.deleteRecipeIngredient(user, t.getRowValue().getRecipe_num(), t.getRowValue().getItem_num());
+                
+                dbm.insertRecipeIngredient(user, t.getRowValue().getRecipe_num(), t.getRowValue().getItem_num(), 
+                							t.getRowValue().getItem_name(), t.getRowValue().getItem_quantity());
+                
+                dbm.getCurrentInventory(user);
+              
+            }
+        });
 	   
 	    //make a dbm function to get a Olist of the ingredients for the recipe
 	    tableData = dbm.getRecipesIngredientList(user, recipe);
