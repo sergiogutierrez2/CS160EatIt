@@ -3,10 +3,8 @@ package application.GUI;
 import application.DatabaseManager;
 import application.Item;
 import application.User;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,16 +12,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView.TableViewSelectionModel;
-import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -32,11 +30,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.util.StringConverter;
 
 public class InventoryListGUI {
 	
@@ -49,9 +42,12 @@ public class InventoryListGUI {
 	    private TableView tableView;
 	    private User user;
 	    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
+	    boolean selected;
+	    
 	    public InventoryListGUI(User user, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
 	    	this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
+	    	selected = false;
 	    	createTable();
 	    }
 	    
@@ -60,6 +56,24 @@ public class InventoryListGUI {
 			tableView = new TableView();
 		    tableView.setEditable(true);
 		    tableView.setBackground(null);
+		    
+		    tableView.setRowFactory(new Callback<TableView<Item>, TableRow<Item>>() {  
+		        @Override  
+		        public TableRow<Item> call(TableView<Item> tableView2) {  
+		            final TableRow<Item> row = new TableRow<>();  
+		            row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {  
+		                @Override  
+		                public void handle(MouseEvent event) {  
+		                    final int index = row.getIndex();  
+		                    if (index >= 0 && index < tableView.getItems().size() && tableView.getSelectionModel().isSelected(index)  ) {
+		                        tableView.getSelectionModel().clearSelection();
+		                        event.consume();  
+		                    }  
+		                }  
+		            });  
+		            return row;  
+		        }  
+		    });  
 		    
 		    TableViewSelectionModel<Item> selectionModel = tableView.getSelectionModel();
 		    selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
@@ -78,6 +92,9 @@ public class InventoryListGUI {
 	            	// t.getNewValue() this is what needs to be filtered.
 	            	System.out.println("New Value:" + t.getNewValue().toString());
 	            	System.out.println("Old Value:" + t.getOldValue().toString());
+	            	
+	            	
+	            	
 	            	
 	            	if(dbm.isInIngredientListTable(user, t.getRowValue().getItem_num()) || dbm.containsItemNum(user, t.getNewValue()) )
 	            	{
@@ -106,6 +123,7 @@ public class InventoryListGUI {
 	            	}
 	            }
 	        });
+		    
 		    
 		    TableColumn<Item, String> column1 = new TableColumn<>("Item Name");
 		    column1.setCellValueFactory(new PropertyValueFactory<>("item_name"));

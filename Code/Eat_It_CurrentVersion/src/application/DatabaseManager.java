@@ -6,7 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -1045,6 +1048,100 @@ public class DatabaseManager {
 		return recipeList;
 	}
 	
+	
+	/**
+	 * This method takes in a boolean and if true returns those recipes that are executable. If boolean is false
+	 * then returns the recipes are are not executable.
+	 * @param execOrNot This boolean determines whether the list is the executable recipes or not executable recipes.
+	 * @return Returns an ObservableList containing desired recipes.
+	 */
+	public void updateExecutableRecipes(User user)
+	{
+		System.out.println("Updating Executable Recipe List for user: " + user.getUsername());
+		ObservableList<Recipe> recipeList = FXCollections.observableArrayList();
+		ObservableList<RecipeItem> ingredientList = FXCollections.observableArrayList();
+		
+		ObservableList<Item> userItems = FXCollections.observableArrayList();
+		userItems = getCurrentInventory(user);
+		//variable to keep track of executable
+		Boolean isExecutable = false;
+		
+		//accessing today's date
+		Calendar today = Calendar.getInstance();
+		today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
+		Date todayDate = today.getTime();
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+			recipeList = getCurrentRecipeList(user);
+			try
+			{
+			Statement statement = connection.createStatement();	
+				for (Recipe currRecip: recipeList) 
+				{
+					ingredientList = getRecipesIngredientList(user, currRecip);//all the ingredients for that recipe
+					
+					for (RecipeItem currRecipeItem : ingredientList) 
+					{
+						//userItems = inventoryList for that user declared above
+						for (Item userItem : userItems)
+						{
+						
+							// creating a date object for expiration date
+							Date date1 = new Date();
+							try {
+								date1 = new SimpleDateFormat("MM/DD/yyyy").parse(userItem.getItem_Exp());
+								} 
+							catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								} 
+							
+							  if( Integer.parseInt(currRecipeItem.getItem_num()) == Integer.parseInt(userItem.getItem_num())) 
+								{
+									if ( Integer.parseInt(currRecipeItem.getItem_quantity()) < Integer.parseInt( userItem.getItem_Quantity()) 
+																		&& date1.compareTo(todayDate) < 1  ) //todayDate = today's date
+									{
+										
+										isExecutable = true;
+									}
+									else
+									{
+										isExecutable = false;
+										currRecip.addItemToMissingList(currRecipeItem);
+									}
+								}
+						}
+					
+					}
+					
+					if ( isExecutable ) 
+					{
+						String sql_Ex = "UPDATE recipes SET executable = '1' WHERE recipe_num = '" + currRecip.getRecipe_num()+"'";
+						statement.executeUpdate(sql_Ex);
+					}	
+					else
+					{	
+						String sql_Ex = "UPDATE recipes SET executable = '0' WHERE recipe_num = '" + currRecip.getRecipe_num()+"'";
+						statement.executeUpdate(sql_Ex);
+					}
+						
+					statement.close();
+				
+				}
+			}
+				
+				catch (SQLException e) 
+					{
+						e.printStackTrace();
+						}
+			
+			
+			return;
+	}
 	public void printCredentials()
 	{
 		System.out.println("Printing Credentials");

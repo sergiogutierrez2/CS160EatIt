@@ -14,12 +14,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -27,6 +29,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 
 public class ExecutableTableGUI {
 	
@@ -56,6 +59,23 @@ public class ExecutableTableGUI {
 	    selectionModel.setSelectionMode(SelectionMode.SINGLE);
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
 
+	    tableView.setRowFactory(new Callback<TableView<Recipe>, TableRow<Recipe>>() {  
+	        @Override  
+	        public TableRow<Recipe> call(TableView<Recipe> tableView2) {  
+	            final TableRow<Recipe> row = new TableRow<>();  
+	            row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {  
+	                @Override  
+	                public void handle(MouseEvent event) {  
+	                    final int index = row.getIndex();  
+	                    if (index >= 0 && index < tableView.getItems().size() && tableView.getSelectionModel().isSelected(index)  ) {
+	                        tableView.getSelectionModel().clearSelection();
+	                        event.consume();  
+	                    }  
+	                }  
+	            });  
+	            return row;  
+	        }  
+	    });  
 	    // COlUMNS
 	    TableColumn<Recipe, String> column0 = new TableColumn<>("Recipe #");
 	    column0.setCellValueFactory(new PropertyValueFactory<>("recipe_num"));

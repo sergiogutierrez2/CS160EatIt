@@ -156,6 +156,11 @@ public class RecipeIngredientList_TableViewGUI
 	     * ********************************** */
 	}
     
+    public TableView getTableView()
+    {
+    	return tableView;
+    	
+    }
     public Scene getScene()
     {
     	return scene;
