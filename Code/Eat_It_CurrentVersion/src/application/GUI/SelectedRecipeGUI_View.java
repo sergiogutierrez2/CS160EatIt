@@ -1,7 +1,10 @@
 package application.GUI;
 
+import java.util.ArrayList;
+
 import application.DatabaseManager;
 import application.Recipe;
+import application.RecipeItem;
 import application.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -43,21 +46,25 @@ public class SelectedRecipeGUI_View {
         
         Text missingIngTitle = new Text("Missing Ingredients:");
         
-        //Recipe.missingItemList
-        // loop the itemlist and add the items to a String
-        // 		S += item.name + ", ";
+       
         
-        // 		Item1(Needs quantity), Item2, Item3, Item4
-        
-//        for(String missingItem : recipe.missingList.get)
-//        {
-//        	
-//        }
-//        TextArea ta = new TextArea();
+        ArrayList<RecipeItem> missingList = dbm.getMissingIngredientListForRecipe(user, recipe);
+       
+        String missingItemListStr = "";
+        for(RecipeItem missingItem : missingList)
+        {
+        	missingItemListStr += missingItem.getItem_name() + "(missing: " + missingItem.getItem_quantity() + ")\n";
+        }
+        TextArea ta = new TextArea();  
+        ta.setEditable(false);
+        ta.setText(missingItemListStr);
+        ta.setWrapText(true);
+        ta.setMaxWidth(200);
+        ta.setMaxHeight(200);
         
         recipeNameTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.ITALIC, 20));
         
-        VBox mainVBox = new VBox(recipeNameTitle,mainHBox,missingIngTitle);
+        VBox mainVBox = new VBox(recipeNameTitle,mainHBox,missingIngTitle, ta);
         mainVBox.setAlignment(Pos.CENTER);
         mainHBox.setSpacing(50);
         

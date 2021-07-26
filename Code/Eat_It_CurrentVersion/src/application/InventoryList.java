@@ -38,4 +38,9 @@ public class InventoryList{
 		return list.size();
 	}
 	
+	public ArrayList<RecipeItem> getList()
+	{
+		return list;
+	}
+	
 }

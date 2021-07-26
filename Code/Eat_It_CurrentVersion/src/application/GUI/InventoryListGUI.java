@@ -466,9 +466,9 @@ public class InventoryListGUI {
 	    									+ ", amountType: " + item_Quantity_Type);
 	    			
 	    				Item tmpItem = new Item(item_num, item_name, item_Exp, item_Par, item_Quantity, item_Quantity_Type);
+		    			tmpItem.setItem_Exp(item_Exp);
 		    			
-		    			
-		    			Boolean successfulInsertion = dbm.insertIngredient(user, item_num, item_name, item_Exp, item_Par, item_Quantity, item_Quantity_Type);
+		    			Boolean successfulInsertion = dbm.insertIngredient(user, item_num, item_name, tmpItem.getItem_Exp(), item_Par, item_Quantity, item_Quantity_Type);
 		    		
 		    			if(successfulInsertion)
 		    			{

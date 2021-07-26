@@ -42,6 +42,7 @@ public class ExecutableTableGUI {
     private TableView tableView;
     private User user;
     private boolean execOrNot;
+    TableViewSelectionModel<Recipe> selectionModel;
     
     public ExecutableTableGUI(User user, boolean execOrNot) {
     	this.user = user;
@@ -55,13 +56,15 @@ public class ExecutableTableGUI {
 	    tableView.setEditable(false);
 	    tableView.setBackground(null);
 	    
-	    TableViewSelectionModel<Recipe> selectionModel = tableView.getSelectionModel();
+	    selectionModel = tableView.getSelectionModel();
 	    selectionModel.setSelectionMode(SelectionMode.SINGLE);
+	    
+	    
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
 
 	    tableView.setRowFactory(new Callback<TableView<Recipe>, TableRow<Recipe>>() {  
 	        @Override  
-	        public TableRow<Recipe> call(TableView<Recipe> tableView2) {  
+	        public TableRow<Recipe> call(TableView<Recipe> tableView) {  
 	            final TableRow<Recipe> row = new TableRow<>();  
 	            row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {  
 	                @Override  
@@ -142,6 +145,17 @@ public class ExecutableTableGUI {
     	return null;
     }
     
+    public Recipe getSelectedRecipe()
+    {
+    	if(selectionModel.isEmpty())
+    	{
+    		return null;
+    	}
+    	else
+    	{
+    		return selectionModel.getSelectedItem();
+    	}
+    }
     
     
     public TableView getTableView()

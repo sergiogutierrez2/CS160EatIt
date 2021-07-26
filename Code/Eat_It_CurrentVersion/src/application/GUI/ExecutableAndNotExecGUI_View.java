@@ -78,27 +78,31 @@ public class ExecutableAndNotExecGUI_View
             
                 
             
-                ObservableList<Recipe> tmpList = executableTable.getTableView().getSelectionModel().getSelectedItems();
-                if (tmpList == null) 
-                    tmpList = not_executableTable.getTableView().getSelectionModel().getSelectedItems();
+            Recipe executableRecipe = executableTable.getSelectedRecipe();
+            Recipe not_executableRecipe = not_executableTable.getSelectedRecipe();
+            
+            if(executableRecipe != null && not_executableRecipe != null)
+            {
+            	 errorMessage.setText("Please only Select One Recipe Either List.");
+            }
+            else if(executableRecipe == null && not_executableRecipe == null)
+            {
+            	errorMessage.setText("Select One Recipe from Either List");
+            }
+            else
+            {
+            	//we know one recipe was selected
+            	currentRecipe = (executableRecipe == null)? not_executableRecipe : executableRecipe;
+            	
+                Stage showSelectedRecipe = new Stage();
+                SelectedRecipeGUI_View popUpMenu = new SelectedRecipeGUI_View(user, currentRecipe);
                 
-                for(Recipe recipe : tmpList)
-                {
-                    currentRecipe = recipe;
-                }
-                if(currentRecipe == null)
-                {
-                    errorMessage.setText("Select a recipe");
-                }
-                else 
-                {
-                    Stage showSelectedRecipe = new Stage();
-                    SelectedRecipeGUI_View popUpMenu = new SelectedRecipeGUI_View(user, currentRecipe);
-                    
-                    showSelectedRecipe.setScene(popUpMenu.getScene());
-                    showSelectedRecipe.setTitle("Selected Recipe");
-                    showSelectedRecipe.show();
-                }
+                showSelectedRecipe.setScene(popUpMenu.getScene());
+                showSelectedRecipe.setTitle("Selected Recipe");
+                showSelectedRecipe.show();
+            }
+                
+                
             });
         
     

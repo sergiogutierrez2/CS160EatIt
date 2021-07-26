@@ -47,6 +47,9 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try 
 		{
+			DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+			dbm.connectToDatabase();
+			
 			LoginGUI loginGUI = new LoginGUI(primaryStage);
 			
 			RegistrationGUI registrationGUI = new RegistrationGUI(primaryStage, loginGUI);

@@ -57,7 +57,7 @@ public class RecipeItem
 	{  	  
 		return ("\n[item_num: " + recipe_num
 				+ " itemName: " + item_name 
-				+  ", ExpDate: " + item_quantity + "]");
+				+  ", item_quantity: " + item_quantity + "]");
 	}
 	
 	

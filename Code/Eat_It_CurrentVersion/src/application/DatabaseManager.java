@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javafx.collections.FXCollections;
@@ -18,7 +20,7 @@ public class DatabaseManager {
 	
 	private Connection connection;
 	private boolean connectedStatus; 
-	private String jdbcUrl = "jdbc:sqlite:schema_v1.db";
+	private String jdbcUrl = "jdbc:sqlite:" + System.getProperty("user.dir") +  File.separator + "src" + File.separator + "application" + File.separator + "db" + File.separator + "schema_v1.db";
 	private static DatabaseManager singleDBMInstance = new DatabaseManager();
 	private User user;
 	
@@ -59,12 +61,12 @@ public class DatabaseManager {
 			System.out.println("Already connected");
 			return true;
 		}
-		if( !( jdbcUrl.equals("jdbc:sqlite:schema_v1.db") ) )
-		{
-			jdbcUrl = "jdbc:sqlite:schema_v1.db";
-			System.out.println("Error: Wrong url");
-			return false;
-		}
+//		if( !( jdbcUrl.equals("jdbc:sqlite:schema_v1.db") ) )
+//		{
+//			jdbcUrl = "jdbc:sqlite:schema_v1.db";
+//			System.out.println("Error: Wrong url");
+//			return false;
+//		}
 		
 		try {
 			connection = DriverManager.getConnection(jdbcUrl);
@@ -1048,13 +1050,58 @@ public class DatabaseManager {
 		return recipeList;
 	}
 	
+	public ArrayList<RecipeItem> getMissingIngredientListForRecipe(User user, Recipe recipe)
+	{
+		ArrayList<RecipeItem> res = new ArrayList<RecipeItem>();
+		//we want to get recipe's ingredients in a list
+		ObservableList<Item> currInventory = getCurrentInventory(user);
+		
+		Calendar today = Calendar.getInstance();
+		today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
+		Date todayDate = today.getTime();
+		
+		for( RecipeItem recipeItem : getRecipesIngredientList(user, recipe) )
+		{
+			for(Item item : currInventory)
+			{
+				if(item.getItem_num().equals(recipeItem.getItem_num()))
+				{
+					System.out.println("item exp_date: '" + item.getItem_Exp() + "'");
+					Date date1 = new Date();
+					try {
+						
+						date1 = new SimpleDateFormat("MM/dd/yyyy").parse(item.getItem_Exp());
+						} 
+					catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						} 
+						
+					System.out.println("todayDate: " + todayDate.toString());
+					System.out.println("exp date: " + date1.toString());
+					int inventoryQuantity = Integer.parseInt(item.getItem_Quantity());
+					int recipeItemQuantity = Integer.parseInt(recipeItem.getItem_quantity());
+					if(date1.compareTo(todayDate) > 0 && 
+							(inventoryQuantity < recipeItemQuantity) )
+					{
+						//make recipe item contain missing quantity 
+						recipeItem.setItem_quantity(Integer.toString(recipeItemQuantity - inventoryQuantity));
+						res.add(recipeItem);
+					}
+				}
+			}
+			
+			
+		}
+		System.out.println("returning " + res.toString());
+		
+		return res;
+		//then we want to get the currentInventory list
+		
+		
+		//them we compare the expiration date to current day and quantity 
+	}
 	
-	/**
-	 * This method takes in a boolean and if true returns those recipes that are executable. If boolean is false
-	 * then returns the recipes are are not executable.
-	 * @param execOrNot This boolean determines whether the list is the executable recipes or not executable recipes.
-	 * @return Returns an ObservableList containing desired recipes.
-	 */
 	public void updateExecutableRecipes(User user)
 	{
 		System.out.println("Updating Executable Recipe List for user: " + user.getUsername());
@@ -1092,8 +1139,10 @@ public class DatabaseManager {
 						
 							// creating a date object for expiration date
 							Date date1 = new Date();
+							System.out.println("user item exp date: " + userItem.getItem_Exp());
 							try {
-								date1 = new SimpleDateFormat("MM/DD/yyyy").parse(userItem.getItem_Exp());
+								System.out.println("exp date of " + userItem.getItem_name() + ": " + date1.toString());
+								date1 = new SimpleDateFormat("MM/dd/yyyy").parse(userItem.getItem_Exp());
 								} 
 							catch (ParseException e) {
 								// TODO Auto-generated catch block
@@ -1103,7 +1152,7 @@ public class DatabaseManager {
 							  if( Integer.parseInt(currRecipeItem.getItem_num()) == Integer.parseInt(userItem.getItem_num())) 
 								{
 									if ( Integer.parseInt(currRecipeItem.getItem_quantity()) < Integer.parseInt( userItem.getItem_Quantity()) 
-																		&& date1.compareTo(todayDate) < 1  ) //todayDate = today's date
+																		&& date1.compareTo(todayDate) > 0  ) //todayDate = today's date
 									{
 										
 										isExecutable = true;
@@ -1142,6 +1191,7 @@ public class DatabaseManager {
 			
 			return;
 	}
+	
 	public void printCredentials()
 	{
 		System.out.println("Printing Credentials");

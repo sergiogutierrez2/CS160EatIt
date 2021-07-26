@@ -72,7 +72,60 @@ public class Item
 	}
 
 	public void setItem_Exp(String item_Exp) {
-		this.item_Exp = item_Exp;
+		//make sure item_Exp is in the correct format
+		//should be in 0M/0D/YYYY
+			//not 		M/D/YYYY
+		//get substrings
+		String month = item_Exp.substring(0, 2);
+		if(month.charAt(month.length() - 1) == '/')
+		{
+			//month is one char so prepend '0'
+			month = "0" + month.substring(0, 1);
+			
+			//that means day starts at index 2
+			String day = item_Exp.substring(2, 4);
+			if(day.charAt(day.length() - 1) == '/')
+			{
+				//day is one char so prepend 0
+				day = "0" + day.substring(0, 1);
+				
+				String year = item_Exp.substring(4);
+				this.item_Exp = month + "/" + day + "/" + year;
+			}
+			else
+			{
+				// month is one char and day is two chars
+				// M/DD/YYYY
+				String year = item_Exp.substring(5);
+				this.item_Exp = month + "/" + day + "/" + year;
+			}
+		}
+		else
+		{
+			//month is two chars: MM/0D/YYYY
+			String day = item_Exp.substring(3, 5);
+			if(day.charAt(day.length() - 1) == '/')
+			{
+				
+				//day is one char: MM/D/YYYY
+				day = "0" + day.substring(0,1);
+				
+				String year = item_Exp.substring(5);
+				this.item_Exp = month + "/" + day + "/" + year;
+			}
+			else
+			{
+				//both day and month are two chars
+				// MM/DD/YYYY so we can leave provided string alone.
+				this.item_Exp = item_Exp;
+			}
+		}
+		
+		System.out.println("item_exp: " + this.item_Exp);
+			
+		
+		
+		
 	}
 
 	public void setItem_Quantity(String item_Quantity) {
