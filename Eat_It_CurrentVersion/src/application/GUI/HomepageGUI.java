@@ -52,6 +52,7 @@ public class HomepageGUI {
 		InventoryListGUI inventoryListGUI = new InventoryListGUI(user, executableAndNotExecGUI_View);
 		RecipeListGUI recipeListGUI = new RecipeListGUI(user, inventoryListGUI.getTableView(), executableAndNotExecGUI_View);
 		
+		executableAndNotExecGUI_View.setInventoryTableView(inventoryListGUI.getTableView());
 		
 		VBox vbox_recipeListGUI = recipeListGUI.getVBox();
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();

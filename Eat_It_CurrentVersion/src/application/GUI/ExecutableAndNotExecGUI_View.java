@@ -7,7 +7,6 @@ import application.DatabaseManager;
 import application.Recipe;
 import application.User;
 import javafx.animation.PauseTransition;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -41,7 +40,10 @@ public class ExecutableAndNotExecGUI_View
     ExecutableTableGUI executableTable;
     ExecutableTableGUI not_executableTable;
     
-    public ExecutableAndNotExecGUI_View(User user)
+    private TableView inventoryListTableView;
+    
+    @SuppressWarnings("unchecked")
+	public ExecutableAndNotExecGUI_View(User user)
     {
         this.user = user;
         executableTable = new ExecutableTableGUI(user, true);
@@ -122,44 +124,80 @@ public class ExecutableAndNotExecGUI_View
         
         executeRecipeBtn.setOnAction(e -> 
         {
+        	currentRecipe = null;
+            
+                
+            
+            Recipe executableRecipe = executableTable.getSelectedRecipe();
+            Recipe not_executableRecipe = not_executableTable.getSelectedRecipe();
+            
+            if(executableRecipe != null && not_executableRecipe != null)
+            {
+            	 errorMessage.setText("Please only Select One Recipe Either List.");
+            }
+            else if(executableRecipe == null && not_executableRecipe == null)
+            {
+            	errorMessage.setText("Select One Recipe from Either List");
+            }
+            else
+            {
+            	currentRecipe = (executableRecipe == null)? not_executableRecipe : executableRecipe;
+            	
+            	System.out.println("execute button");
+            	Stage popup = new Stage();
+            	popup.setTitle("Making " + currentRecipe.getRecipe_name());
+            	PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            	
+            	
+            	delay.setOnFinished( event ->
+            			{
+            				popup.close();
+                    		executeRecipeBtn.setDisable(false);
+            			}
+            			);
+            	        	
+            	Random rand = new Random();
+            	int randomNum = rand.nextInt((2 - 1) + 1) + 1;
+
+//            	Image image = new Image (new File(System.getProperty("user.dir") + 
+//            			File.pathSeparator + "src" + File.pathSeparator + "application" +
+//            			File.pathSeparator + "resources" + File.pathSeparator + 
+//            			"Cooking" + randomNum + ".gif").toURI().toString());
+            	
+            	Image image = new Image(getClass().getResourceAsStream("/application/resources/Cooking" + randomNum + ".gif"));
+            	
+            	ImageView imageview = new ImageView(image);
+
+            	Group root = new Group(imageview);
+            	
+//            	Image image2 = new Image (new File("Executable.gif").toURI().toString());
+            	Image image2 = new Image(getClass().getResourceAsStream("/application/resources/Executable.gif"));
+            	ImageView imageview2 = new ImageView(image2);
+            	Group root2 = new Group(imageview2);
+            	
+    		    VBox cook = new VBox();
+    		    cook.getChildren().addAll(root, root2);
+    		    cook.setAlignment(Pos.CENTER);
+    		    cook.setSpacing(5);
+    		    
+            	Scene scene = new Scene(cook, 800, 800);
+            	popup.setScene(scene);
+
+            	popup.show();
+           		executeRecipeBtn.setDisable(true);
+            	
+            	delay.play();
+            	
+            	dbm.execRecipe(user, currentRecipe);
+            	inventoryListTableView.getItems().clear();
+            	inventoryListTableView.getItems().addAll(dbm.getCurrentInventory(user));
+            	
+            	dbm.updateExecutableRecipes(user);
+                updateTables();
+            	
+            }
         	// Sergio's cooking animation
-        	System.out.println("execute button");
-        	Stage popup = new Stage();
-        	PauseTransition delay = new PauseTransition(Duration.seconds(6));
         	
-        	
-        	delay.setOnFinished( event ->
-        			{
-        				popup.close();
-                		executeRecipeBtn.setDisable(false);
-        			}
-        			);
-        	        	
-        	Random rand = new Random();
-        	int randomNum = rand.nextInt((2 - 1) + 1) + 1;
-
-        	Image image = new Image (new File("Cooking" + randomNum + ".gif").toURI().toString());
-        	ImageView imageview = new ImageView(image);
-
-        	Group root = new Group(imageview);
-        	
-        	Image image2 = new Image (new File("Executable.gif").toURI().toString());
-        	ImageView imageview2 = new ImageView(image2);
-        	Group root2 = new Group(imageview2);
-        	
-		    VBox cook = new VBox();
-		    cook.getChildren().addAll(root, root2);
-		    cook.setAlignment(Pos.CENTER);
-		    cook.setSpacing(5);
-		    
-        	Scene scene = new Scene(cook, 800, 800);
-        	popup.setScene(scene);
-
-        	popup.show();
-       		executeRecipeBtn.setDisable(true);
-        	
-        	delay.play();
-        	//Dre database call
         });
     
     }
@@ -174,6 +212,12 @@ public class ExecutableAndNotExecGUI_View
     public TitledPane getTitledPane()
     {
         return bothExecutableListsTitlePane;
+    }
+    
+    @SuppressWarnings("rawtypes")
+	public void setInventoryTableView(TableView tableview)
+    {
+    	this.inventoryListTableView = tableview;
     }
 
 }

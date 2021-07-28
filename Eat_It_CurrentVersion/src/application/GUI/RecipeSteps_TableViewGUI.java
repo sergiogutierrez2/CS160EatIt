@@ -60,23 +60,23 @@ public class RecipeSteps_TableViewGUI
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void createTable() {
-		tableView = new TableView();
-	    tableView.setEditable(true);
-	    tableView.setBackground(null);
-	    
-	    TableViewSelectionModel<RecipeStep> selectionModel = tableView.getSelectionModel();
-	    selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
-	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
+    	tableView = new TableView();
+    	tableView.setEditable(true);
+    	tableView.setBackground(null);
 
-	    // COlUMNS
-	    TableColumn<RecipeStep, String> column0 = new TableColumn<>("Step\n#");
-	    column0.setCellValueFactory(new PropertyValueFactory<>("step_num"));
-	    column0.setCellFactory(TextFieldTableCell.<RecipeStep>forTableColumn());
-	    column0.setMinWidth(50);
-	    column0.setMaxWidth(50);
-	    
-	    TableColumn<RecipeStep, String> column1 = new TableColumn<>("Description");
-	    column1.setCellValueFactory(new PropertyValueFactory<>("step_desc"));
+    	TableViewSelectionModel<RecipeStep> selectionModel = tableView.getSelectionModel();
+    	selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
+
+    	// COlUMNS
+    	TableColumn<RecipeStep, String> column0 = new TableColumn<>("Step\n#");
+    	column0.setCellValueFactory(new PropertyValueFactory<>("step_num"));
+    	column0.setCellFactory(TextFieldTableCell.<RecipeStep>forTableColumn());
+    	column0.setMinWidth(50);
+    	column0.setMaxWidth(50);
+
+    	TableColumn<RecipeStep, String> column1 = new TableColumn<>("Description");
+    	column1.setCellValueFactory(new PropertyValueFactory<>("step_desc"));
 	    column1.setCellFactory(TextFieldTableCell.<RecipeStep>forTableColumn());
 	    column1.setMinWidth(150);
 	    column1.setMaxWidth(150);
@@ -96,6 +96,7 @@ public class RecipeSteps_TableViewGUI
 	    deleteButton.setCursor(Cursor.HAND);
 	    
 	    addStep = new TextField();
+	    addStep.setMaxWidth(130);
 	    addStep.setPromptText("Enter Step Number");
 	    addStep.setFont(Font.font("Arial", FontWeight.BOLD, 10));
 	    addStep.textProperty().addListener(new ChangeListener<String>() {
@@ -116,8 +117,8 @@ public class RecipeSteps_TableViewGUI
 	    addDesc = new TextArea();
 	    addDesc.setPromptText("Enter a Description of the Step");
 	    addDesc.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-	    addDesc.setMaxHeight(80);
-	    addDesc.setMaxWidth(100);
+	    addDesc.setMaxHeight(40);
+	    addDesc.setMaxWidth(350);
 	    addDesc.setWrapText(true);
 	    addDesc.textProperty().addListener(new ChangeListener<String>() {
 	        @Override
@@ -140,12 +141,17 @@ public class RecipeSteps_TableViewGUI
 	    hbox.setAlignment(Pos.CENTER);
 	    VBox addStep_VBox = new VBox(errorMessage, hbox, addStep, addDesc);
 	    addStep_VBox.setAlignment(Pos.CENTER);
-	   
+	    addStep_VBox.setSpacing(5);
+	    
+	    tableView.setMaxHeight(300);
 	    
 	    vbox = new VBox(addStep_VBox, tableView);
 	    vbox.setSpacing(5);
 	    vbox.setAlignment(Pos.CENTER);
 	    vbox.setBackground(null);
+	    vbox.setMaxHeight(300);
+	    
+	    
 	    
 	    scene = new Scene(vbox, mainWidth, mainHeight);
 	    

@@ -15,7 +15,10 @@ import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-//a singleton object (only one instance allowed)
+/**
+ * The DatabaseManager class is a singleton object (only one instance allowed).
+ * @author Team Eat It (Summer 2021)
+ */
 public class DatabaseManager {
 	
 	private Connection connection;
@@ -81,7 +84,10 @@ public class DatabaseManager {
 		}
 	}
 	
-	//returns true if connection closed success
+	/**
+	 * This method closed the connection to the db.
+	 * @return Returns true if connection closed.
+	 */
 	public boolean closeConnection()
 	{
 		try {
@@ -1269,6 +1275,56 @@ public class DatabaseManager {
 			}
 	}
 
+	public void execRecipe(User user, Recipe recipe) {
+
+        if(!connectedStatus)
+        {
+            connectToDatabase();
+        }
+        //get invetory list 
+        ObservableList<Item> currentInventory = getCurrentInventory(user);
+
+        //get recipe ingredient list
+        ObservableList<RecipeItem> currentRecipeingredients = getRecipesIngredientList(user,recipe);
+
+
+        Statement statement;
+        try {
+            for(Item item:currentInventory ){
+                for(RecipeItem recipeitem:currentRecipeingredients) {
+                    if(item.getItem_num().equals(recipeitem.getItem_num())) {
+
+
+                        statement = connection.createStatement();
+
+                        int itemQuantity = Integer.parseInt(item.getItem_Quantity());
+                        int recipeitemQuantity = Integer.parseInt(recipeitem.getItem_quantity());
+                        int finalQuantity = ((itemQuantity - recipeitemQuantity) < 0)?0:(itemQuantity - recipeitemQuantity);
+
+                        String sql_Ex = "UPDATE ingredient SET quantity = '"+ finalQuantity +"' WHERE item_num = '" + item.getItem_num() +"'";
+                        statement.executeUpdate(sql_Ex);
+
+
+                        statement.close();
+
+                        break; 
+
+                    }
+                    else {
+                        continue;
+                    }
+
+                }
+            }
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+	
 	public ArrayList<Item> getUserShoppingList(User user)
     {
         ArrayList<Item> res = new ArrayList<Item>();
@@ -1326,5 +1382,4 @@ public class DatabaseManager {
         
         //them we compare the expiration date to current day and quantity 
     }
-	
 }

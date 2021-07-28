@@ -5,6 +5,7 @@ import java.net.URL;
 import application.DatabaseManager;
 import application.Item;
 import application.Recipe;
+import application.RecipeItem;
 import application.User;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,6 +27,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.control.DatePicker;
 
 public class RecipeList_AddRecipeItemsGUI {
@@ -49,6 +51,12 @@ public class RecipeList_AddRecipeItemsGUI {
 		
 		inventoryListTableView = simpleIngredListGUI.getTableView();
 		Button addIngredientToRecipe = new Button("Add Ingredient");
+		addIngredientToRecipe.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		addIngredientToRecipe.setCursor(Cursor.HAND);
+		
+		Button deleteButton = new Button("Delete");
+	    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+	    deleteButton.setCursor(Cursor.HAND);
 		
 		Text recipeNameTitle = new Text(recipe.getRecipe_name());
 		
@@ -173,9 +181,13 @@ public class RecipeList_AddRecipeItemsGUI {
 		addIngredientToItemListBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		addIngredientToItemListBtn.setCursor(Cursor.HAND);
 		
-		HBox mainHBox = new HBox(simpleIngredListGUI.getVBox(), addIngredientToRecipe, recipeIngredListGUI.getVBox(), recipeSteps_TableViewGUI.getVBox() );
-		mainHBox.setAlignment(Pos.CENTER);
-		mainHBox.setSpacing(50);
+		VBox add_delete_recipe_Ingredient_Vbox = new VBox(deleteButton, addIngredientToRecipe);
+		add_delete_recipe_Ingredient_Vbox.setAlignment(Pos.CENTER);
+		add_delete_recipe_Ingredient_Vbox.setSpacing(5);
+		
+		HBox ingredientHBox = new HBox(simpleIngredListGUI.getVBox(), add_delete_recipe_Ingredient_Vbox, recipeIngredListGUI.getVBox());
+		ingredientHBox.setAlignment(Pos.CENTER);
+		ingredientHBox.setSpacing(5);
 		
 		HBox newItemTextFields_1 = new HBox(addIngredientToItemListBtn, autoGenItemNumberBtn, addItemNum, addItemName, addExpirationDate);
 		newItemTextFields_1.setAlignment(Pos.CENTER);
@@ -184,8 +196,15 @@ public class RecipeList_AddRecipeItemsGUI {
 		
 		VBox newItemTextFields_vBox = new VBox(newItemTextFields_1, newItemTextFields_2);
 		
+		VBox ingredientVbox = new VBox(ingredientHBox, newItemTextFields_vBox);
+		
+		HBox mainHBox = new HBox(ingredientVbox, recipeSteps_TableViewGUI.getVBox() );
+		mainHBox.setAlignment(Pos.CENTER);
+		mainHBox.setSpacing(50);
+		
+		
 		VBox mainVBox = new VBox();
-		mainVBox.getChildren().addAll(recipeNameTitle, mainHBox, errorMessage, newItemTextFields_vBox);
+		mainVBox.getChildren().addAll(recipeNameTitle, mainHBox, errorMessage);
 		mainVBox.setAlignment(Pos.CENTER);
 		
 		Rectangle inventoryList_background = new Rectangle(1200, 800);
@@ -208,6 +227,21 @@ public class RecipeList_AddRecipeItemsGUI {
 	    	addItemNum.setText(dbm.autogenerateItemNum(user));
 	    	
 	    } );
+		
+		TableView recipeIngredListTableView = recipeIngredListGUI.getTableView();
+		
+		 deleteButton.setOnAction(e -> 
+		    {
+		    	ObservableList<RecipeItem> tmpList = recipeIngredListTableView.getSelectionModel().getSelectedItems();
+		    	for(RecipeItem recipeItem : tmpList)
+		    	{
+		    		dbm.deleteRecipeIngredient(user, recipe.getRecipe_num() ,recipeItem.getItem_num());
+		    	}
+		    	recipeIngredListTableView.getItems().removeAll(recipeIngredListTableView.getSelectionModel().getSelectedItems());
+		    	
+		    	dbm.updateExecutableRecipes(user);
+		    	executableAndNotExecGUI_View.updateTables();
+		    });
 		
 		addIngredientToItemListBtn.setOnAction(new EventHandler<ActionEvent>() {
     		@Override

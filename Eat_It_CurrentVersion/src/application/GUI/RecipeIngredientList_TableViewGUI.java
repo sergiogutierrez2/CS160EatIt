@@ -147,15 +147,9 @@ public class RecipeIngredientList_TableViewGUI
 		errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
 		errorMessage.setFill(Color.RED); 
 	    
-	    Button deleteButton = new Button("Delete");
-	    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
-	    deleteButton.setCursor(Cursor.HAND);
 	    
-	    HBox hb_1 = new HBox(deleteButton);
-	    hb_1.setAlignment(Pos.CENTER);
-	    hb_1.setSpacing(5);
 	    	    
-	    vbox = new VBox(errorMessage, hb_1, tableView);
+	    vbox = new VBox(errorMessage, tableView);
 	    vbox.setSpacing(5);
 	    vbox.setAlignment(Pos.CENTER);
 	    vbox.setBackground(null);
@@ -166,18 +160,6 @@ public class RecipeIngredientList_TableViewGUI
 	     * Event Listeners Start
 	     * ********************************** */
 	    
-	    deleteButton.setOnAction(e -> 
-	    {
-	    	ObservableList<RecipeItem> tmpList = tableView.getSelectionModel().getSelectedItems();
-	    	for(RecipeItem recipeItem : tmpList)
-	    	{
-	    		dbm.deleteRecipeIngredient(user, recipe.getRecipe_num() ,recipeItem.getItem_num());
-	    	}
-	    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
-	    	
-	    	dbm.updateExecutableRecipes(user);
-	    	executableAndNotExecGUI_View.updateTables();
-	    });
 	    
 	    /* **********************************
 	     * Event Listeners End
