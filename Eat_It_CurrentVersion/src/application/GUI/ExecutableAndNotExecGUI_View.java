@@ -1,14 +1,22 @@
 package application.GUI;
 
+import java.io.File;
+import java.util.Random;
+
 import application.DatabaseManager;
 import application.Recipe;
 import application.User;
+import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -19,6 +27,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ExecutableAndNotExecGUI_View 
 {
@@ -115,9 +124,43 @@ public class ExecutableAndNotExecGUI_View
         {
         	// Sergio's cooking animation
         	System.out.println("execute button");
-            //Dre database call
+        	Stage popup = new Stage();
+        	PauseTransition delay = new PauseTransition(Duration.seconds(6));
+        	
+        	
+        	delay.setOnFinished( event ->
+        			{
+        				popup.close();
+                		executeRecipeBtn.setDisable(false);
+        			}
+        			);
+        	        	
+        	Random rand = new Random();
+        	int randomNum = rand.nextInt((2 - 1) + 1) + 1;
+
+        	Image image = new Image (new File("Cooking" + randomNum + ".gif").toURI().toString());
+        	ImageView imageview = new ImageView(image);
+
+        	Group root = new Group(imageview);
+        	
+        	Image image2 = new Image (new File("Executable.gif").toURI().toString());
+        	ImageView imageview2 = new ImageView(image2);
+        	Group root2 = new Group(imageview2);
+        	
+		    VBox cook = new VBox();
+		    cook.getChildren().addAll(root, root2);
+		    cook.setAlignment(Pos.CENTER);
+		    cook.setSpacing(5);
+		    
+        	Scene scene = new Scene(cook, 800, 800);
+        	popup.setScene(scene);
+
+        	popup.show();
+       		executeRecipeBtn.setDisable(true);
+        	
+        	delay.play();
+        	//Dre database call
         });
-    
     
     }
     
