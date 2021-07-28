@@ -40,11 +40,13 @@ public class RecipeIngredientList_TableViewGUI
     private Recipe recipe;
     private Text errorMessage;
     private TableView simpleIngredientTableView;
+    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
     
-    public RecipeIngredientList_TableViewGUI(User user, Recipe recipe) 
+    public RecipeIngredientList_TableViewGUI(User user, Recipe recipe, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) 
     {
     	this.user = user;
     	this.recipe = recipe;
+    	this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
     	createTable();
     }
     
@@ -96,18 +98,41 @@ public class RecipeIngredientList_TableViewGUI
             public void handle(TableColumn.CellEditEvent<RecipeItem, String> t) {
                 
             	// t.getNewValue() this is what needs to be filtered.
+            	String s = t.getNewValue().toString();
             	
-                t.getRowValue().setItem_quantity(t.getNewValue()); //changes cell object's value to new entry
-                
-                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
-                
-                dbm.deleteRecipeIngredient(user, t.getRowValue().getRecipe_num(), t.getRowValue().getItem_num());
-                
-                dbm.insertRecipeIngredient(user, t.getRowValue().getRecipe_num(), t.getRowValue().getItem_num(), 
-                							t.getRowValue().getItem_name(), t.getRowValue().getItem_quantity());
-                
-                dbm.getCurrentInventory(user);
-              
+            	try
+            	{
+            		int x = Integer.parseInt(s);
+            		
+            		if(x > 0)
+            		{
+            			t.getRowValue().setItem_quantity(t.getNewValue()); //changes cell object's value to new entry
+                        
+                        tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+                        
+                        dbm.deleteRecipeIngredient(user, t.getRowValue().getRecipe_num(), t.getRowValue().getItem_num());
+                        
+                        dbm.insertRecipeIngredient(user, t.getRowValue().getRecipe_num(), t.getRowValue().getItem_num(), 
+                        							t.getRowValue().getItem_name(), t.getRowValue().getItem_quantity());
+                        
+                        dbm.getCurrentInventory(user);
+                        
+                        dbm.updateExecutableRecipes(user);
+                        executableAndNotExecGUI_View.updateTables();
+            		}
+            		else
+            		{
+            			t.getRowValue().setItem_quantity(t.getOldValue());
+                		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+            		}
+            		
+            	}
+            	catch(NumberFormatException exception)
+            	{
+            		System.out.println("Failed to parse int. Don't allow edit!");
+            		t.getRowValue().setItem_quantity(t.getOldValue());
+            		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+            	}
             }
         });
 	   
@@ -149,6 +174,9 @@ public class RecipeIngredientList_TableViewGUI
 	    		dbm.deleteRecipeIngredient(user, recipe.getRecipe_num() ,recipeItem.getItem_num());
 	    	}
 	    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+	    	
+	    	dbm.updateExecutableRecipes(user);
+	    	executableAndNotExecGUI_View.updateTables();
 	    });
 	    
 	    /* **********************************

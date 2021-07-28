@@ -26,12 +26,13 @@ public class SelectedRecipeGUI_View {
     private Scene homepage_scene;
     private Stage SelectedRecipeGUI_Stage;
     private Scene SelectedRecipeView_scene;
+    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
     
-    public SelectedRecipeGUI_View(User user, Recipe recipe ) {
+    public SelectedRecipeGUI_View(User user, Recipe recipe, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
         Text recipeNameTitle = new Text(recipe.getRecipe_name());
-        
+        this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
         recipeNameTitle.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 30));
-        RecipeIngredientList_TableViewGUI recipeIngredListGUI = new RecipeIngredientList_TableViewGUI(user, recipe);
+        RecipeIngredientList_TableViewGUI recipeIngredListGUI = new RecipeIngredientList_TableViewGUI(user, recipe, executableAndNotExecGUI_View);
         RecipeSteps_TableViewGUI recipeSteps_TableViewGUI = new RecipeSteps_TableViewGUI(user, recipe);
         
         

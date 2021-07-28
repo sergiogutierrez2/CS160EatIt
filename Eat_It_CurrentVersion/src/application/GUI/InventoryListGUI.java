@@ -29,6 +29,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class InventoryListGUI {
@@ -43,6 +44,7 @@ public class InventoryListGUI {
 	    private User user;
 	    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
 	    boolean selected;
+	    private Text errorMessage;
 	    
 	    public InventoryListGUI(User user, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
@@ -118,8 +120,6 @@ public class InventoryListGUI {
 		                
 		                dbm.getCurrentInventory(user);
 		                
-		                executableAndNotExecGUI_View.updateTables();
-		                
 	            	}
 	            }
 	        });
@@ -134,18 +134,28 @@ public class InventoryListGUI {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
 	                
-	                t.getRowValue().setItem_name(t.getNewValue());
-	                
-	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
-	                
-	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
-	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
-	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
-	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
-	                
-	                dbm.getCurrentInventory(user);
-	                
-	                executableAndNotExecGUI_View.updateTables();
+	            	
+	            	if(dbm.isInIngredientListTable(user, t.getRowValue().getItem_num()) || dbm.containsItemNum(user, t.getNewValue()) )
+	            	{
+	            		//dont allow change!
+	            		System.out.println("Dont Change!");
+	            		t.getRowValue().setItem_name(t.getOldValue());
+	            		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+	            	}
+	            	else {
+	            	
+		                t.getRowValue().setItem_name(t.getNewValue());
+		                
+		                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+		                
+		                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
+		                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
+		                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
+		                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
+		                
+		                dbm.getCurrentInventory(user);
+		                
+	            	}
 	            }
 	        });
 		  
@@ -158,18 +168,66 @@ public class InventoryListGUI {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
 	                
-	                t.getRowValue().setItem_Exp(t.getNewValue());
-	                
-	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
-	                
-	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
-	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
-	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
-	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
-	                
-	                dbm.getCurrentInventory(user);
-	                
-	                executableAndNotExecGUI_View.updateTables();
+	            	String date = t.getNewValue().toString();
+	            	if(date.length() == 10)
+	            	{
+	            		try {
+	            			// 0123456789
+	            			// MM/dd/yyyy
+	            			int month = Integer.parseInt(date.substring(0, 2));
+	            			int day = Integer.parseInt(date.substring(3, 5));
+	            			int year = Integer.parseInt(date.substring(6, 10));
+	            			
+	            			boolean allowEdit = true;
+	            			
+	            			if(month < 0 || month > 12)
+	            			{
+	            				allowEdit = false;
+	            			}
+	            			
+	            			if(day < 1 || day > 31)
+	            			{
+	            				allowEdit = false;
+	            			}
+	            			
+	            			if(year < 2000)
+	            			{
+	            				allowEdit = false;
+	            			}
+	            			if(allowEdit)
+	            			{
+	            				t.getRowValue().setItem_Exp(t.getNewValue());
+	        	                
+	        	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+	        	                
+	        	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
+	        	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
+	        	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
+	        	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
+	        	                
+	        	                dbm.getCurrentInventory(user);
+	        	                
+	        	                dbm.updateExecutableRecipes(user);
+	        	                executableAndNotExecGUI_View.updateTables();
+	            			}
+	            			else
+	            			{
+	            				t.getRowValue().setItem_Exp(t.getOldValue());
+			            		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+	            			}
+	            		}
+	            		catch(NumberFormatException exception)
+	            		{
+	            			System.out.println("Failed to parse integer");
+	            			t.getRowValue().setItem_Exp(t.getOldValue());
+		            		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+	            		}
+	            	}
+	            	else
+	            	{
+	            		t.getRowValue().setItem_Exp(t.getOldValue());
+	            		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+	            	}
 	            }
 	        });
 		    
@@ -181,19 +239,45 @@ public class InventoryListGUI {
 		    column3.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
+	            	
+	            	errorMessage.setText("");
+	            	
+	                try
+	                {
+	                	int x = Integer.parseInt(t.getNewValue().toString());
+	                	
+	                	if(x > 0)
+	                	{
+	                		t.getRowValue().setItem_Quantity(Integer.toString(x));
+	    	                
+	    	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+	    	                
+	    	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
+	    	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
+	    	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
+	    	                		Integer.toString(x), t.getRowValue().getItem_Quantity_Type());
+	    	                
+	    	                dbm.getCurrentInventory(user);
+	    	                
+	    	                dbm.updateExecutableRecipes(user);
+	    	                executableAndNotExecGUI_View.updateTables();
+	                	}
+	                	else
+	                	{
+	                		errorMessage.setText("Not a valid recipe number: negative.");
+	                		t.getRowValue().setItem_Quantity(t.getOldValue());
+	    	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+	                	}
+	                	
+	                }
+	                catch(NumberFormatException e)
+	                {
+	                	System.out.println("Not a vaild item quantity.");
+	                	errorMessage.setText("Not a valid recipe number.");
+	                	t.getRowValue().setItem_Quantity(t.getOldValue());
+    	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+	                }
 	                
-	                t.getRowValue().setItem_Quantity(t.getNewValue());
-	                
-	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
-	                
-	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
-	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
-	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
-	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
-	                
-	                dbm.getCurrentInventory(user);
-	                
-	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		    
@@ -217,7 +301,6 @@ public class InventoryListGUI {
 	                
 	                dbm.getCurrentInventory(user);
 	                
-	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		    
@@ -230,18 +313,27 @@ public class InventoryListGUI {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
 	                
-	                t.getRowValue().setItem_Quantity_Type(t.getNewValue());
-	                
-	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
-	                
-	                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
-	                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
-	                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
-	                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
-	                
-	                dbm.getCurrentInventory(user);
-	                
-	                executableAndNotExecGUI_View.updateTables();
+	            	if(dbm.isInIngredientListTable(user, t.getRowValue().getItem_num()) || dbm.containsItemNum(user, t.getNewValue()) )
+	            	{
+	            		//dont allow change!
+	            		System.out.println("Dont Change!");
+	            		t.getRowValue().setItem_Quantity_Type(t.getOldValue());
+	            		tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); 
+	            	}
+	            	else {
+	            		
+		                t.getRowValue().setItem_Quantity_Type(t.getNewValue());
+		                
+		                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+		                
+		                dbm.deleteIngredient( user, t.getRowValue().getItem_num() );
+		                dbm.insertIngredient(user,  t.getRowValue().getItem_num(), 
+		                		t.getRowValue().getItem_name(), t.getRowValue().getItem_Exp(), t.getRowValue().getItem_Par(), 
+		                		t.getRowValue().getItem_Quantity(), t.getRowValue().getItem_Quantity_Type());
+		                
+		                dbm.getCurrentInventory(user);
+		                
+	            	}
 	            }
 	        });
 		  
@@ -368,7 +460,7 @@ public class InventoryListGUI {
 		        }
 		    });
 		    
-		    Text errorMessage = new Text("");
+		    errorMessage = new Text("");
 			errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
 			errorMessage.setFill(Color.RED); 
 			
@@ -384,10 +476,6 @@ public class InventoryListGUI {
 		    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    deleteButton.setCursor(Cursor.HAND);
 		    
-//		    Button updateButton = new Button("Update");
-//		    updateButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
-//		    updateButton.setCursor(Cursor.HAND);
-		    
 		    TextField searchItem = new TextField();
 		    searchItem.setPromptText("Search Inventory");
 		    searchItem.setFont(Font.font("Arial", FontWeight.BOLD, 10));
@@ -395,6 +483,10 @@ public class InventoryListGUI {
 		    Button searchItembtn = new Button("Search");
 		    searchItembtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    searchItembtn.setCursor(Cursor.HAND);
+		    
+		    Button viewShoppingList = new Button("Shopping List");
+            viewShoppingList.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+            viewShoppingList.setCursor(Cursor.HAND);
 		    	    
 		    HBox hb = new HBox();
 		    hb.getChildren().addAll(addItemNum, 
@@ -421,10 +513,12 @@ public class InventoryListGUI {
 		    hb_1.setAlignment(Pos.CENTER);
 		    hb_1.setSpacing(5);
 		    	    
-		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, hb_3,  tableView);
+		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, hb_3,  tableView, viewShoppingList);
 		    vbox.setSpacing(5);
 		    vbox.setAlignment(Pos.CENTER);
 		    vbox.setBackground(null);
+		    
+		    
 		    
 		    scene = new Scene(vbox, mainWidth, mainHeight);
 		    
@@ -434,14 +528,14 @@ public class InventoryListGUI {
 		    
 		    autoGenItemNumberBtn.setOnAction(e -> 
 		    {
+		    	errorMessage.setText("");
 		    	addItemNum.setText(dbm.autogenerateItemNum(user));
-		    	
 		    });
 		    
 		    addButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		@Override
 	    		public void handle(ActionEvent e) {
-	    			
+	    			errorMessage.setText("");
 	    			if( addItemNum.getText().equals("")
 	    					|| addItemName.getText().equals("") 
 	    					|| addExpirationDate.getEditor().getText().equals("") 
@@ -492,27 +586,56 @@ public class InventoryListGUI {
 		    
 		    deleteButton.setOnAction(e -> 
 		    {
+		    	errorMessage.setText("");
+	    		boolean remove = false;
 		    	ObservableList<Item> tmpList = tableView.getSelectionModel().getSelectedItems();
 		    	for(Item item : tmpList)
 		    	{
-		    		dbm.deleteIngredient(user, item.getItem_num());
+		    		if( !dbm.isInIngredientListTable(user, item.getItem_num()) )
+    				{
+		    			remove = true;
+		    			dbm.deleteIngredient(user, item.getItem_num());
+    				}
+		    		else
+		    		{
+		    			errorMessage.setText("The item: " + item.getItem_name() + ", is being used in a Recipe and cannot be deleted.");
+		    		}
 		    	}
-		    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 		    	
-		    	executableAndNotExecGUI_View.updateTables();
+		    	if(remove)
+		    	{
+		    		tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
+		    	}
+		    	
+		    	dbm.updateExecutableRecipes(user);
+                executableAndNotExecGUI_View.updateTables();
 		    });
 		    
 		    searchItembtn.setOnAction(e -> 
 		    {
+		    	errorMessage.setText("");
 		    	ObservableList<Item> tmpList = dbm.getCurrentInventory(user);
 		    	tableView.getItems().clear();
 		    	for(Item item : tmpList)
 		    	{
 		    		if (item.getItem_name().contains(searchItem.getText()) ) tableView.getItems().add(item);
 		    	}
-		    	//tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 		    });
 		    
+		    viewShoppingList.setOnAction(e -> 
+            {
+
+
+                    Stage showShoppingList = new Stage();
+                    ShoppingListGUI_View popUpMenu = new ShoppingListGUI_View(user);
+
+                    showShoppingList.setScene(popUpMenu.getScene());
+                    showShoppingList.setTitle("Selected Recipe");
+                    showShoppingList.show();
+                }
+
+
+            );
 		    
 		    /* **********************************
 		     * Event Listeners End
@@ -538,5 +661,13 @@ public class InventoryListGUI {
 	    {
 	    	return tableView;
 	    }
+	    
+//	    public static void main(String[] args) 
+//	    {
+//			String s = "01/01/2021";
+//			int x = Integer.parseInt(s.substring(6, 10));
+//			System.out.println(x);
+//			
+//		}
 	    
 }

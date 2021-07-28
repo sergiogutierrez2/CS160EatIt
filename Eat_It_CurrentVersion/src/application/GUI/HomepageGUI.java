@@ -50,7 +50,7 @@ public class HomepageGUI {
 		
 		ExecutableAndNotExecGUI_View executableAndNotExecGUI_View = new ExecutableAndNotExecGUI_View(user);
 		InventoryListGUI inventoryListGUI = new InventoryListGUI(user, executableAndNotExecGUI_View);
-		RecipeListGUI recipeListGUI = new RecipeListGUI(user, inventoryListGUI.getTableView());
+		RecipeListGUI recipeListGUI = new RecipeListGUI(user, inventoryListGUI.getTableView(), executableAndNotExecGUI_View);
 		
 		
 		VBox vbox_recipeListGUI = recipeListGUI.getVBox();
@@ -63,7 +63,7 @@ public class HomepageGUI {
 		vbox_inventoryListGUI.setMaxWidth(375);
 		vbox_inventoryListGUI.setMaxHeight(600);
 		
-		Rectangle mainBackground = new Rectangle(1320,770);
+		Rectangle mainBackground = new Rectangle(1420,770);
 		mainBackground.setArcHeight(40.0);
 		mainBackground.setArcWidth(40.0);
 		mainBackground.setFill(Color.web("#CDD3CE",1));

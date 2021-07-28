@@ -1,5 +1,7 @@
 package application.GUI;
 
+import java.net.URL;
+
 import application.DatabaseManager;
 import application.Item;
 import application.Recipe;
@@ -34,13 +36,15 @@ public class RecipeList_AddRecipeItemsGUI {
 	private Scene RecipeList_AddRecipeItemsGUI_scene;
 	private TableView inventoryListTableView;
 	private TableView mainInventoryListTable;
+	private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
 	
-	public RecipeList_AddRecipeItemsGUI(User user, Recipe recipe, TableView mainInventoryListTable)
+	public RecipeList_AddRecipeItemsGUI(User user, Recipe recipe, TableView mainInventoryListTable, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View)
 	{
+		this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
 		this.mainInventoryListTable = mainInventoryListTable;
 		
 		SimpleIngredientList_TableViewGUI simpleIngredListGUI = new SimpleIngredientList_TableViewGUI(user);
-		RecipeIngredientList_TableViewGUI recipeIngredListGUI = new RecipeIngredientList_TableViewGUI(user, recipe);
+		RecipeIngredientList_TableViewGUI recipeIngredListGUI = new RecipeIngredientList_TableViewGUI(user, recipe, executableAndNotExecGUI_View);
 		RecipeSteps_TableViewGUI recipeSteps_TableViewGUI = new RecipeSteps_TableViewGUI(user, recipe);
 		
 		inventoryListTableView = simpleIngredListGUI.getTableView();
@@ -184,7 +188,7 @@ public class RecipeList_AddRecipeItemsGUI {
 		mainVBox.getChildren().addAll(recipeNameTitle, mainHBox, errorMessage, newItemTextFields_vBox);
 		mainVBox.setAlignment(Pos.CENTER);
 		
-		Rectangle inventoryList_background = new Rectangle(1200, 600);
+		Rectangle inventoryList_background = new Rectangle(1200, 800);
 		inventoryList_background.setArcHeight(40.0);
 		inventoryList_background.setArcWidth(40.0);
 		inventoryList_background.setFill(Color.web("#e3e3e3",1));
@@ -193,8 +197,14 @@ public class RecipeList_AddRecipeItemsGUI {
 
 		RecipeList_AddRecipeItemsGUI_scene = new Scene(stackpane);
 		
+		URL url = this.getClass().getResource("/application/application.css");
+		System.out.println(url.toString());
+		String css = url.toExternalForm();
+		RecipeList_AddRecipeItemsGUI_scene.getStylesheets().add(css);
+		
 		autoGenItemNumberBtn.setOnAction(e -> 
 	    {
+	    	errorMessage.setText("");
 	    	addItemNum.setText(dbm.autogenerateItemNum(user));
 	    	
 	    } );
@@ -203,7 +213,7 @@ public class RecipeList_AddRecipeItemsGUI {
     		@Override
     		public void handle(ActionEvent e) 
     		{
-    			
+    			errorMessage.setText("");
     			if( addItemNum.getText().equals("")
     					|| addItemName.getText().equals("") 
     					|| addExpirationDate.getEditor().getText().equals("") 
@@ -243,6 +253,8 @@ public class RecipeList_AddRecipeItemsGUI {
 		    			addQuantity.clear();
 		    			addAmount_Type.clear();
 		    			errorMessage.setText("");
+		    			dbm.updateExecutableRecipes(user);
+		    			executableAndNotExecGUI_View.updateTables();
 	    			}
 	    			else
 	    			{
@@ -258,6 +270,8 @@ public class RecipeList_AddRecipeItemsGUI {
     		public void handle(ActionEvent e) {
     			
     			recipeIngredListGUI.updateRecipeItemList(simpleIngredListGUI.getSelectedItems());
+    			dbm.updateExecutableRecipes(user);
+    			executableAndNotExecGUI_View.updateTables();
 				
 			}
 	    });

@@ -617,6 +617,8 @@ public class DatabaseManager {
 			statement.execute(sql);
 			
 			statement.close();
+			
+			deleteAllRecipeIngredient(user, recipe_num);
 		} catch (SQLException e) {
 			System.out.println("Failed to delete recipe: " + e.getErrorCode());
 			e.printStackTrace();
@@ -670,6 +672,34 @@ public class DatabaseManager {
 		
 		String sql = "DELETE FROM ingredientlist WHERE user_id = '" + user.getAcc_id() + "' AND recipe_num = '" + recipe_num 
 						+ "' AND item_num = '" + item_num + "'";
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			statement.execute(sql);
+			
+			statement.close();
+		} catch (SQLException e) {
+			System.out.println("Failed to delete ingredient from recipe ingredient list: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Deletes all recipe ingredients attached to recipe_num;
+	 * @param user
+	 * @param recipe_num
+	 */
+	public void deleteAllRecipeIngredient(User user, String recipe_num)
+	{
+		System.out.println( "Deleting Ingredients from recipe_num: " + recipe_num );
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM ingredientlist WHERE user_id = '" + user.getAcc_id() + "' AND recipe_num = '" + recipe_num + "'";
 		
 		try {
 			Statement statement = connection.createStatement();
@@ -1139,10 +1169,11 @@ public class DatabaseManager {
 						
 							// creating a date object for expiration date
 							Date date1 = new Date();
-							System.out.println("user item exp date: " + userItem.getItem_Exp());
+							//System.out.println("user item: " + userItem.getItem_name() + " has exp date: " + userItem.getItem_Exp());
 							try {
-								System.out.println("exp date of " + userItem.getItem_name() + ": " + date1.toString());
+								
 								date1 = new SimpleDateFormat("MM/dd/yyyy").parse(userItem.getItem_Exp());
+								//System.out.println("exp date of " + userItem.getItem_name() + ": " + date1.toString());
 								} 
 							catch (ParseException e) {
 								// TODO Auto-generated catch block
@@ -1151,18 +1182,25 @@ public class DatabaseManager {
 							
 							  if( Integer.parseInt(currRecipeItem.getItem_num()) == Integer.parseInt(userItem.getItem_num())) 
 								{
-									if ( Integer.parseInt(currRecipeItem.getItem_quantity()) < Integer.parseInt( userItem.getItem_Quantity()) 
+									if ( Integer.parseInt(currRecipeItem.getItem_quantity()) <= Integer.parseInt( userItem.getItem_Quantity()) 
 																		&& date1.compareTo(todayDate) > 0  ) //todayDate = today's date
 									{
-										
+										System.out.println(currRecip.getRecipe_name() + " is still executable! b/c " + userItem.getItem_name());
 										isExecutable = true;
 									}
 									else
 									{
+										System.out.println(currRecip.getRecipe_name() + " is no longer	 executable! b/c " + userItem.getItem_name());
+
 										isExecutable = false;
 										currRecip.addItemToMissingList(currRecipeItem);
+										break;
 									}
 								}
+						}
+						if(!isExecutable)
+						{
+							break;
 						}
 					
 					}
@@ -1231,4 +1269,62 @@ public class DatabaseManager {
 			}
 	}
 
+	public ArrayList<Item> getUserShoppingList(User user)
+    {
+        ArrayList<Item> res = new ArrayList<Item>();
+        //we want to get recipe's ingredients in a list
+        ObservableList<Item> currInventory = getCurrentInventory(user);
+        
+        Calendar today = Calendar.getInstance();
+        today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
+        Date todayDate = today.getTime();
+        
+            for(Item item : currInventory)
+            {
+                
+                    System.out.println("item exp_date: '" + item.getItem_Exp() + "'");
+                    Date date1 = new Date();
+                    try {
+                        
+                        date1 = new SimpleDateFormat("MM/dd/yyyy").parse(item.getItem_Exp());
+                        } 
+                    catch (ParseException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        } 
+                        
+                    System.out.println("todayDate: " + todayDate.toString());
+                    System.out.println("exp date: " + date1.toString());
+                    int inventoryQuantity = Integer.parseInt(item.getItem_Quantity());
+                    int inventoryParQuantity = Integer.parseInt(item.getItem_Par());
+                    if(date1.compareTo(todayDate) < 0 || 
+                            (inventoryQuantity < inventoryParQuantity) )
+                    {
+                        //make recipe item contain missing quantity 
+                    	if(date1.compareTo(todayDate) < 0)
+                    	{
+                    		item.setItem_Quantity(Integer.toString(inventoryParQuantity - 0));
+                            res.add(item);
+                    	}
+                    	else
+                    	{
+                    		item.setItem_Quantity(Integer.toString(inventoryParQuantity - inventoryQuantity));
+                            res.add(item);
+                    	}
+                        
+                    }
+                
+            }
+            
+            
+        
+        System.out.println("returning " + res.toString());
+        
+        return res;
+        //then we want to get the currentInventory list
+        
+        
+        //them we compare the expiration date to current day and quantity 
+    }
+	
 }

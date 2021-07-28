@@ -42,9 +42,14 @@ public class ExecutableAndNotExecGUI_View
         Button viewRecipebtn = new Button("View Recipe");
         viewRecipebtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
         viewRecipebtn.setCursor(Cursor.HAND);
+        
+        Button executeRecipeBtn = new Button("Execute Recipe");
+        executeRecipeBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+        executeRecipeBtn.setCursor(Cursor.HAND);
             
         HBox hb_1 = new HBox();
-        hb_1.getChildren().addAll(viewRecipebtn);
+        hb_1.getChildren().addAll(executeRecipeBtn, viewRecipebtn);
+        hb_1.setSpacing(5);
         hb_1.setAlignment(Pos.BASELINE_CENTER);
        
         Text errorMessage = new Text("");
@@ -95,7 +100,7 @@ public class ExecutableAndNotExecGUI_View
             	currentRecipe = (executableRecipe == null)? not_executableRecipe : executableRecipe;
             	
                 Stage showSelectedRecipe = new Stage();
-                SelectedRecipeGUI_View popUpMenu = new SelectedRecipeGUI_View(user, currentRecipe);
+                SelectedRecipeGUI_View popUpMenu = new SelectedRecipeGUI_View(user, currentRecipe, this);
                 
                 showSelectedRecipe.setScene(popUpMenu.getScene());
                 showSelectedRecipe.setTitle("Selected Recipe");
@@ -105,6 +110,13 @@ public class ExecutableAndNotExecGUI_View
                 
             });
         
+        
+        executeRecipeBtn.setOnAction(e -> 
+        {
+        	// Sergio's cooking animation
+        	System.out.println("execute button");
+            //Dre database call
+        });
     
     
     }

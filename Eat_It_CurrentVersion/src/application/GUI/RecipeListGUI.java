@@ -41,10 +41,12 @@ public class RecipeListGUI {
 	    private User user;
 	    private Recipe currentRecipe;
 	    private TableView mainInventoryListTable;
-	    
-	    public RecipeListGUI(User user, TableView mainInventoryListTable) {
+	    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
+	    private Text errorMessage;
+	    public RecipeListGUI(User user, TableView mainInventoryListTable, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
 	    	this.mainInventoryListTable = mainInventoryListTable;
+	    	this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
 	    	createTable();
 	    }
 	    
@@ -69,17 +71,37 @@ public class RecipeListGUI {
 	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
 	                
 	            	// t.getNewValue() this is what needs to be filtered.
+	            	try
+	            	{
+	            		int x = Integer.parseInt(t.getNewValue().toString());
+	            		
+	            		if( dbm.containsRecipeNum(user, Integer.toString(x)) )
+	            		{
+	            			
+	            			 t.getRowValue().setRecipe_num(t.getOldValue());
+	            			 tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue());
+	            			 errorMessage.setText("Recipe number is taken already!");
+	            		}
+	            		else
+	            		{
+	            			t.getRowValue().setRecipe_num(Integer.toString(x)); //changes cell object's value to new entry
+	     	                
+	     	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
+	     	                
+	     	                dbm.deleteRecipe( user, t.getRowValue().getRecipe_num() );
+	     	                
+	     	                dbm.insertRecipe( user,  Integer.toString(x), t.getRowValue().getRecipe_name(),
+	     	                		t.getRowValue().getCook_time(), t.getRowValue().getPrep_time(), t.getRowValue().getExecutable() );	
+	     	                
+	     	                dbm.getCurrentInventory(user);
+	            		}
+	            	}
+	            	catch(NumberFormatException e)
+	            	{
+	            		System.out.println("Not a valid recipe num!");
+	            	}
 	            	
-	                t.getRowValue().setRecipe_num(t.getNewValue()); //changes cell object's value to new entry
-	                
-	                tableView.getItems().set(t.getTablePosition().getRow(), t.getRowValue()); //changes view of table to reflect changes
-	                
-	                dbm.deleteRecipe( user, t.getRowValue().getRecipe_num() );
-	                
-	                dbm.insertRecipe( user, t.getRowValue().getRecipe_num(), t.getRowValue().getRecipe_name(),
-	                		t.getRowValue().getCook_time(), t.getRowValue().getPrep_time(), t.getRowValue().getExecutable() );	
-	                
-	                dbm.getCurrentInventory(user);
+	               
 	                
 	            }
 	        });
@@ -107,6 +129,9 @@ public class RecipeListGUI {
 	                
 	                dbm.getCurrentInventory(user);
 	                
+	                dbm.updateExecutableRecipes(user);
+	                executableAndNotExecGUI_View.updateTables();
+	                
 	            }
 	        });
 		  
@@ -133,6 +158,8 @@ public class RecipeListGUI {
 	                
 	                dbm.getCurrentInventory(user);
 	                
+	                dbm.updateExecutableRecipes(user);
+	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		   
@@ -159,6 +186,8 @@ public class RecipeListGUI {
 	                
 	                dbm.getCurrentInventory(user);
 	                
+	                dbm.updateExecutableRecipes(user);
+	                executableAndNotExecGUI_View.updateTables();
 	            }
 	        });
 		    
@@ -256,7 +285,7 @@ public class RecipeListGUI {
 		        }
 		    });
 		    
-		    Text errorMessage = new Text("");
+		    errorMessage = new Text("");
 			errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
 			errorMessage.setFill(Color.RED); 
 			
@@ -322,6 +351,8 @@ public class RecipeListGUI {
 		    
 		    autoGenRecipeNumberBtn.setOnAction(e -> 
 		    {
+		    	errorMessage.setText("");
+		    	
 		    	addRecipeNumber.setText(dbm.autogenerateRecipeNum(user));
 		    	
 		    });
@@ -331,7 +362,7 @@ public class RecipeListGUI {
 		    	//if the input fields are all filled then that means that 
 		    	//the user wants to add ingredients to the recipe that they are 
 		    	//currently working on.
-		    	
+		    	errorMessage.setText("");
 		    	currentRecipe = null;
 		    	
 		    	if( addRecipeNumber.getText().equals("")
@@ -351,7 +382,7 @@ public class RecipeListGUI {
 			    	else 
 			    	{
 			    		Stage addIngredToRecipeStage = new Stage();
-		    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable);
+		    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable, executableAndNotExecGUI_View);
 		    			
 		    			addIngredToRecipeStage.setScene(popUpMenu.getScene());
 		    			addIngredToRecipeStage.setTitle("Add Ingredients Pop Up");
@@ -382,7 +413,7 @@ public class RecipeListGUI {
 			    			errorMessage.setText("");
 			    			
 			    			Stage addIngredToRecipeStage = new Stage();
-			    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable);
+			    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable, executableAndNotExecGUI_View);
 		    			}
 		    			else
 		    			{
@@ -409,6 +440,7 @@ public class RecipeListGUI {
 		    addButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		@Override
 	    		public void handle(ActionEvent e) {
+	    			errorMessage.setText("");
 	    			
 	    			if( addRecipeNumber.getText().equals("")
 	    					|| addRecipeName.getText().equals("") 
@@ -440,17 +472,22 @@ public class RecipeListGUI {
 			    			addCookTime.clear();
 			    			addPrepTime.clear();
 			    			errorMessage.setText("");
+			    			dbm.updateExecutableRecipes(user);
+					    	executableAndNotExecGUI_View.updateTables();
 		    			}
 		    			else
 		    			{
 		    				errorMessage.setText("Failed to insert! Change Recipe Number!");
 		    			}
 	    			}
+	    			
 	    		}
 		    });
 		    
 		    deleteButton.setOnAction(e -> 
 		    {
+		    	errorMessage.setText("");
+		    	
 		    	ObservableList<Recipe> tmpList = tableView.getSelectionModel().getSelectedItems();
 		    	for(Recipe recipe : tmpList)
 		    	{
@@ -462,6 +499,8 @@ public class RecipeListGUI {
 		    	//get recipe number of what was deleted.
 		    		//deleteIngedientList()
 		    		//dbm.deleteRecipeSteps(User user, String recipe_num)
+		    	dbm.updateExecutableRecipes(user);
+		    	executableAndNotExecGUI_View.updateTables();
 		    });
 		    
 		    searchRecipebtn.setOnAction(e -> 
