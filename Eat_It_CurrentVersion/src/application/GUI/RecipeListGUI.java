@@ -29,6 +29,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class RecipeListGUI {
 	
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
@@ -43,6 +48,8 @@ public class RecipeListGUI {
 	    private TableView mainInventoryListTable;
 	    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
 	    private Text errorMessage;
+	    
+
 	    public RecipeListGUI(User user, TableView mainInventoryListTable, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
 	    	this.mainInventoryListTable = mainInventoryListTable;

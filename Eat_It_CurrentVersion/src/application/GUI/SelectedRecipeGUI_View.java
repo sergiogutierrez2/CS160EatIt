@@ -20,6 +20,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class SelectedRecipeGUI_View {
 
     DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
@@ -73,7 +78,6 @@ public class SelectedRecipeGUI_View {
 
         SelectedRecipeView_scene = new Scene(stackpane);
     }
-    
     
     public Scene getScene()
     {

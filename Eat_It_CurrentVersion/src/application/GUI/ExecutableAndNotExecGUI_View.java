@@ -28,6 +28,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class ExecutableAndNotExecGUI_View 
 {
     DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();

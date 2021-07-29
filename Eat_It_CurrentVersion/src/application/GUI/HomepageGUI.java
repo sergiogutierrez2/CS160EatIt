@@ -18,6 +18,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class HomepageGUI {
 	
 	private double mainWidth = 1380, mainHeight = 720;

@@ -2,6 +2,11 @@ package application;
 
 import java.util.ArrayList;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class InventoryList{
 	private ArrayList<RecipeItem> list;
 	

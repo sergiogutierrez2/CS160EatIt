@@ -1,6 +1,10 @@
 package application;
 
-
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class Item
 {
 

@@ -17,7 +17,7 @@ import javafx.collections.ObservableList;
 
 /**
  * The DatabaseManager class is a singleton object (only one instance allowed).
- * @author Team Eat It (Summer 2021)
+ * @author Eat_It(Summer 2021 Team)
  */
 public class DatabaseManager {
 	

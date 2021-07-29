@@ -1,7 +1,5 @@
 package application;
 	
-//imports for javaFX
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -41,6 +39,11 @@ import application.GUI.LoginGUI;
 import application.GUI.RecipeIngredientList_TableViewGUI;
 import application.GUI.RegistrationGUI;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class Main extends Application {
 	
 	@Override

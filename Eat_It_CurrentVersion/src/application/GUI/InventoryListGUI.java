@@ -32,6 +32,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class InventoryListGUI {
 	
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();

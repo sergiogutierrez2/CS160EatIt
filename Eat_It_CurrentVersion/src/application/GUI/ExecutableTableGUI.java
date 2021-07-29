@@ -31,6 +31,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class ExecutableTableGUI {
 	
 	DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();

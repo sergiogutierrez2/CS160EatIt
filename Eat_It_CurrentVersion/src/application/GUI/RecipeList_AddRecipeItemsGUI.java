@@ -30,6 +30,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.DatePicker;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class RecipeList_AddRecipeItemsGUI {
 
 	DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();

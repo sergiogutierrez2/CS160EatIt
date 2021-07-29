@@ -1,5 +1,10 @@
 package application;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class Recipe 
 {
     
@@ -11,6 +16,8 @@ public class Recipe
     private InventoryList iList;
     private int iListSize;
     public InventoryList missingList;
+    
+
     public Recipe(String recipe_num, String recipe_name, 
                     String cook_time, String prep_time, 
                                         String executable) 
@@ -23,8 +30,6 @@ public class Recipe
         iList = new InventoryList();
         missingList = new InventoryList();
     }
-    
-    
     
     public Recipe(String recipe_num, String recipe_name, 
             String cook_time, String prep_time) 

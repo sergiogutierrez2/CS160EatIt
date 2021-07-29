@@ -22,6 +22,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class RegistrationGUI {
 	
 	private DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();

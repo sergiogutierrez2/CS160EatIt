@@ -30,6 +30,11 @@ import javafx.scene.text.Text;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
+/**
+ * TODO: Write a description of the class here.
+ * 
+ * @author Eat_It(Summer 2021 Team)
+ */
 public class RecipeSteps_TableViewGUI 
 {
 	DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
