@@ -14,6 +14,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -41,11 +44,19 @@ public class SelectedRecipeGUI_View {
         RecipeIngredientList_TableViewGUI recipeIngredListGUI = new RecipeIngredientList_TableViewGUI(user, recipe, executableAndNotExecGUI_View);
         RecipeSteps_TableViewGUI recipeSteps_TableViewGUI = new RecipeSteps_TableViewGUI(user, recipe);
         
+        LinearGradient linearGrad = new LinearGradient(
+                0,   // start X 
+                0,   // start Y
+                0,   // end X
+                1, // end Y
+                true, // proportional
+                CycleMethod.NO_CYCLE, // cycle colors
+                // stops
+                new Stop(0.1f, Color.WHITE),
+                new Stop(1.0f, Color.CADETBLUE));
         
-        Rectangle selectedRecipe_background = new Rectangle(700, 600);
-        selectedRecipe_background.setArcHeight(30.0);
-        selectedRecipe_background.setArcWidth(30.0);
-        selectedRecipe_background.setFill(Color.web("#e3e3e3",1));
+        Rectangle selectedRecipe_background = new Rectangle(700, 700);
+        selectedRecipe_background.setFill(linearGrad);
         
         HBox mainHBox = new HBox( recipeIngredListGUI.getTableView(), recipeSteps_TableViewGUI.getTableView() );
         mainHBox.setAlignment(Pos.CENTER);

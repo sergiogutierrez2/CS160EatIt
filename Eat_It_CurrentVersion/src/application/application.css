@@ -36,7 +36,7 @@
     -fx-border-color: transparent;
     -fx-padding: 2 0 2 10px;
     -fx-font-weight:bold;
-	-fx-font-size: 9px;
+	-fx-font-size: 12px;
 }
 
 .table-row-cell:hover {
@@ -74,8 +74,30 @@
 
 /* Style each of column header's labels */ 
 .table-view .column-header-background .label {
-	-fx-font-weight: bold;
-	-fx-font-size: 9px;
+	-fx-font-weight: 900;
+	-fx-font-size: 10px;
+	-fx-font-family: Arial, Helvetica, sans-serif;
+	
 	
 }
 
+
+.titled-pane > .title 
+{
+-fx-background-color: -fx-outer-border, transparent, white;
+-fx-background-insets: 0, 1, 2;
+-fx-background-radius: 5 5 0 0, 4 4 0 0, 3 3 0 0;
+-fx-padding: 0.166667em 0.833333em 0.25em 0.833333em; /* 2 10 3 10 */
+}
+
+.titled-pane > *.content 
+{
+-fx-background-color: transparent, transparent, transparent;
+-fx-background-insets: 0, 0 1 1 1;
+-fx-padding: 0.167em;
+ }
+
+.titled-pane:focused > .title > .arrow-button .arrow 
+{
+-fx-background-color: transparent;
+}

@@ -3,6 +3,8 @@ package application;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -63,6 +65,9 @@ public class Main extends Application {
 			primaryStage.setScene(loginGUI.getLoginScene());
 			
 			primaryStage.setTitle("Login Page");
+			primaryStage.setX(50);
+			primaryStage.setY(50);
+			
 			primaryStage.show();
 			
 		} 

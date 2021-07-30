@@ -1,12 +1,13 @@
 package application.GUI;
 
-import java.io.File;
 import java.util.Random;
 
 import application.DatabaseManager;
 import application.Recipe;
 import application.User;
 import javafx.animation.PauseTransition;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -16,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -41,15 +43,20 @@ public class ExecutableAndNotExecGUI_View
     private VBox main_VBox;
     private User user;
     private TitledPane bothExecutableListsTitlePane;
+    private StackPane stackPaneFromHomepage;
+    private Rectangle blockStageBackground;
     
     ExecutableTableGUI executableTable;
     ExecutableTableGUI not_executableTable;
+    
+    private Stage showSelectedRecipe;
     
     private TableView inventoryListTableView;
     
     @SuppressWarnings("unchecked")
 	public ExecutableAndNotExecGUI_View(User user)
     {
+    	this.showSelectedRecipe = new Stage();
         this.user = user;
         executableTable = new ExecutableTableGUI(user, true);
         not_executableTable = new ExecutableTableGUI(user, false);
@@ -59,6 +66,7 @@ public class ExecutableAndNotExecGUI_View
         viewRecipebtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
         viewRecipebtn.setCursor(Cursor.HAND);
         
+        
         Button executeRecipeBtn = new Button("Execute Recipe");
         executeRecipeBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
         executeRecipeBtn.setCursor(Cursor.HAND);
@@ -66,6 +74,7 @@ public class ExecutableAndNotExecGUI_View
         HBox hb_1 = new HBox();
         hb_1.getChildren().addAll(executeRecipeBtn, viewRecipebtn);
         hb_1.setSpacing(5);
+        hb_1.setPadding(new Insets(0, 0, 5, 0));
         hb_1.setAlignment(Pos.BASELINE_CENTER);
        
         Text errorMessage = new Text("");
@@ -74,18 +83,15 @@ public class ExecutableAndNotExecGUI_View
         
         TitledPane executableListTitlePane = new TitledPane("Executable Recipes", executableTable.getTableView());
         executableListTitlePane.setMinWidth(350);
+        
         TitledPane not_executableListTitlePane = new TitledPane("Non-Executable Recipes", not_executableTable.getTableView());
         not_executableListTitlePane.setMinWidth(350);
         
-        main_VBox = new VBox(hb_1,errorMessage,executableListTitlePane, not_executableListTitlePane);
-        
-        Rectangle background = new Rectangle(445,550);
-        background.setArcHeight(40.0);
-        background.setArcWidth(40.0);
-        background.setFill(Color.web("#e3e3e3",1));
-        
-    
-        StackPane stackPane = new StackPane(background,main_VBox);
+        main_VBox = new VBox(hb_1, errorMessage,executableListTitlePane, not_executableListTitlePane);
+        main_VBox.setAlignment(Pos.CENTER);
+        main_VBox.setSpacing(5);
+        	
+        StackPane stackPane = new StackPane(main_VBox);
         
         bothExecutableListsTitlePane = new TitledPane("Executable Recipes", stackPane);
         
@@ -94,7 +100,8 @@ public class ExecutableAndNotExecGUI_View
             //if the input fields are all filled then that means that 
             //the user wants to add ingredients to the recipe that they are 
             //currently working on.
-            
+        	errorMessage.setText("");
+        	
             currentRecipe = null;
             
                 
@@ -115,16 +122,37 @@ public class ExecutableAndNotExecGUI_View
             	//we know one recipe was selected
             	currentRecipe = (executableRecipe == null)? not_executableRecipe : executableRecipe;
             	
-                Stage showSelectedRecipe = new Stage();
                 SelectedRecipeGUI_View popUpMenu = new SelectedRecipeGUI_View(user, currentRecipe, this);
                 
                 showSelectedRecipe.setScene(popUpMenu.getScene());
                 showSelectedRecipe.setTitle("Selected Recipe");
                 showSelectedRecipe.show();
+                blockStageBackground.setStyle("-fx-background-color: grey; -fx-opacity: 0.1;");
+                stackPaneFromHomepage.getChildren().add(blockStageBackground);
             }
                 
                 
             });
+        
+        showSelectedRecipe.setOnHiding( event -> { stackPaneFromHomepage.getChildren().remove(blockStageBackground);} );
+        
+        viewRecipebtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 viewRecipebtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+			
+		});
+        
+        viewRecipebtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 viewRecipebtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+			
+		});
         
         
         executeRecipeBtn.setOnAction(e -> 
@@ -204,7 +232,36 @@ public class ExecutableAndNotExecGUI_View
         	// Sergio's cooking animation
         	
         });
+        
+        executeRecipeBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 executeRecipeBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+			
+		});
+        
+        executeRecipeBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 executeRecipeBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+			
+		});
     
+    }
+    
+    public void setStackPaneFromHomepage(StackPane sp, Rectangle blockStageBackground)
+    {
+    	this.blockStageBackground = blockStageBackground;
+    	this.stackPaneFromHomepage = sp;
+    }
+    
+    public Stage getViewRecipeStage()
+    {
+    	return showSelectedRecipe;
     }
     
     public void updateTables()

@@ -20,6 +20,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -71,9 +72,8 @@ public class RecipeSteps_TableViewGUI
 
     	TableViewSelectionModel<RecipeStep> selectionModel = tableView.getSelectionModel();
     	selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
-    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
+    	tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-    	// COlUMNS
     	TableColumn<RecipeStep, String> column0 = new TableColumn<>("Step\n#");
     	column0.setCellValueFactory(new PropertyValueFactory<>("step_num"));
     	column0.setCellFactory(TextFieldTableCell.<RecipeStep>forTableColumn());
@@ -96,7 +96,7 @@ public class RecipeSteps_TableViewGUI
 	    addButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 	    addButton.setCursor(Cursor.HAND);
 	    
-	    deleteButton = new Button("Delete Selected");
+	    deleteButton = new Button("Delete Step");
 	    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 	    deleteButton.setCursor(Cursor.HAND);
 	    
@@ -139,11 +139,11 @@ public class RecipeSteps_TableViewGUI
 	    
 	    errorMessage = new Text("");
 		errorMessage.setFont(Font.font("Arial", FontWeight.THIN, FontPosture.ITALIC, 9));
-		errorMessage.setFill(Color.RED); 
-	    
+		errorMessage.setFill(Color.RED);
 	    
 	    HBox hbox = new HBox(addButton, deleteButton);
 	    hbox.setAlignment(Pos.CENTER);
+	    
 	    VBox addStep_VBox = new VBox(errorMessage, hbox, addStep, addDesc);
 	    addStep_VBox.setAlignment(Pos.CENTER);
 	    addStep_VBox.setSpacing(5);
@@ -156,12 +156,9 @@ public class RecipeSteps_TableViewGUI
 	    vbox.setBackground(null);
 	    vbox.setMaxHeight(300);
 	    
-	    
-	    
 	    scene = new Scene(vbox, mainWidth, mainHeight);
 	    
-	    
-	    
+	    scene.setFill(null);
 	    /* **********************************
 	     * Event Listeners Start
 	     * ********************************** */
@@ -181,11 +178,9 @@ public class RecipeSteps_TableViewGUI
     				String recipe_step = addStep.getText();
     				String step_desc = addDesc.getText();
     						
-    				
     				System.out.println("recipe_step: " + recipe_step + ", step_desc: " + step_desc);
     			
     				RecipeStep tmpRecipeStep = new RecipeStep(recipe.getRecipe_num(), recipe_step, step_desc);
-	    			
 	    			
 	    			Boolean successfulInsertion = dbm.insertRecipeSteps(user, recipe.getRecipe_num(), recipe_step, step_desc);
 	    		
@@ -203,6 +198,22 @@ public class RecipeSteps_TableViewGUI
     			}
     		}
 	    });
+    	
+    	addButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 addButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+    	
+    	addButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 addButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
     
     	deleteButton.setOnAction(e -> 
 	    {
@@ -213,6 +224,22 @@ public class RecipeSteps_TableViewGUI
 	    	}
 	    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 	    });
+    	
+    	deleteButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 deleteButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+    	
+    	deleteButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
 	    
 	    /* **********************************
 	     * Event Listeners End
@@ -226,7 +253,7 @@ public class RecipeSteps_TableViewGUI
     
     public VBox getVBox()
     {
-    	return vbox;
+    	return this.vbox;
     }
     
     public ObservableList<Item> getCurrentInventory()

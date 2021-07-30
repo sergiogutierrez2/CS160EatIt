@@ -7,28 +7,33 @@ import application.Item;
 import application.Recipe;
 import application.RecipeItem;
 import application.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.scene.control.DatePicker;
 
 /**
  * TODO: Write a description of the class here.
@@ -200,22 +205,33 @@ public class RecipeList_AddRecipeItemsGUI {
 		newItemTextFields_2.setAlignment(Pos.CENTER);
 		
 		VBox newItemTextFields_vBox = new VBox(newItemTextFields_1, newItemTextFields_2);
+		newItemTextFields_vBox.setPadding(new Insets(5, 0, 0, 0));
 		
 		VBox ingredientVbox = new VBox(ingredientHBox, newItemTextFields_vBox);
 		
 		HBox mainHBox = new HBox(ingredientVbox, recipeSteps_TableViewGUI.getVBox() );
-		mainHBox.setAlignment(Pos.CENTER);
+		mainHBox.setAlignment(Pos.TOP_CENTER);
 		mainHBox.setSpacing(50);
-		
 		
 		VBox mainVBox = new VBox();
 		mainVBox.getChildren().addAll(recipeNameTitle, mainHBox, errorMessage);
 		mainVBox.setAlignment(Pos.CENTER);
 		
+		LinearGradient linearGrad = new LinearGradient(
+                0,   // start X 
+                0,   // start Y
+                0,   // end X
+                1, // end Y
+                true, // proportional
+                CycleMethod.NO_CYCLE, // cycle colors
+                // stops
+                new Stop(0.1f, Color.WHITE),
+                new Stop(1.0f, Color.CADETBLUE));
+		
 		Rectangle inventoryList_background = new Rectangle(1200, 800);
 		inventoryList_background.setArcHeight(40.0);
 		inventoryList_background.setArcWidth(40.0);
-		inventoryList_background.setFill(Color.web("#e3e3e3",1));
+		inventoryList_background.setFill(linearGrad);
 		
 		StackPane stackpane = new StackPane(inventoryList_background, mainVBox);
 
@@ -233,6 +249,22 @@ public class RecipeList_AddRecipeItemsGUI {
 	    	
 	    } );
 		
+		autoGenItemNumberBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 autoGenItemNumberBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 10px; -fx-font-size: 9px; -fx-text-fill: #ffffff");
+		    }
+		});
+	 
+		autoGenItemNumberBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 autoGenItemNumberBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 10px; -fx-font-size: 9px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
 		TableView recipeIngredListTableView = recipeIngredListGUI.getTableView();
 		
 		 deleteButton.setOnAction(e -> 
@@ -247,6 +279,22 @@ public class RecipeList_AddRecipeItemsGUI {
 		    	dbm.updateExecutableRecipes(user);
 		    	executableAndNotExecGUI_View.updateTables();
 		    });
+		 
+		 deleteButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		 
+		 deleteButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
 		
 		addIngredientToItemListBtn.setOnAction(new EventHandler<ActionEvent>() {
     		@Override
@@ -303,6 +351,22 @@ public class RecipeList_AddRecipeItemsGUI {
     		}
 	    });
 		
+		addIngredientToItemListBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 addIngredientToItemListBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+	 
+		addIngredientToItemListBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 addIngredientToItemListBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
 		addIngredientToRecipe.setOnAction(new EventHandler<ActionEvent>() 
 		{
     		@Override
@@ -314,6 +378,23 @@ public class RecipeList_AddRecipeItemsGUI {
 				
 			}
 	    });
+		
+		addIngredientToRecipe.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 addIngredientToRecipe.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+	 
+		addIngredientToRecipe.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 addIngredientToRecipe.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
 	}  
 	
 	public Scene getScene()

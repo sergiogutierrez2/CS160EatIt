@@ -10,6 +10,7 @@ import application.DatabaseManager;
 import application.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -19,6 +20,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -98,7 +100,7 @@ public class LoginGUI {
 
 		/* create the buttons for sing up page */
 		signUpBtn = new Button("Sign Up");
-		loginBtn = new Button("Login  ");
+		loginBtn = new Button("Login");
 		
 		signUpBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		signUpBtn.setCursor(Cursor.HAND);
@@ -139,6 +141,24 @@ public class LoginGUI {
 		
 		});
 		
+		signUpBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 signUpBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+			
+		});
+		
+		signUpBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 signUpBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+			
+		});
+		
 		loginBtn.setOnAction(e-> {
 			
 			String username = getUserNameString();
@@ -162,7 +182,24 @@ public class LoginGUI {
 				passwordField.clear();
 			}
 		});
+		
+		loginBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			@Override
+		    public void handle(MouseEvent t) {
+				loginBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
+		loginBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			@Override
+		    public void handle(MouseEvent t) {
+				loginBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
 	}
+	
 	
 	public Scene getLoginScene() 
 	{

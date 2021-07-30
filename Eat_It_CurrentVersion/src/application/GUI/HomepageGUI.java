@@ -3,6 +3,7 @@ package application.GUI;
 import java.net.URL;
 
 import application.User;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -11,10 +12,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -25,10 +31,13 @@ import javafx.stage.Stage;
  */
 public class HomepageGUI {
 	
-	private double mainWidth = 1380, mainHeight = 720;
+	private double mainWidth = 1380, mainHeight = 780;
 	private Scene homepageScene;
-	Button logoutBtn;
+	private Button logoutBtn;
 	private User user;
+	private StackPane mainPane;
+	private Stage stageFromAddIngredientListView;
+	private Stage stageFromViewingRecipe;
 	
 	public HomepageGUI(Stage stage, User user, Scene loginScene)
 	{
@@ -63,61 +72,114 @@ public class HomepageGUI {
 		VBox vbox_inventoryListGUI = inventoryListGUI.getVBox();
 		//vbox_inventoryListGUI.setPrefSize(300, 500);
 		
-		vbox_recipeListGUI.setMaxWidth(375);
+		vbox_recipeListGUI.setMaxWidth(420);
 		vbox_recipeListGUI.setMaxHeight(600);
 		
-		vbox_inventoryListGUI.setMaxWidth(375);
+		vbox_inventoryListGUI.setMaxWidth(420);
 		vbox_inventoryListGUI.setMaxHeight(600);
 		
-		Rectangle mainBackground = new Rectangle(1420,770);
-		mainBackground.setArcHeight(40.0);
-		mainBackground.setArcWidth(40.0);
-		mainBackground.setFill(Color.web("#CDD3CE",1));
+		LinearGradient linearGrad = new LinearGradient(
+                0,   // start X 
+                0,   // start Y
+                0,   // end X
+                1, // end Y
+                true, // proportional
+                CycleMethod.NO_CYCLE, // cycle colors
+                // stops
+                new Stop(0.1f, Color.WHITE),
+                new Stop(1.0f, Color.CADETBLUE));
 		
-		Rectangle inventoryList_background = new Rectangle(400,550);
-		inventoryList_background.setArcHeight(40.0);
-		inventoryList_background.setArcWidth(40.0);
-		inventoryList_background.setFill(Color.web("#e3e3e3",1));
+		Rectangle mainBackground = new Rectangle(mainWidth, mainHeight);
+		mainBackground.setFill(linearGrad);
 		
-		Rectangle recipeList_background = new Rectangle(400,550);
-		recipeList_background.setArcHeight(40.0);
-		recipeList_background.setArcWidth(40.0);
-		recipeList_background.setFill(Color.web("#e3e3e3",1));
+		Rectangle blockStageBackground = new Rectangle(mainWidth, mainHeight);
+		blockStageBackground.setStyle("-fx-background-color: grey; -fx-opacity: 0.75;");
 		
 		StackPane inventoryListStackPane = new StackPane();
-		inventoryListStackPane.getChildren().addAll(inventoryList_background, vbox_inventoryListGUI);
+		inventoryListStackPane.getChildren().addAll(vbox_inventoryListGUI);
 		inventoryListStackPane.setAlignment(Pos.CENTER);
 		
 		StackPane recipeListStackPane = new StackPane();
-		recipeListStackPane.getChildren().addAll(recipeList_background, vbox_recipeListGUI);
+		recipeListStackPane.getChildren().addAll(vbox_recipeListGUI);
 		recipeListStackPane.setAlignment(Pos.CENTER);
 		
 		TitledPane ingredientsPane = new TitledPane("Ingredients", inventoryListStackPane);
-		ingredientsPane.setMinWidth(350);
+		ingredientsPane.setMinWidth(400);
+		ingredientsPane.setMaxHeight(600);
+		ingredientsPane.setMinHeight(600);
+		
+		
 		TitledPane recipesListPane = new TitledPane("Recipe List", recipeListStackPane);
 		recipesListPane.setMinWidth(400);
+		recipesListPane.setMaxHeight(600);
+		recipesListPane.setMinHeight(600);
 		
 		TitledPane execView = executableAndNotExecGUI_View.getTitledPane();
+		execView.setMaxHeight(600);
+		execView.setMinHeight(600);
 		
 		HBox hbox = new HBox(ingredientsPane, recipesListPane, execView);
 		hbox.setPadding(new Insets(10, 0, 0, 10));
 		hbox.setSpacing(5);
 		entireHomePage_VBox.getChildren().add(hbox);
 		
-		StackPane mainPane = new StackPane(mainBackground, entireHomePage_VBox);
+		mainPane = new StackPane(mainBackground, entireHomePage_VBox);
 		
 		homepageScene = new Scene(mainPane, mainWidth, mainHeight);
 	
+		recipeListGUI.setStackPaneFromHomepage(mainPane, blockStageBackground);
+		stageFromAddIngredientListView = recipeListGUI.getAddIngredientListStage();
+		
+		executableAndNotExecGUI_View.setStackPaneFromHomepage(mainPane, blockStageBackground);
+		stageFromViewingRecipe = executableAndNotExecGUI_View.getViewRecipeStage();
 		
 		URL url = this.getClass().getResource("/application/application.css");
 		System.out.println(url.toString());
 		String css = url.toExternalForm();
 		homepageScene.getStylesheets().add(css);
+		ingredientsPane.getStylesheets().add(css);
 		
 		logoutBtn.setOnAction(e-> {
 			this.user = null;
 			stage.setScene(loginScene);
 			stage.setTitle("Login Page");
+		});
+		
+		logoutBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 logoutBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
+		logoutBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 logoutBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
+		blockStageBackground.setOnMouseClicked(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 
+				 if(stageFromAddIngredientListView.isShowing())
+				 {
+					 mainPane.getChildren().remove(blockStageBackground);
+					 stageFromAddIngredientListView.close();
+				 }
+				 if(stageFromViewingRecipe.isShowing())
+				 {
+					 mainPane.getChildren().remove(blockStageBackground);
+					 stageFromViewingRecipe.close();
+				 }
+				 
+				 
+				 
+		    }
 		});
 	}
 	

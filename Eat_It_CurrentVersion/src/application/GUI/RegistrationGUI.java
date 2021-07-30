@@ -3,6 +3,7 @@ package application.GUI;
 import application.DatabaseManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -12,6 +13,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -34,7 +36,6 @@ public class RegistrationGUI {
 	private TextField userNameField;
 	private PasswordField passwordField1;
 	private PasswordField passwordField2;
-	
 	private Button cancelBtn, registerBtn;
 	private String jdbcUrl3 = "jdbc:sqlite:schema_v1.db";
 	
@@ -145,7 +146,6 @@ public class RegistrationGUI {
 		// *********************************
 		
 		cancelBtn.setOnAction(e->{
-			
 			System.out.println("Cancel Button Pressed");
 			stage.setScene(loginGUI.getLoginScene());
 			stage.setTitle("Login Page");
@@ -153,13 +153,26 @@ public class RegistrationGUI {
 			userNameField.clear();
 			passwordField1.clear();
 			passwordField2.clear();
-			
+		});
+		
+		cancelBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 cancelBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
+		cancelBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 cancelBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
 		});
 		
 		registerBtn.setOnAction(e->{
-			
 			errorMessage.setText("");
-			
 			
 			System.out.println("register");
 			
@@ -171,7 +184,6 @@ public class RegistrationGUI {
 								+ "password: " + pass_word.toString() + "\n"
 								+ "reEnterPass: " + reEnterPass.toString());
 				
-			
 			if(dbm.insertCredentials(username, pass_word, reEnterPass))
 			{
 				dbm.printCredentials();
@@ -189,15 +201,26 @@ public class RegistrationGUI {
 			else
 			{
 				errorMessage.setText("Username already taken: " + username);
-			
 			}
-			
-			
-
+		});
+		
+		registerBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 registerBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
+		registerBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			 @Override
+		    public void handle(MouseEvent t) {
+				 registerBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
 		});
 		
 	}
-	
 	
 	public Scene getSignUpScene() 
 	{

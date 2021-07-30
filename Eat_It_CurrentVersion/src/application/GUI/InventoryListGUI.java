@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -87,11 +88,11 @@ public class InventoryListGUI {
 		    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
 
 		    // COlUMNS
-		    TableColumn<Item, String> column0 = new TableColumn<>("Item\n#");
+		    TableColumn<Item, String> column0 = new TableColumn<>("Item #");
 		    column0.setCellValueFactory(new PropertyValueFactory<>("item_num"));
 		    column0.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column0.setMinWidth(30);
-		    column0.setMaxWidth(80);
+		    column0.setMinWidth(40);
+		    column0.setMaxWidth(40);
 		    column0.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
@@ -134,7 +135,7 @@ public class InventoryListGUI {
 		    column1.setCellValueFactory(new PropertyValueFactory<>("item_name"));
 		    column1.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
 		    column1.setMinWidth(60);
-		    column1.setMaxWidth(90);
+		    column1.setMaxWidth(150);
 		    column1.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
@@ -167,8 +168,8 @@ public class InventoryListGUI {
 		    TableColumn<Item, String> column2 = new TableColumn<>("Expiration Date");
 		    column2.setCellValueFactory(new PropertyValueFactory<>("item_Exp"));
 		    column2.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column2.setMinWidth(70);
-		    column2.setMaxWidth(70);
+		    column2.setMinWidth(90);
+		    column2.setMaxWidth(120);
 		    column2.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
@@ -309,11 +310,11 @@ public class InventoryListGUI {
 	            }
 	        });
 		    
-		    TableColumn<Item, String> column5 = new TableColumn<>("Amount\nType");
+		    TableColumn<Item, String> column5 = new TableColumn<>("Amount Type");
 		    column5.setCellValueFactory(new PropertyValueFactory<>("item_Quantity_Type"));
 		    column5.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-		    column5.setMinWidth(60);
-		    column5.setMaxWidth(60);
+		    column5.setMinWidth(100);
+		    column5.setMaxWidth(100);
 		    column5.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Item, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Item, String> t) {
@@ -517,6 +518,7 @@ public class InventoryListGUI {
 		    HBox hb_1 = new HBox(autoGenItemNumberBtn, addButton, deleteButton);
 		    hb_1.setAlignment(Pos.CENTER);
 		    hb_1.setSpacing(5);
+		    hb_1.setPadding(new Insets(0, 0, 10, 0));
 		    	    
 		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, hb_3,  tableView, viewShoppingList);
 		    vbox.setSpacing(5);
@@ -536,6 +538,25 @@ public class InventoryListGUI {
 		    	errorMessage.setText("");
 		    	addItemNum.setText(dbm.autogenerateItemNum(user));
 		    });
+		    
+		    autoGenItemNumberBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 autoGenItemNumberBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 10px; -fx-font-size: 9px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+		    
+		    autoGenItemNumberBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 autoGenItemNumberBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 10px; -fx-font-size: 9px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+		    
 		    
 		    addButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		@Override
@@ -589,6 +610,23 @@ public class InventoryListGUI {
 	    		}
 		    });
 		    
+		    addButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+		    
+		    addButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
 		    deleteButton.setOnAction(e -> 
 		    {
 		    	errorMessage.setText("");
@@ -616,6 +654,22 @@ public class InventoryListGUI {
                 executableAndNotExecGUI_View.updateTables();
 		    });
 		    
+		    deleteButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
+		    deleteButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
 		    searchItembtn.setOnAction(e -> 
 		    {
 		    	errorMessage.setText("");
@@ -626,6 +680,24 @@ public class InventoryListGUI {
 		    		if (item.getItem_name().contains(searchItem.getText()) ) tableView.getItems().add(item);
 		    	}
 		    });
+		    
+		    searchItembtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 searchItembtn.setStyle("-fx-background-color: #06BCC1; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+		    
+		    searchItembtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 searchItembtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
 		    
 		    viewShoppingList.setOnAction(e -> 
             {
@@ -641,6 +713,24 @@ public class InventoryListGUI {
 
 
             );
+		    
+		    viewShoppingList.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 viewShoppingList.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+		    
+		    viewShoppingList.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 viewShoppingList.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
 		    
 		    /* **********************************
 		     * Event Listeners End

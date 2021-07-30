@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -20,9 +21,12 @@ import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -48,12 +52,15 @@ public class RecipeListGUI {
 	    private TableView mainInventoryListTable;
 	    private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
 	    private Text errorMessage;
-	    
+	    private StackPane stackPaneFromHomePage;
+	    private Rectangle blockStageBackground;
+	    private Stage addIngredToRecipeStage;
 
 	    public RecipeListGUI(User user, TableView mainInventoryListTable, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
 	    	this.mainInventoryListTable = mainInventoryListTable;
 	    	this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
+	    	addIngredToRecipeStage = new Stage();
 	    	createTable();
 	    }
 	    
@@ -68,11 +75,11 @@ public class RecipeListGUI {
 		    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
 
 		    // COlUMNS
-		    TableColumn<Recipe, String> column0 = new TableColumn<>("Recipe\n#");
+		    TableColumn<Recipe, String> column0 = new TableColumn<>("Recipe n#");
 		    column0.setCellValueFactory(new PropertyValueFactory<>("recipe_num"));
 		    column0.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
-		    column0.setMinWidth(40);
-		    column0.setMaxWidth(40);
+		    column0.setMinWidth(70);
+		    column0.setMaxWidth(70);
 		    column0.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
@@ -117,8 +124,8 @@ public class RecipeListGUI {
 		    TableColumn<Recipe, String> column1 = new TableColumn<>("Recipe Name");
 		    column1.setCellValueFactory(new PropertyValueFactory<>("recipe_name"));
 		    column1.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
-		    column1.setMinWidth(80);
-		    column1.setMaxWidth(80);
+		    column1.setMinWidth(120);
+		    column1.setMaxWidth(120);
 		    column1.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
@@ -146,8 +153,8 @@ public class RecipeListGUI {
 		    TableColumn<Recipe, String> column2 = new TableColumn<>("Cook Time");
 		    column2.setCellValueFactory(new PropertyValueFactory<>("cook_time"));
 		    column2.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
-		    column2.setMinWidth(50);
-		    column2.setMaxWidth(50);
+		    column2.setMinWidth(80);
+		    column2.setMaxWidth(80);
 		    column2.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
@@ -174,8 +181,8 @@ public class RecipeListGUI {
 		    TableColumn<Recipe, String> column3 = new TableColumn<>("Prep Time");
 		    column3.setCellValueFactory(new PropertyValueFactory<>("prep_time"));
 		    column3.setCellFactory(TextFieldTableCell.<Recipe>forTableColumn());
-		    column3.setMinWidth(50);
-		    column3.setMaxWidth(50);
+		    column3.setMinWidth(80);
+		    column3.setMaxWidth(80);
 		    column3.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Recipe, String>>() {
 	            @Override
 	            public void handle(TableColumn.CellEditEvent<Recipe, String> t) {
@@ -310,7 +317,7 @@ public class RecipeListGUI {
 		    deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    deleteButton.setCursor(Cursor.HAND);
 		    
-		    Button addRecipeIngredients = new Button("Add\nIngredients");
+		    Button addRecipeIngredients = new Button("Add Ingredients");
 		    addRecipeIngredients.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    addRecipeIngredients.setCursor(Cursor.HAND);
 		    
@@ -329,8 +336,8 @@ public class RecipeListGUI {
 		    						addCookTime);
 		    hb.setAlignment(Pos.CENTER);
 		    HBox hb_2 = new HBox();
-		    hb_2.getChildren().addAll(addPrepTime);
-		    hb_2.setAlignment(Pos.CENTER);
+		    hb_2.getChildren().addAll(autoGenRecipeNumberBtn, addPrepTime);
+		    hb_2.setAlignment(Pos.CENTER_LEFT);
 		    
 		    HBox hb_3 = new HBox();
 		    hb_3.getChildren().addAll(searchRecipe, searchRecipebtn);
@@ -341,9 +348,10 @@ public class RecipeListGUI {
 		    hb_2.setSpacing(5);
 		    hb.setSpacing(5);
 		    
-		    HBox hb_1 = new HBox(autoGenRecipeNumberBtn, addButton, deleteButton, addRecipeIngredients);
+		    HBox hb_1 = new HBox(addButton, deleteButton, addRecipeIngredients);
 		    hb_1.setAlignment(Pos.CENTER);
 		    hb_1.setSpacing(5);
+		    hb_1.setPadding(new Insets(0, 0, 10, 0));
 		    	    
 		    vbox = new VBox(hb, hb_2, errorMessage, hb_1, hb_3, tableView);
 		    vbox.setSpacing(5);
@@ -364,6 +372,22 @@ public class RecipeListGUI {
 		    	
 		    });
 		    
+		    autoGenRecipeNumberBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 autoGenRecipeNumberBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 10px; -fx-font-size: 9px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
+		    autoGenRecipeNumberBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 autoGenRecipeNumberBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 10px; -fx-font-size: 9px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
 		    addRecipeIngredients.setOnAction(e -> 
 		    {
 		    	//if the input fields are all filled then that means that 
@@ -377,32 +401,40 @@ public class RecipeListGUI {
     					|| addCookTime.getText().equals("") 
     					|| addPrepTime.getText().equals("") )
     			{
+		    		//check if they selected something
 		    		ObservableList<Recipe> tmpList = tableView.getSelectionModel().getSelectedItems();
 			    	for(Recipe recipe : tmpList)
 			    	{
 			    		currentRecipe = recipe;
 			    	}
+			    	//if they did not select anything
 			    	if(currentRecipe == null)
 			    	{
 			    		errorMessage.setText("Select a recipe or enter data in all the fields");
 			    	}
 			    	else 
 			    	{
-			    		Stage addIngredToRecipeStage = new Stage();
+			    		//they did select something
 		    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable, executableAndNotExecGUI_View);
 		    			
 		    			addIngredToRecipeStage.setScene(popUpMenu.getScene());
 		    			addIngredToRecipeStage.setTitle("Add Ingredients Pop Up");
 		    			addIngredToRecipeStage.show();
+		    			stackPaneFromHomePage.getChildren().add(blockStageBackground);
 			    	}
     			}
 		    	else
 		    	{
-		    		String recipe_num = addRecipeNumber.getText(), recipe_name = addRecipeName.getText(), 
-    						cook_time = addCookTime.getText(), prep_time = addPrepTime.getText();	
+		    		//if they filled out all of the fields and then pressed addIngredients
+		    		//then this section should add the recipe to the database if possible
+		    		//and then open the stage with the to add ingredients.
+		    		String recipe_num = addRecipeNumber.getText().toString(), recipe_name = addRecipeName.getText().toString(), 
+    						cook_time = addCookTime.getText().toString(), prep_time = addPrepTime.getText().toString();	
 		    		
+		    		//check if recipe already exists
 		    		if( !(dbm.containsRecipeNum(user, recipe_num)) )
 		    		{
+		    			//if it does not, then add recipe to database.
 		    			currentRecipe = new Recipe(recipe_num, recipe_name, cook_time, prep_time);
 			    		
 			    		Boolean successfulInsertion = false;
@@ -419,8 +451,12 @@ public class RecipeListGUI {
 			    			addPrepTime.clear();
 			    			errorMessage.setText("");
 			    			
-			    			Stage addIngredToRecipeStage = new Stage();
 			    			RecipeList_AddRecipeItemsGUI popUpMenu = new RecipeList_AddRecipeItemsGUI(user, currentRecipe, mainInventoryListTable, executableAndNotExecGUI_View);
+			    			addIngredToRecipeStage.setScene(popUpMenu.getScene());
+			    			addIngredToRecipeStage.setTitle("Add Ingredients Pop Up");
+			    			addIngredToRecipeStage.show();
+			    			blockStageBackground.setStyle("-fx-background-color: grey; -fx-opacity: 0.75;");
+			    			stackPaneFromHomePage.getChildren().add(blockStageBackground);
 		    			}
 		    			else
 		    			{
@@ -443,6 +479,25 @@ public class RecipeListGUI {
 		    			//they probably want to add recipe ingredients to the selected recipe
 		    	
 		    });
+		    
+		    addIngredToRecipeStage.setOnHiding( event -> { stackPaneFromHomePage.getChildren().remove(blockStageBackground);} );
+
+		    
+		    addRecipeIngredients.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addRecipeIngredients.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
+		    addRecipeIngredients.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addRecipeIngredients.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
 		    
 		    addButton.setOnAction(new EventHandler<ActionEvent>() {
 	    		@Override
@@ -491,6 +546,22 @@ public class RecipeListGUI {
 	    		}
 		    });
 		    
+		    addButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
+		    addButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
 		    deleteButton.setOnAction(e -> 
 		    {
 		    	errorMessage.setText("");
@@ -510,6 +581,22 @@ public class RecipeListGUI {
 		    	executableAndNotExecGUI_View.updateTables();
 		    });
 		    
+		    deleteButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
+		    deleteButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
 		    searchRecipebtn.setOnAction(e -> 
 		    {
 		    	ObservableList<Recipe> tmpList = dbm.getCurrentRecipeList(user);
@@ -520,6 +607,22 @@ public class RecipeListGUI {
 		    	}
 		    	//tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 		    });
+		    
+		    searchRecipebtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 searchRecipebtn.setStyle("-fx-background-color: #06BCC1; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
+		    
+		    searchRecipebtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 searchRecipebtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+			});
 		    
 		    /* **********************************
 		     * Event Listeners End
@@ -539,5 +642,16 @@ public class RecipeListGUI {
 	    public ObservableList<Recipe> getCurrentInventory()
 	    {
 	    	return null;
+	    }
+	    
+	    public void setStackPaneFromHomepage(StackPane sp, Rectangle blockStageBackground)
+	    {
+	    	this.blockStageBackground = blockStageBackground;
+	    	this.stackPaneFromHomePage = sp;
+	    }
+	    
+	    public Stage getAddIngredientListStage()
+	    {
+	    	return addIngredToRecipeStage;
 	    }
 }

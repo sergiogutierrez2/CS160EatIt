@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -73,11 +74,11 @@ public class SimpleIngredientList_TableViewGUI
 	    tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Removes extra column
 
 	    // COlUMNS
-	    TableColumn<Item, String> column0 = new TableColumn<>("Item\n#");
+	    TableColumn<Item, String> column0 = new TableColumn<>("Item #");
 	    column0.setCellValueFactory(new PropertyValueFactory<>("item_num"));
 	    column0.setCellFactory(TextFieldTableCell.<Item>forTableColumn());
-	    column0.setMinWidth(30);
-	    column0.setMaxWidth(30);
+	    column0.setMinWidth(50);
+	    column0.setMaxWidth(50);
 	    
 	    TableColumn<Item, String> column1 = new TableColumn<>("Item Name");
 	    column1.setCellValueFactory(new PropertyValueFactory<>("item_name"));
@@ -114,6 +115,25 @@ public class SimpleIngredientList_TableViewGUI
 		    	addItemNum.setText(dbm.autogenerateItemNum(user));
 		    	
 		    });
+	    	
+	    	autoGenItemNumberBtn.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 autoGenItemNumberBtn.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+	    	
+	    	autoGenItemNumberBtn.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 autoGenItemNumberBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+	    	
 	    }
 	    
 	    if(addButton != null)
@@ -168,6 +188,24 @@ public class SimpleIngredientList_TableViewGUI
 	    			}
 	    		}
 		    });
+	    	
+	    	addButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+	    	
+	    	addButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 addButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
 	    }
 	    
 	    if(deleteButton != null)
@@ -181,7 +219,26 @@ public class SimpleIngredientList_TableViewGUI
 		    	}
 		    	tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
 		    });
+	    	
+	    	deleteButton.setOnMouseEntered(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
+	    	
+	    	deleteButton.setOnMouseExited(new EventHandler<MouseEvent>() 
+			{
+				 @Override
+			    public void handle(MouseEvent t) {
+					 deleteButton.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+			    }
+				
+			});
 	    }
+	    
 	    
 	    /* **********************************
 	     * Event Listeners End
