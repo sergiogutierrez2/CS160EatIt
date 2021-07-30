@@ -1,5 +1,6 @@
 package application.GUI;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 import application.DatabaseManager;
@@ -41,9 +42,9 @@ public class SelectedRecipeGUI_View {
         RecipeSteps_TableViewGUI recipeSteps_TableViewGUI = new RecipeSteps_TableViewGUI(user, recipe);
         
         
-        Rectangle selectedRecipe_background = new Rectangle(800, 500);
-        selectedRecipe_background.setArcHeight(40.0);
-        selectedRecipe_background.setArcWidth(40.0);
+        Rectangle selectedRecipe_background = new Rectangle(700, 600);
+        selectedRecipe_background.setArcHeight(30.0);
+        selectedRecipe_background.setArcWidth(30.0);
         selectedRecipe_background.setFill(Color.web("#e3e3e3",1));
         
         HBox mainHBox = new HBox( recipeIngredListGUI.getTableView(), recipeSteps_TableViewGUI.getTableView() );
@@ -59,29 +60,36 @@ public class SelectedRecipeGUI_View {
         String missingItemListStr = "";
         for(RecipeItem missingItem : missingList)
         {
-        	missingItemListStr += missingItem.getItem_name() + "(missing: " + missingItem.getItem_quantity() + ")\n";
+            missingItemListStr += missingItem.getItem_name() + "(missing: " + missingItem.getItem_quantity() + ")\n";
         }
         TextArea ta = new TextArea();  
         ta.setEditable(false);
         ta.setText(missingItemListStr);
         ta.setWrapText(true);
-        ta.setMaxWidth(200);
-        ta.setMaxHeight(200);
+        ta.setMaxWidth(300);
+        ta.setMaxHeight(150);
         
         recipeNameTitle.setFont(Font.font("Arial", FontWeight.MEDIUM, FontPosture.ITALIC, 20));
         
         VBox mainVBox = new VBox(recipeNameTitle,mainHBox,missingIngTitle, ta);
         mainVBox.setAlignment(Pos.CENTER);
+        mainVBox.setSpacing(20);
         mainHBox.setSpacing(50);
         
         StackPane stackpane = new StackPane(selectedRecipe_background, mainVBox);
 
         SelectedRecipeView_scene = new Scene(stackpane);
+        
+        
+        URL url = this.getClass().getResource("/application/application.css");
+        System.out.println(url.toString());
+        String css = url.toExternalForm();
+        SelectedRecipeView_scene.getStylesheets().add(css);
+        
     }
     
     public Scene getScene()
     {
         return SelectedRecipeView_scene;
     }
-    
 }

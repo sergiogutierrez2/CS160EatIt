@@ -27,36 +27,70 @@ public class DatabaseManager {
 	private static DatabaseManager singleDBMInstance = new DatabaseManager();
 	private User user;
 	
-	//ensures that there is only one instance of a DatabaseManager object
+	/**
+	 * This is the DatabaseManager constructor which 
+	 * has a private access modifier to ensure that 
+	 * this class is a singleton.
+	 * 
+	 */
 	private DatabaseManager(){
 		connectedStatus = false;
 	}
 	
+	/**
+	 * This method is used to get the singleton instance of the 
+	 * database manager class.
+	 * @return Returns the singleton instance of the DatabaseManager class.
+	 */
 	public static DatabaseManager getSingleDatabaseManagerInstance()
 	{
 		return singleDBMInstance;
 	}
 	
+	/**
+	 * This method is the used to set the URL for the for
+	 * embedded database.
+	 * 
+	 * @param url This is a path to an embedded sqlite database.
+	 */
 	public void setJdbcUrl(String url)
 	{
 		jdbcUrl = url;
 	}
 	
+	/**
+	 * This method returns the path to the Sqlite database.
+	 * @return Returns the path in String format. 
+	 */
 	public String getJdbcUrl()
 	{
 		return jdbcUrl;
 	}
 	
+	/**
+	 * This method is used to get the user member of the DatabaseManager class.
+	 * @return Returns a User type.
+	 */
 	public User getUser()
 	{
 		return user;
 	}
 	
+	/**
+	 * This method returns a boolean that is true if the
+	 * database is currently connected.
+	 * @return Returns true is connect, and false if not connected.
+	 */
 	public boolean getConnectedStatus()
 	{
 		return connectedStatus;
 	}
 	
+	/**
+	 * This method connects to the database located at the
+	 * current JDBC URL.
+	 * @return Returns true if connection is set up successful, false if not.
+	 */
 	public boolean connectToDatabase()
 	{
 		if(connectedStatus)
@@ -85,7 +119,7 @@ public class DatabaseManager {
 	}
 	
 	/**
-	 * This method closed the connection to the db.
+	 * This method closes the connection to the db.
 	 * @return Returns true if connection closed.
 	 */
 	public boolean closeConnection()
@@ -108,7 +142,14 @@ public class DatabaseManager {
 		}
 	}
 	
-	//returns true when credential is valid
+
+	/**
+	 * This method is used to check if the provided credentials
+	 * are valid. 
+	 * @param username This is the String containing the username.
+	 * @param password This is the String containing the password.
+	 * @return Returns true if credential is valid, false if invalid.
+	 */
 	public boolean isCredentialsValid(String username, String password)
 	{
 		if(!connectedStatus)
@@ -158,7 +199,13 @@ public class DatabaseManager {
 		}
 	}
 	
-	//if item number already exists then containsItemNum should be true
+	/**
+	 * This method is used to check if the inventory of the user
+	 * already contains the passed in item_num.
+	 * @param user This is the user who's inventory we would like to check.
+	 * @param item_num This is the item_num that is checked in the inventory list of the user.
+	 * @return Returns true is the inventory list of the user has the item_num.
+	 */
 	public boolean containsItemNum(User user, String item_num)
 	{
 		System.out.println("check if user containsItemNum: " + item_num);
@@ -209,6 +256,13 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to check if the recipe list of the user 
+	 * contains the passed in recipe number.
+	 * @param user This is the user who's recipe list we would like to check. 
+	 * @param recipe_num This is the recipe_num that is checked in the recipe list of the user.
+	 * @return Returns true if the recipe list contains the provided recipe number.
+	 */
 	public boolean containsRecipeNum(User user, String recipe_num)
 	{
 		System.out.println("check if user containRecipeNum: " + recipe_num);
@@ -259,6 +313,12 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used if the user contains the item_number in any of their recipe's ingredient list.
+	 * @param user This is the user who's recipe list we would like to check. 	 
+	 * @param item_num
+	 * @return Returns true is user contains the item_number in any of their recipe's ingredient list.
+	 */
 	public boolean isInIngredientListTable(User user, String item_num)
 	{
 		System.out.println("check if user has item_num: " + item_num + ", any where in ingredient list table.");
@@ -308,6 +368,13 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method checks if a user's recipe contains the provided item number.
+	 * @param user This is the user who's recipe we would like to check. 	 
+	 * @param recipe_num This is the recipe we want to check.
+	 * @param item_num This is the item we want to check is present in the recipe.
+	 * @return Returns true if recipe contains recipe ingredient.
+	 */
 	public boolean containsRecipeIngredient(User user, String recipe_num, String item_num)
 	{
 		System.out.println("START checking if user's recipe num: " + recipe_num + ", contains ingredient: " + item_num);
@@ -363,6 +430,13 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method checks if a user's recipe contains the provided set number.
+	 * @param user This is the user who's recipe we would like to check. 	 
+	 * @param recipe_num This is the recipe we want to check.
+	 * @param step_num This is the recipe step number we want to check is present in the recipe.
+	 * @return Returns true if the recipe contains the recipe step number.
+	 */
 	public boolean containsRecipeStep(User user, String recipe_num, String step_num)
 	{
 		System.out.println("checking if user's recipe steps table for recipe: " + recipe_num + ", contains step number: " + step_num);
@@ -415,6 +489,13 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to insert a credential in the database.
+	 * @param username The string with the username we want to insert in the database.
+	 * @param password1 The string with the password we want to insert in the database.
+	 * @param password2 The string with the confirmation password we want to insert in the database.
+	 * @return Returns true if the credential was successfully inserted.
+	 */
 	public boolean insertCredentials(String username, String password1, String password2)
 	{
 		System.out.println("Inserting Credentials");
@@ -451,6 +532,10 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to delete the credential passed in.
+	 * @param username This is a String containing the username of the credential we want to remove from the database.
+	 */
 	public void deleteCredentials(String username)
 	{
 		System.out.println("Deleting Credentials");
@@ -475,6 +560,17 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to insert an ingredient intp the database.
+	 * @param user The user who's inventory we want to insert the ingredient into.
+	 * @param item_num The item number of the ingredient we are inserting.
+	 * @param ingredient_name This is a String of the ingredient name.
+	 * @param expiration_date This is a String of the expiration date.
+	 * @param par_amount This is a String of the par_amount.
+	 * @param quantity This is a String of the quantity.
+	 * @param quantity_type This is a String of the quantity_type.
+	 * @return Returns true if the ingredient insertion was successful.
+	 */
 	public boolean insertIngredient(User user, String item_num, String ingredient_name, 
 									String expiration_date, String par_amount, String quantity, String quantity_type)
 	{
@@ -511,6 +607,11 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to delete the ingredient from the inventory list of the user.
+	 * @param user The user who's inventory we want to delete the ingredient from.
+	 * @param item_num This is the item number of the ingredient we want to delete.
+	 */
 	public void deleteIngredient(User user, String item_num)
 	{
 		System.out.println("Deleting Ingredient " + item_num );
@@ -535,6 +636,16 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to insert a recipe into the database.
+	 * @param user The user who's recipe list we want to insert the recipe into.
+	 * @param recipe_num This is a String of the recipe number.
+	 * @param recipe_name This is a String of the recipe name.
+	 * @param cook_time This is a String of the recipe cook time.
+	 * @param prep_time This is a String of the recipe prep time.
+	 * @param executable This is a String of the recipe executable attribute (0 or 1).
+	 * @return Returns true if insertion is successful.
+	 */
 	public boolean insertRecipe(User user, String recipe_num, String recipe_name, 
 			String cook_time, String prep_time, String executable)
 	{
@@ -571,6 +682,12 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to insert a recipe into the database.
+	 * @param user The user who's recipe list we want to insert the recipe into.
+	 * @param recipe The recipe that should be inserted into the recipe list.
+	 * @return
+	 */
 	public boolean insertRecipe(User user, Recipe recipe)
 	{
 		System.out.println("Inserting Recipe");
@@ -606,6 +723,11 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to delete the recipe passed in.
+	 * @param user The user who's recipe we want to delete from the recipe list.
+	 * @param recipe_num The recipe number of recipe we want to delete.
+	 */
 	public void deleteRecipe(User user, String recipe_num)
 	{
 		System.out.println("Deleting recipe from recipe_num: " + recipe_num );
@@ -632,6 +754,15 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to insert an ingredient into the provided recipe.
+	 * @param user This is the user who's recipe we want to add an ingredient to.
+	 * @param recipe_num This is the recipe number that we want to add an ingredient to.
+	 * @param item_num This is the ingredient we want to add to the recipe.
+	 * @param ingredient_name This is the ingredient name we want to add to recipe.
+	 * @param quantity This is the quantity name we want to add to recipe.
+	 * @return Returns true if insertion was successful, false if not.
+	 */
 	public boolean insertRecipeIngredient(User user, String recipe_num, String item_num, String ingredient_name, String quantity)
 	{
 		System.out.println("Inserting ingredient into Recipe: " + recipe_num);
@@ -667,6 +798,12 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to delete an ingredient from the provided recipe.
+	 * @param user This is the user who's recipe want to delete the ingredient from.
+	 * @param recipe_num This is the recipe that we want to delete the ingredient from.
+	 * @param item_num This is the item number we want to delete the recipe's ingredient list.
+	 */
 	public void deleteRecipeIngredient(User user, String recipe_num, String item_num)
 	{
 		System.out.println( "Deleting Ingredient from recipe: " + recipe_num );
@@ -693,8 +830,8 @@ public class DatabaseManager {
 	
 	/**
 	 * Deletes all recipe ingredients attached to recipe_num;
-	 * @param user
-	 * @param recipe_num
+	 * @param user This is user who's recipe we want to delete all ingredient from.
+	 * @param recipe_num This is the recipe number we want to delete all ingredients from.
 	 */
 	public void deleteAllRecipeIngredient(User user, String recipe_num)
 	{
@@ -719,6 +856,14 @@ public class DatabaseManager {
 		}
 	}
 
+	/**
+	 * This method is used to insert a recipe step into a provided recipe.
+	 * @param user This is the user's who's recipe we want to add a step to.
+	 * @param recipe_num This is the recipe number where we want to add a step to.
+	 * @param step_num This is the step number that we want to add to the recipe.
+	 * @param step_desc This is the step description that we want to add to the recipe.
+	 * @return Returns true is insertion is successful, false if not.
+	 */
 	public boolean insertRecipeSteps(User user, String recipe_num, String step_num, String step_desc)
 	{
 		System.out.println("Inserting step into RecipeSteps: " + recipe_num);
@@ -754,6 +899,12 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to delete a recipe step from a provided recipe.
+	 * @param user This is the user's who recipe we want to delete a step from.
+	 * @param recipe_num This is the recipe want want to delete a step from.
+	 * @param step_num This is the step we want to delete.
+	 */
 	public void deleteRecipeSteps(User user, String recipe_num, String step_num)
 	{
 		System.out.println( "Deleting recipeStep: " + step_num + ", from recipe: " + recipe_num );
@@ -777,19 +928,13 @@ public class DatabaseManager {
 			e.printStackTrace();
 		}
 	}
-
-	public void updateExec()
-	{
-		//you need to get a list of the recipes:
-			//getCurrentRecipeList(User user)
-		
-		//get ingredient list:
-			//getCurrentInventory(User user)
-		
-		
-		
-	}
 	
+	/**
+	 * This method is used to auto-generate the recipe number by finding the current
+	 * largest recipe number in the database and returning that number plus one.
+	 * @param user This is the user who's recipe list we need to check.
+	 * @return Returns the next recipe number in String format.
+	 */
 	public String autogenerateRecipeNum(User user)
 	{
 		System.out.println("autogenerateItemNum()");
@@ -829,7 +974,12 @@ public class DatabaseManager {
 		return String.valueOf(autoGenRecipeNum);
 	}
 	
-	//return highest item_num plus one
+	/**
+	 * This method is used to auto-generate the item number by finding the current
+	 * largest item number in the database and returning that number plus one.
+	 * @param user This is the user who's inventory list we need to check.
+	 * @return Returns the next item number in String format.
+	 */
 	public String autogenerateItemNum(User user)
 	{
 		System.out.println("autogenerateItemNum()");
@@ -870,6 +1020,11 @@ public class DatabaseManager {
 		return String.valueOf(autoGenItemNum);
 	}
 	
+	/**
+	 * This method returns the current inventory list in the form of an observable list.
+	 * @param user This is the user who's inventory we want to return.
+	 * @return Returns an observable list of type Item.
+	 */
 	public ObservableList<Item> getCurrentInventory(User user)
 	{
 		System.out.println("Getting Current Inventory");
@@ -912,6 +1067,11 @@ public class DatabaseManager {
 		return currentInventoryList;
 	}
 	
+	/**
+	 * This method returns the current recipe list in the form of an observable list.
+	 * @param user This is the user who's recipe list we want to return.
+	 * @return Returns an observable list of type Recipe.
+	 */
 	public ObservableList<Recipe> getCurrentRecipeList(User user)
 	{
 		System.out.println("Getting Recipe List for user: " + user.getUsername());
@@ -953,6 +1113,12 @@ public class DatabaseManager {
 		return recipeList;
 	}
 	
+	/**
+	 * This method returns the current ingredient list of the provided recipe in the form of an observable list.
+	 * @param user This is the user who's recipe ingredient list we want to return.
+	 * @param recipe This is the recipe that we want to get the ingredient list from.
+	 * @return Returns an observable list of type RecipeItem.
+	 */
 	public ObservableList<RecipeItem> getRecipesIngredientList(User user, Recipe recipe)
 	{
 		System.out.println("Getting Ingredient List for Recipe: " + recipe.getRecipe_name());
@@ -990,6 +1156,12 @@ public class DatabaseManager {
 		return ingredientList;
 	}
 	
+	/**
+	 * This method returns the recipe's step list of the provided recipe in the form of an observable list.
+	 * @param user This is the user who's recipe step list we want to return.
+	 * @param recipe This is the recipe that we want to get the step list from.
+	 * @return Returns an observable list of type RecipeStep.
+	 */
 	public ObservableList<RecipeStep> getRecipesStepList(User user, Recipe recipe)
 	{
 		System.out.println("Getting Recipe Step List for Recipe: " + recipe.getRecipe_name());
@@ -1086,58 +1258,74 @@ public class DatabaseManager {
 		return recipeList;
 	}
 	
+	/**
+	 * This method is used to get the missing ingredients needed to execute the provided recipe.
+	 * The recipe's ingredient list is cross checked against the inventory list.
+	 * @param user This is the user who's inventory we want to check.
+	 * @param recipe This is the recipe who's ingredient list we want to check.
+	 * @return Returns an ArrayList of type RecipeItem.
+	 */
 	public ArrayList<RecipeItem> getMissingIngredientListForRecipe(User user, Recipe recipe)
-	{
-		ArrayList<RecipeItem> res = new ArrayList<RecipeItem>();
-		//we want to get recipe's ingredients in a list
-		ObservableList<Item> currInventory = getCurrentInventory(user);
-		
-		Calendar today = Calendar.getInstance();
-		today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
-		Date todayDate = today.getTime();
-		
-		for( RecipeItem recipeItem : getRecipesIngredientList(user, recipe) )
-		{
-			for(Item item : currInventory)
-			{
-				if(item.getItem_num().equals(recipeItem.getItem_num()))
-				{
-					System.out.println("item exp_date: '" + item.getItem_Exp() + "'");
-					Date date1 = new Date();
-					try {
-						
-						date1 = new SimpleDateFormat("MM/dd/yyyy").parse(item.getItem_Exp());
-						} 
-					catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						} 
-						
-					System.out.println("todayDate: " + todayDate.toString());
-					System.out.println("exp date: " + date1.toString());
-					int inventoryQuantity = Integer.parseInt(item.getItem_Quantity());
-					int recipeItemQuantity = Integer.parseInt(recipeItem.getItem_quantity());
-					if(date1.compareTo(todayDate) > 0 && 
-							(inventoryQuantity < recipeItemQuantity) )
-					{
-						//make recipe item contain missing quantity 
-						recipeItem.setItem_quantity(Integer.toString(recipeItemQuantity - inventoryQuantity));
-						res.add(recipeItem);
-					}
-				}
-			}
-			
-			
-		}
-		System.out.println("returning " + res.toString());
-		
-		return res;
-		//then we want to get the currentInventory list
-		
-		
-		//them we compare the expiration date to current day and quantity 
-	}
+    {
+        ArrayList<RecipeItem> res = new ArrayList<RecipeItem>();
+        //we want to get recipe's ingredients in a list
+        ObservableList<Item> currInventory = getCurrentInventory(user);
+        
+        Calendar today = Calendar.getInstance();
+        today.clear(Calendar.HOUR); today.clear(Calendar.MINUTE); today.clear(Calendar.SECOND);
+        Date todayDate = today.getTime();
+        
+        for( RecipeItem recipeItem : getRecipesIngredientList(user, recipe) )
+        {
+            for(Item item : currInventory)
+            {
+                if(item.getItem_num().equals(recipeItem.getItem_num()))
+                {
+                    System.out.println("item exp_date: '" + item.getItem_Exp() + "'");
+                    Date date1 = new Date();
+                    try {
+                        
+                        date1 = new SimpleDateFormat("MM/dd/yyyy").parse(item.getItem_Exp());
+                        } 
+                    catch (ParseException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        } 
+                        
+                    System.out.println("todayDate: " + todayDate.toString());
+                    System.out.println("exp date: " + date1.toString());
+                    int inventoryQuantity = Integer.parseInt(item.getItem_Quantity());
+                    int recipeItemQuantity = Integer.parseInt(recipeItem.getItem_quantity());
+                    if(date1.compareTo(todayDate) < 0 || 
+                            (inventoryQuantity < recipeItemQuantity) )
+                    {
+                        if (inventoryQuantity < recipeItemQuantity)
+                        
+                        //make recipe item contain missing quantity 
+                        recipeItem.setItem_quantity(Integer.toString(recipeItemQuantity - inventoryQuantity));
+                        
+                        else if(date1.compareTo(todayDate) > 0 )
+                            recipeItem.setItem_quantity(Integer.toString(recipeItemQuantity - 0));
+                        res.add(recipeItem);
+                    }
+                }
+            }
+            
+            
+        }
+        System.out.println("returning " + res.toString());
+        
+        return res;
+        //then we want to get the currentInventory list
+        
+        
+        //them we compare the expiration date to current day and quantity 
+    }
 	
+	/**
+	 * This method changes the recipe list to update the executable attribute.
+	 * @param user This is the user who's inventory and recipe ingredient list we want to cross check.
+	 */
 	public void updateExecutableRecipes(User user)
 	{
 		System.out.println("Updating Executable Recipe List for user: " + user.getUsername());
@@ -1236,6 +1424,9 @@ public class DatabaseManager {
 			return;
 	}
 	
+	/**
+	 * This method is used to print the credentials from the database.
+	 */
 	public void printCredentials()
 	{
 		System.out.println("Printing Credentials");
@@ -1267,6 +1458,10 @@ public class DatabaseManager {
 		}
 	}
 	
+	/**
+	 * This method is used to print an observable list of type Recipe.
+	 * @param recipeList This is the list we want to print.
+	 */
 	public void printRecipeObservableList(ObservableList<Recipe> recipeList)
 	{
 		for(Recipe tempR : recipeList)
@@ -1275,6 +1470,13 @@ public class DatabaseManager {
 			}
 	}
 
+	/**
+	 * This method is used to execute a given recipe. This means that 
+	 * the inventory list's quantities will be changed according to the
+	 * quantities of the recipe's ingredient list.
+	 * @param user The user.
+	 * @param recipe The recipe of the user.
+	 */
 	public void execRecipe(User user, Recipe recipe) {
 
         if(!connectedStatus)
@@ -1325,6 +1527,12 @@ public class DatabaseManager {
 
     }
 	
+	/**
+	 * This method is used to get the shopping list of the user. This list
+	 * is generated according to par amount and expiration date of ingredients
+	 * @param user This is the user.
+	 * @return Returns an array list of type Item.
+	 */
 	public ArrayList<Item> getUserShoppingList(User user)
     {
         ArrayList<Item> res = new ArrayList<Item>();

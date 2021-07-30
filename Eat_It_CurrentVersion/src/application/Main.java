@@ -40,8 +40,8 @@ import application.GUI.RecipeIngredientList_TableViewGUI;
 import application.GUI.RegistrationGUI;
 
 /**
- * TODO: Write a description of the class here.
- * 
+ * This is the main class of the application and is used
+ * to start up the javafx application.
  * @author Eat_It(Summer 2021 Team)
  */
 public class Main extends Application {
@@ -59,12 +59,6 @@ public class Main extends Application {
 			
 			loginGUI.setRegistrationGUI(registrationGUI);
 			
-			//START TESTS
-//			Recipe recipe = new Recipe("1", "Pasta", "30 min", "10 min", "0");
-//			User user = new User("1", "zuber1", "password");
-//			RecipeIngredientList_TableViewGUI temp = new RecipeIngredientList_TableViewGUI(user, recipe);
-//			primaryStage.setScene(temp.getScene());
-			//END TESTS
 			
 			primaryStage.setScene(loginGUI.getLoginScene());
 			

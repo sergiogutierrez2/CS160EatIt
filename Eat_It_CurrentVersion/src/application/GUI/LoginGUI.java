@@ -35,7 +35,6 @@ import javafx.stage.Stage;
  * @author Eat_It(Summer 2021 Team)
  */
 public class LoginGUI {
-	
 	private DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 	private RegistrationGUI registrationGUI;
 	private Scene login_scene;
