@@ -1,7 +1,8 @@
 package application;
 
 /**
- * TODO: Write a description of the class here.
+ * Java Class that manages the items
+ * that will be used in our recipes.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -15,6 +16,17 @@ public class Item
 	private String item_Par;
 	private String item_Quantity_Type;
 	
+	/**
+	 * This is the constructor for the Item class that accepts
+	 * an item number, item name, and item expiration date
+	 * item quantity, item Par, and item quantity type.
+	 * @param item_num Number of the item.
+	 * @param item_name Name of the item.
+	 * @param item_exp Expiration date of the item.
+	 * @param item_Quantity Quantity of the item.
+	 * @param item_Par Par of the item.
+	 * @param item_Quantity_type Number of the item.
+	 */
 	public Item(String item_num, String item_name, String item_Exp, 
 				String item_Quantity, String item_Par, String item_Quantity_Type) 
 	{
@@ -26,6 +38,10 @@ public class Item
 		 this.item_Quantity_Type = item_Quantity_Type;
 	}
 	
+	/**
+	 * Returns a string representation of the object.
+	 * @return A string representation of the object.
+	 */
 	@Override
 	public String toString() 
 	{  	  
@@ -37,44 +53,83 @@ public class Item
 				+ ", amountType: " + item_Quantity_Type + "]");
 	}
 	
+	/**
+	 * This method returns the number of the item.
+	 * @return The number of the item.
+	 */
 	public String getItem_num()
 	{
 		return item_num;
 	}
 	
+	/**
+	 * This method returns the name of item.
+	 * @return The name of the item.
+	 */
 	public String getItem_name()
 	{
 		return item_name;
 	}
 	
+	/**
+	 * This method returns the expiration date of the item.
+	 * @return The expiration date of the item.
+	 */
 	public String getItem_Exp()
 	{
 		return item_Exp;
 	}
 	
+	/**
+	 * This method returns the item's quantity.
+	 * @return The quantity of the item.
+	 */
 	public String getItem_Quantity()
 	{
 		return item_Quantity;
 	}
 	
+	/**
+	 * This method returns the par of the item.
+	 * @return The par of the item.
+	 */
 	public String getItem_Par()
 	{
 		return item_Par;
 	}
 	
+	/**
+	 * This method returns the quantity type of the item.
+	 * @return The quantity type of the item.
+	 */
 	public String getItem_Quantity_Type()
 	{
 		return item_Quantity_Type;
 	}
 
+	/**
+	 * This method is used to set the item's number
+	 * with the given parameter.
+	 * @param item_num The number of the item.
+	 */
 	public void setItem_num(String item_num) {
 		this.item_num = item_num;
 	}
 
+	/**
+	 * This method is used to set the item's name
+	 * with the given parameter.
+	 * @param item_name The name of the item.
+	 */
 	public void setItem_name(String item_name) {
 		this.item_name = item_name;
 	}
 
+	/**
+	 * This method is used to set the item's expiration date
+	 * with the given parameter.
+	 * @param item_Exp The item's expiration date.
+	 */
 	public void setItem_Exp(String item_Exp) {
 		//make sure item_Exp is in the correct format
 		//should be in 0M/0D/YYYY
@@ -132,14 +187,29 @@ public class Item
 		
 	}
 
+	/**
+	 * This method is used to set the item's quantity
+	 * with the given parameter.
+	 * @param item_Quantity The quantity of the item.
+	 */
 	public void setItem_Quantity(String item_Quantity) {
 		this.item_Quantity = item_Quantity;
 	}
 
+	/**
+	 * This method is used to set the item's Par
+	 * with the given parameter.
+	 * @param item_par The par of the item.
+	 */
 	public void setItem_Par(String item_Par) {
 		this.item_Par = item_Par;
 	}
 
+	/**
+	 * This method is used to set the item's quantity type
+	 * with the given parameter.
+	 * @param item_Quantity_Type The quantity type of the item.
+	 */
 	public void setItem_Quantity_Type(String item_Quantity_Type) {
 		this.item_Quantity_Type = item_Quantity_Type;
 	}
