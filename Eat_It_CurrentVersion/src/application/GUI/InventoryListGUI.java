@@ -34,7 +34,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
- * TODO: Write a description of the class here.
+ * Java Class that manages the user's Inventory list GUI.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -52,6 +52,12 @@ public class InventoryListGUI {
 	    boolean selected;
 	    private Text errorMessage;
 	    
+		/**
+		 * This is the constructor for the InventoryListGUI class that accepts
+		 * a user, and view of the executable and not executable recipes.
+		 * @param user The user that signed in.
+		 * @param executableAndNotExecGUI_View The view of the recipes that are executable and not executable.
+		 */
 	    public InventoryListGUI(User user, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
 	    	this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
@@ -380,25 +386,6 @@ public class InventoryListGUI {
 		            }
 		        }
 		    });
-		    
-//		    TextField addExpirationDate = new TextField();
-//		    addExpirationDate.setPromptText("Expiration Date");
-//		    addExpirationDate.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-//		    addExpirationDate.textProperty().addListener(new ChangeListener<String>() {
-//		        @Override
-//		        public void changed(ObservableValue<? extends String> observable, String oldValue, 
-//		            String newValue) {
-//		             
-//		            if (!newValue.matches("\\d") && !newValue.matches("/")) {
-//		            	addExpirationDate.setText(newValue.replaceAll("[^\\d/]", ""));
-//		            }
-//		        	
-//		            if (addExpirationDate.getText().length() > 8) {
-//		                String s = addExpirationDate.getText().substring(0, 8);
-//		                addExpirationDate.setText(s);
-//		            } 		            
-//		        }
-//		    });
 		    
 		    DatePicker addExpirationDate;
 		    addExpirationDate = new DatePicker();
@@ -737,32 +724,40 @@ public class InventoryListGUI {
 		     * ********************************** */
     	}
 	    
+		/**
+		 * This method returns the scene of the class.
+		 * @return The scene of the class.
+		 */
 	    public Scene getScene()
 	    {
 	    	return scene;
 	    }
 	    
+		/**
+		 * This method returns the VBox of the class.
+		 * @return The VBox of the class.
+		 */
 	    public VBox getVBox()
 	    {
 	    	return vbox;
 	    }
 	    
+		/**
+		 * This method returns null.
+		 * @return Returns null.
+		 */
 	    public ObservableList<Item> getCurrentInventory()
 	    {
 	    	return null;
 	    }
 	    
+		/**
+		 * This method returns the table view of the class.
+		 * @return The table view of the class.
+		 */
 	    public TableView getTableView()
 	    {
 	    	return tableView;
 	    }
-	    
-//	    public static void main(String[] args) 
-//	    {
-//			String s = "01/01/2021";
-//			int x = Integer.parseInt(s.substring(6, 10));
-//			System.out.println(x);
-//			
-//		}
-	    
+	        
 }
