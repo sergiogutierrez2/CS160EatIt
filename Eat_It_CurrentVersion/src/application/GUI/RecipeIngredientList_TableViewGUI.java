@@ -48,7 +48,7 @@ public class RecipeIngredientList_TableViewGUI
     private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
     
 	/**
-	 * This is the constructor for the ecipeIngredientList_TableViewGUI class that accepts
+	 * This is the constructor for the RecipeIngredientList_TableViewGUI class that accepts
 	 * a user, recipe, and view of the executable and not executable recipes.
 	 * @param user The user that signed in.
 	 * @param recipe The recipe of the user.
