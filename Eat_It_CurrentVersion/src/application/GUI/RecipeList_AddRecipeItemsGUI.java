@@ -36,7 +36,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * TODO: Write a description of the class here.
+ * Java Class that manages the GUI that allows the user
+ * to add recipe items to the inventory.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -50,6 +51,15 @@ public class RecipeList_AddRecipeItemsGUI {
 	private TableView mainInventoryListTable;
 	private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
 	
+	/**
+	 * This is the constructor for the InventoryListGUI class that accepts
+	 * a user, recipe, inventory list table,
+	 * and view of the executable and not executable recipes.
+	 * @param user The user that signed in.
+	 * @param recipe The recipe of the user.
+	 * @param mainInventoryListTable The table of the inventory list.
+	 * @param executableAndNotExecGUI_View The view of the recipes that are executable and not executable.
+	 */
 	public RecipeList_AddRecipeItemsGUI(User user, Recipe recipe, TableView mainInventoryListTable, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View)
 	{
 		this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;
@@ -397,6 +407,10 @@ public class RecipeList_AddRecipeItemsGUI {
 		
 	}  
 	
+	/**
+	 * This method returns the scene of the class.
+	 * @return The scene of the class.
+	 */
 	public Scene getScene()
 	{
 		return RecipeList_AddRecipeItemsGUI_scene;
