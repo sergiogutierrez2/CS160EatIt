@@ -28,7 +28,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * TODO: Write a description of the class here.
+ * Java Class that manages the user's Ingredient list GUI.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -47,6 +47,13 @@ public class RecipeIngredientList_TableViewGUI
     private TableView simpleIngredientTableView;
     private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
     
+	/**
+	 * This is the constructor for the RecipeIngredientList_TableViewGUI class that accepts
+	 * a user, recipe, and view of the executable and not executable recipes.
+	 * @param user The user that signed in.
+	 * @param recipe The recipe of the user.
+	 * @param executableAndNotExecGUI_View The view of the recipes that are executable and not executable.
+	 */
     public RecipeIngredientList_TableViewGUI(User user, Recipe recipe, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) 
     {
     	this.user = user;
@@ -160,34 +167,40 @@ public class RecipeIngredientList_TableViewGUI
 	    vbox.setBackground(null);
 	    
 	    scene = new Scene(vbox, mainWidth, mainHeight);
-	    
-	    /* **********************************
-	     * Event Listeners Start
-	     * ********************************** */
-	    
-	    
-	    /* **********************************
-	     * Event Listeners End
-	     * ********************************** */
 	}
     
+	/**
+	 * This method returns the table view of the class.
+	 * @return The table view of the class.
+	 */
     public TableView getTableView()
     {
     	return tableView;
     	
     }
     
-
+	/**
+	 * This method returns the scene of the class.
+	 * @return The scene of the class.
+	 */
     public Scene getScene()
     {
     	return scene;
     }
     
+	/**
+	 * This method returns the VBox of the class.
+	 * @return The VBox of the class.
+	 */
     public VBox getVBox()
     {
     	return vbox;
     }
     
+	/**
+	 * This method returns null.
+	 * @return Returns null.
+	 */
     public ObservableList<Recipe> getCurrentInventory()
     {
     	return null;
