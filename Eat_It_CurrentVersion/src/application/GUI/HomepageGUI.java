@@ -25,7 +25,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
- * TODO: Write a description of the class here.
+ * Java Class that manages the homepage GUI of the user's ingredients and recipes.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -39,6 +39,13 @@ public class HomepageGUI {
 	private Stage stageFromAddIngredientListView;
 	private Stage stageFromViewingRecipe;
 	
+	/**
+	 * This is the constructor for the HomepageGUI class that accepts
+	 * a stage, user and login scene.
+	 * @param stage The stage of the homepage.
+	 * @param user The user that signed in.
+	 * @param loginScene The login scene.
+	 */
 	public HomepageGUI(Stage stage, User user, Scene loginScene)
 	{
 		// we need to pass in a user somehow, but for now im just making one
@@ -183,6 +190,10 @@ public class HomepageGUI {
 		});
 	}
 	
+	/**
+	 * This method returns the scene of the homepage.
+	 * @return The homepage scene.
+	 */
 	public Scene getHomepageGUIscene()
 	{
 		return homepageScene;
