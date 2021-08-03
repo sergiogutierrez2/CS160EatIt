@@ -31,7 +31,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * TODO: Write a description of the class here.
+ * This class ExecutableANdNotExecGUI_view handles the viewing section of the home page dedicated to.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -53,6 +53,10 @@ public class ExecutableAndNotExecGUI_View
     
     private TableView inventoryListTableView;
     
+    /**
+     * The Constructor of this class accepts a user as parameter.
+     * @param user Holds a reference to the object of the class user (current user logged in).
+     */
     @SuppressWarnings("unchecked")
 	public ExecutableAndNotExecGUI_View(User user)
     {
@@ -253,17 +257,30 @@ public class ExecutableAndNotExecGUI_View
     
     }
     
+    /**
+     * This method sets the format for the view.
+     * @param sp This is the StackPane parameter that helps generate black screen when additional stages are open.
+     * @param blockStageBackground This is the background that blocks the main stage.
+     */
     public void setStackPaneFromHomepage(StackPane sp, Rectangle blockStageBackground)
     {
     	this.blockStageBackground = blockStageBackground;
     	this.stackPaneFromHomepage = sp;
     }
     
+    /**
+     * This method returns the stage of the selected recipe.
+     * @return showSelectedRecipe Is the current recipe selected to be executed or viewed.
+     */
     public Stage getViewRecipeStage()
     {
     	return showSelectedRecipe;
     }
     
+    /**
+     * This method updates the tables of executable and non executable each time it is called.
+     * This method makes a dbm call to update the database. 
+     */
     public void updateTables()
     {    
         dbm.updateExecutableRecipes(user);

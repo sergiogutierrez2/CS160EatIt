@@ -25,7 +25,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * TODO: Write a description of the class here.
+ * This class is used to create the Registration View for 
+ * when users need to create a new account.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -39,6 +40,11 @@ public class RegistrationGUI {
 	private Button cancelBtn, registerBtn;
 	private String jdbcUrl3 = "jdbc:sqlite:schema_v1.db";
 	
+	/**
+	 * This is to create the registration GUI.
+	 * @param stage This is the stage.
+	 * @param loginGUI From the login GUI.
+	 */
 	public RegistrationGUI(Stage stage, LoginGUI loginGUI)
 	{
 		double mainRectWidth = 1100, mainRectHeight = 650;
@@ -189,7 +195,7 @@ public class RegistrationGUI {
 				dbm.printCredentials();
 				dbm.isCredentialsValid(username, pass_word); //sets the User user variable
 				
-				HomepageGUI homepageGUI = new HomepageGUI(stage, dbm.getUser(), loginGUI.getLoginScene());
+				HomepageGUI homepageGUI = new HomepageGUI(stage, dbm.getUser(username), loginGUI.getLoginScene());
 				stage.setScene(homepageGUI.getHomepageGUIscene());
 				stage.setTitle("Homepage");
 				

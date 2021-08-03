@@ -32,7 +32,7 @@ import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 /**
- * TODO: Write a description of the class here.
+ * This class created a tablebView that can be used as executable or not.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -55,6 +55,9 @@ public class ExecutableTableGUI {
     	createTable();
     }
     
+    /**
+     * This method creates the generic tables that are used by the GUI to display the recipes.
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void createTable() {
 		tableView = new TableView();
@@ -127,6 +130,12 @@ public class ExecutableTableGUI {
 	     * ********************************** */
 	}
     
+    /**
+     * This method updates the tables by clearing all data, making a call to dbm to get list of executables.
+     * This methods adds the new data to the table to display the most current.
+     * @param user This is User type that we build the table from.
+     * @param execOrNot This is a boolean that decides which table to build.
+     */
     public void updateTable(User user, boolean execOrNot)
     {
     	tableView.getItems().clear();
@@ -149,7 +158,10 @@ public class ExecutableTableGUI {
     {
     	return null;
     }
-    
+    /**
+     * This method returns the selected recipe in the table.
+     * @return Returns null if no recipe is selected, otherwise return the selected recipe.
+     */
     public Recipe getSelectedRecipe()
     {
     	if(selectionModel.isEmpty())

@@ -25,8 +25,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * TODO: Write a description of the class here.
- * 
+ * This class is used to build the view of selected recipes.
  * @author Eat_It(Summer 2021 Team)
  */
 public class SelectedRecipeGUI_View {
@@ -37,6 +36,12 @@ public class SelectedRecipeGUI_View {
     private Scene SelectedRecipeView_scene;
     private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
     
+    /**
+     * This creates the GUI for the selected Recipe.
+     * @param user Of the user. 
+     * @param recipe Of the recipe.
+     * @param executableAndNotExecGUI_View Of the executable GUI.
+     */
     public SelectedRecipeGUI_View(User user, Recipe recipe, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
         Text recipeNameTitle = new Text(recipe.getRecipe_name());
         this.executableAndNotExecGUI_View = executableAndNotExecGUI_View;

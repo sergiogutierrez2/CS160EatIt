@@ -1,7 +1,7 @@
 package application;
 
 /**
- * TODO: Write a description of the class here.
+ * This class is used to create the Recipe object.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -17,7 +17,15 @@ public class Recipe
     private int iListSize;
     public InventoryList missingList;
     
-
+    /**
+     * This is the constructor for the Recipe class that accepts
+     * recipe number, recipe name, cook time, prep time, and cook time.
+     * @param recipe_num Of the recipe.
+     * @param recipe_name Of the recipe.
+     * @param cook_time Of the recipe.
+     * @param prep_time Of the recipe.
+     * @param executable Of the recipe.
+     */
     public Recipe(String recipe_num, String recipe_name, 
                     String cook_time, String prep_time, 
                                         String executable) 
@@ -87,6 +95,10 @@ public class Recipe
         this.iList = iList;
     }
 
+    /**
+     * Prints statement saying that executable value is invalid.
+     * @param executable
+     */
     public void setExecutable(String executable) {
         
         if(!(executable.equals("0")) && !(executable.equals("1")) )

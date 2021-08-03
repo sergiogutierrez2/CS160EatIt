@@ -47,7 +47,7 @@ public class RecipeIngredientList_TableViewGUI
     private TableView simpleIngredientTableView;
     private ExecutableAndNotExecGUI_View executableAndNotExecGUI_View;
     
-	/**
+    /**
 	 * This is the constructor for the RecipeIngredientList_TableViewGUI class that accepts
 	 * a user, recipe, and view of the executable and not executable recipes.
 	 * @param user The user that signed in.
@@ -167,9 +167,18 @@ public class RecipeIngredientList_TableViewGUI
 	    vbox.setBackground(null);
 	    
 	    scene = new Scene(vbox, mainWidth, mainHeight);
+	    
+	    /* **********************************
+	     * Event Listeners Start
+	     * ********************************** */
+	    
+	    
+	    /* **********************************
+	     * Event Listeners End
+	     * ********************************** */
 	}
     
-	/**
+    /**
 	 * This method returns the table view of the class.
 	 * @return The table view of the class.
 	 */
@@ -179,7 +188,7 @@ public class RecipeIngredientList_TableViewGUI
     	
     }
     
-	/**
+    /**
 	 * This method returns the scene of the class.
 	 * @return The scene of the class.
 	 */
@@ -188,7 +197,7 @@ public class RecipeIngredientList_TableViewGUI
     	return scene;
     }
     
-	/**
+    /**
 	 * This method returns the VBox of the class.
 	 * @return The VBox of the class.
 	 */
@@ -197,7 +206,7 @@ public class RecipeIngredientList_TableViewGUI
     	return vbox;
     }
     
-	/**
+    /**
 	 * This method returns null.
 	 * @return Returns null.
 	 */

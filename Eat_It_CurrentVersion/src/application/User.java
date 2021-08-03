@@ -101,5 +101,15 @@ public class User {
 		this.acc_id = acc_id;
 	}
 	
+	@Override
+	public String toString()
+	{
+		String s = "";
+		
+		s = "Acc_id: " + this.acc_id + ", username: " + this.username + ", password: " + this.password;
+		
+		return s;
+	}
+	
 	
 }

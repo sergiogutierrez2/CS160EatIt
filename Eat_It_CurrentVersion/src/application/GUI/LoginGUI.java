@@ -10,6 +10,7 @@ import application.DatabaseManager;
 import application.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,20 +33,28 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * TODO: Write a description of the class here.
+ * This is a class for the login GUI.
+ * This class creates GUI for the login screen.
  * 
  * @author Eat_It(Summer 2021 Team)
  */
 public class LoginGUI {
 	private DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 	private RegistrationGUI registrationGUI;
+	private SettingGUI settingGUI;
 	private Scene login_scene;
 	private Text errorMessageLogin;
 	private TextField userNameField;
 	private PasswordField passwordField;
-	private Button signUpBtn, loginBtn;
+	private Button signUpBtn, loginBtn, settings;
 	private String jdbcUrl3 = "jdbc:sqlite:schema_v1.db";
+	private ObservableList<User> settingsTableData;
 	
+	/**
+	 * This is how the GUI for the login page is created and 
+	 * it accepts all the credentials.
+	 * @param stage This is the page passed to the constructor. 
+	 */
 	public LoginGUI(Stage stage)
 	{
 		double mainRectWidth = 1100, mainRectHeight = 650;
@@ -107,6 +116,11 @@ public class LoginGUI {
 
 		loginBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		loginBtn.setCursor(Cursor.HAND);
+		
+		settings = new Button("settings");
+		settings.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		settings.setCursor(Cursor.HAND);
+		
 
 		Image img = new Image(getClass().getResourceAsStream("/application/resources/Eat_It_Logo_300px.png"));
 		ImageView imgView = new ImageView(img);
@@ -119,7 +133,7 @@ public class LoginGUI {
 
 		/* add all other members vertically */
 		VBox inputFields_VBox = new VBox();
-		inputFields_VBox.getChildren().addAll(imgView, errorMessageLogin, userNameField, passwordField, signUp_LoginButton_HBox);
+		inputFields_VBox.getChildren().addAll(imgView, errorMessageLogin, userNameField, passwordField, signUp_LoginButton_HBox, settings);
 		inputFields_VBox.setAlignment(Pos.CENTER);
 		inputFields_VBox.setSpacing(10d);
 
@@ -173,7 +187,7 @@ public class LoginGUI {
 			{
 				getLoginErrorMessageText().setText("");
 				System.out.println("Login Successful");
-				User user = dbm.getUser();
+				User user = dbm.getUser(username);
 				HomepageGUI homepageGUI = new HomepageGUI(stage, user, login_scene);
 				stage.setScene(homepageGUI.getHomepageGUIscene());
 				stage.setTitle("Homepage");
@@ -198,9 +212,38 @@ public class LoginGUI {
 				loginBtn.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
 		    }
 		});
+		
+		settings.setOnAction(e-> {
+			
+			System.out.println("Setting Button Pressed");
+			stage.setScene(settingGUI.getSettingScene());
+			stage.setTitle("Settings Page");
+			userNameField.clear();
+			passwordField.clear();
+			settingGUI.updateTableView();
+		});
+		
+		settings.setOnMouseEntered(new EventHandler<MouseEvent>() 
+		{
+			@Override
+		    public void handle(MouseEvent t) {
+				settings.setStyle("-fx-background-color: #C792DF; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
+		
+		settings.setOnMouseExited(new EventHandler<MouseEvent>() 
+		{
+			@Override
+		    public void handle(MouseEvent t) {
+				settings.setStyle("-fx-background-color: #000000; -fx-background-radius: 15px; -fx-text-fill: #ffffff");
+		    }
+		});
 	}
 	
-	
+	/**
+	 * This will get the login Scene.
+	 * @return The login scene.
+	 */
 	public Scene getLoginScene() 
 	{
 		return login_scene;
@@ -234,6 +277,11 @@ public class LoginGUI {
 	public void setRegistrationGUI(RegistrationGUI registrationGUI)
 	{
 		this.registrationGUI = registrationGUI;
+	}
+	
+	public void setSettingGUI(SettingGUI settingGUI)
+	{
+		this.settingGUI = settingGUI;
 	}
 
 }

@@ -1,8 +1,7 @@
 package application;
 
 /**
- * TODO: Write a description of the class here.
- * 
+ * This class is designed to hold the information for items that belong to a certain recipe.
  * @author Eat_It(Summer 2021 Team)
  */
 public class RecipeItem 
@@ -12,6 +11,14 @@ public class RecipeItem
 	private String item_name;
 	private String item_quantity;
 	
+	/**
+	 * Constructor for the item list class.
+	 * The constructor accepts parameters and assigns them to private fields of the same type held within the class.
+	 * @param recipe_num This is the recipe_num of the recipe.
+	 * @param item_num This is the item_num of the recipe ingredient.
+	 * @param item_name This is the item_name of the recipe.
+	 * @param item_quantity This is the item_quantity of the recipe.
+	 */
 	public RecipeItem(String recipe_num, String item_num, String item_name, String item_quantity)
 	{
 		this.recipe_num = recipe_num;
@@ -53,6 +60,10 @@ public class RecipeItem
 		return item_quantity;
 	}
 
+	/**
+	 * This method updates the quantity of the item used in the recipe.
+	 * @param item_quantity Is a string that holds the new quantity for that item.
+	 */
 	public void setItem_quantity(String item_quantity) {
 		this.item_quantity = item_quantity;
 	}

@@ -23,9 +23,9 @@ public class DatabaseManager {
 	
 	private Connection connection;
 	private boolean connectedStatus; 
-	private String jdbcUrl = "jdbc:sqlite:" + System.getProperty("user.dir") +  File.separator + "src" + File.separator + "application" + File.separator + "db" + File.separator + "schema_v1.db";
+	private final String jdbcUrl = "jdbc:sqlite:" + System.getProperty("user.dir") +  File.separator + "src" + File.separator + "application" + File.separator + "db" + File.separator + "schema_v1.db";
 	private static DatabaseManager singleDBMInstance = new DatabaseManager();
-	private User user;
+	//private User user;
 	
 	/**
 	 * This is the DatabaseManager constructor which 
@@ -48,17 +48,6 @@ public class DatabaseManager {
 	}
 	
 	/**
-	 * This method is the used to set the URL for the for
-	 * embedded database.
-	 * 
-	 * @param url This is a path to an embedded sqlite database.
-	 */
-	public void setJdbcUrl(String url)
-	{
-		jdbcUrl = url;
-	}
-	
-	/**
 	 * This method returns the path to the Sqlite database.
 	 * @return Returns the path in String format. 
 	 */
@@ -68,11 +57,55 @@ public class DatabaseManager {
 	}
 	
 	/**
-	 * This method is used to get the user member of the DatabaseManager class.
+//	 * This method is used to get the user member of the DatabaseManager class.
+//	 * @return Returns a User type.
+//	 */
+//	public User getUser()
+//	{
+//		return user;
+//	}
+	
+	/**
+	 * This method returns a User type built from the 
+	 * username passed in, if that username is in the db.
+	 * @param username This is the username of the User we want to build.
 	 * @return Returns a User type.
 	 */
-	public User getUser()
+	public User getUser(String username)
 	{
+
+		System.out.println("Getting user from username: " + username);
+		User user = null;
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "SELECT * FROM logins where username = '" + username + "' LIMIT 1";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				
+				Integer user_id = result.getInt("user_id"); //specified attribute name is "user_id" in sql db
+				String userName = result.getString("username"); //specified attribute name is "pass_word" in sql db
+				String pass_word = result.getString("pass_word");
+			
+				System.out.println(user_id + " | " + userName + " | " + pass_word);
+				user = new User(user_id.toString(), userName, pass_word);
+			}
+			
+			statement.close();
+			result.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return user;
+		}
+		
+		
 		return user;
 	}
 	
@@ -180,7 +213,7 @@ public class DatabaseManager {
 				String pass_word_db = result.getString("pass_word"); //specified attribute name is "pass_word" in sql db
 				
 				System.out.println("From DBMS: " + user_id + " | " + username_db + " | " + pass_word_db + " is VALID credential");
-				user = new User(String.valueOf(user_id), username_db, pass_word_db);
+//				user = new User(String.valueOf(user_id), username_db, pass_word_db);
 			}
 			
 			pstmt.close();
@@ -536,7 +569,7 @@ public class DatabaseManager {
 	 * This method is used to delete the credential passed in.
 	 * @param username This is a String containing the username of the credential we want to remove from the database.
 	 */
-	public void deleteCredentials(String username)
+	public void deleteCredentials(User user)
 	{
 		System.out.println("Deleting Credentials");
 		
@@ -545,7 +578,41 @@ public class DatabaseManager {
 			connectToDatabase();
 		}
 		
-		String sql = "DELETE FROM logins WHERE username = '" + username + "'";
+		String sql = "DELETE FROM logins WHERE user_id = '" + user.getAcc_id() + "'";
+		
+		try {
+			
+			deleteAllRecipes(user);
+			deleteAllIngredientsForUser(user);
+			
+			Statement statement = connection.createStatement();
+			
+			statement.execute(sql);
+			
+			statement.close();
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Failed to delete credentials: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This method is used to delete a credential from the database with 
+	 * the provided user id number.
+	 * @param User This is a User object of the Credential to be deleted.
+	 */
+	public void deleteCredentialsWithUserId(User user)
+	{
+		System.out.println("Deleting Credentials");
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM logins WHERE user_id = '" + user.getAcc_id() + "'";
 		
 		try {
 			Statement statement = connection.createStatement();
@@ -553,10 +620,146 @@ public class DatabaseManager {
 			statement.execute(sql);
 			
 			statement.close();
+			
+			deleteAllRecipes(user);
+			deleteAllIngredientsForUser(user);
 		} catch (SQLException e) {
 			System.out.println("Failed to delete credentials: " + e.getErrorCode());
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This method is used to update a credential from the database with 
+	 * the provided username.
+	 * @param user_id This is a String user_id.
+	 * @Return Returns true is credential was updated successfully, false if not.
+	 */
+	public boolean updateCredentialUsername(String user_id, String user_name)
+	{
+		System.out.println("Updating Username");
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		// First check if provided username already exists
+		if(usernameExists(user_id, user_name))
+		{
+			//username already exists
+			return false;
+		}
+		else
+		{
+			try {
+				Statement statement = connection.createStatement();
+				
+				String sql_Ex = "UPDATE logins SET username = '" + user_name + "' WHERE user_id = '" + user_id + "'";
+				
+				statement.executeUpdate(sql_Ex);
+				
+				statement.close();
+				
+				return true;
+			} catch (SQLException e) {
+				System.out.println("Failed to update credentials: " + e.getErrorCode());
+				
+				e.printStackTrace();
+				
+				return false;
+			}
+		}
+	}
+	
+	/**
+	 * This method is used to update a credential from the database with 
+	 * the provided password.
+	 * @param user_id This is a String with the user_id of the credential we want to replace.
+	 * @param password This is the String with the new password we want to replace old password with.
+	 * @Return Returns true is credential was updated successfully, false if not.
+	 */
+	public boolean updateCredentialPassword(String user_id, String password)
+	{
+		System.out.println("Updating password");
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		
+		try {
+			Statement statement = connection.createStatement();
 			
+			String sql_Ex = "UPDATE logins SET pass_word = '" + password + "' WHERE user_id = '" + user_id + "'";
+			
+			statement.executeUpdate(sql_Ex);
+			
+			statement.close();
+			
+			return true;
+		} catch (SQLException e) {
+			System.out.println("Failed to update credentials: " + e.getErrorCode());
+			
+			e.printStackTrace();
+			
+			return false;
+		}
+	}
+	
+	/**
+	 * This method is used to update a credential from the database with 
+	 * the provided username.
+	 * @param user_id This is a String username.
+	 * @Return Returns true is credential was updated successfully, false if not.
+	 */
+	public boolean usernameExists(String user_id, String username)
+	{
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		String sql = "SELECT user_id, username, pass_word FROM logins where username = ? and user_id <> ?";
+		
+		try {
+			PreparedStatement pstmt = connection.prepareStatement(sql);
+		
+			pstmt.setString(1, username);
+			
+			pstmt.setInt(2, Integer.parseInt(user_id));
+			
+			ResultSet result;
+			
+			result = pstmt.executeQuery();
+			
+			boolean invalidCredentialsFlag = true;
+			
+			while (result.next()) 
+			{
+				System.out.println("DBMS: Credentials should be valid!");
+				invalidCredentialsFlag = false;
+				int userId = result.getInt("user_id");
+				String username_db = result.getString("username"); //specified attribute name is "username" in sql db
+				String pass_word_db = result.getString("pass_word"); //specified attribute name is "pass_word" in sql db
+				
+				System.out.println("From DBMS: " + userId + " | " + username_db + " | " + pass_word_db + " is VALID credential");
+				//user = new User(String.valueOf(userId), username_db, pass_word_db);
+			}
+			
+			pstmt.close();
+			result.close();
+			
+			if(invalidCredentialsFlag)
+			{
+				System.out.println("From DBMS: " + username + " is INVALID credential");
+			}
+			
+			return !invalidCredentialsFlag;
+		} catch (SQLException e) {
+			System.out.println("Failed to check credentials: " + e.getErrorCode());
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -634,6 +837,31 @@ public class DatabaseManager {
 			e.printStackTrace();
 			
 		}
+	}
+	
+	public void deleteAllIngredientsForUser(User user_1)
+	{
+		System.out.println( "Deleting All Ingredients from User: " + user_1.getUsername() );
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM ingredient WHERE user_id = '" + user_1.getAcc_id() + "'";
+		
+		try 
+		{
+			Statement statement = connection.createStatement();
+			
+			statement.execute(sql);
+			
+			statement.close();
+		} catch (SQLException e) {
+			System.out.println("Failed to delete all ingredients for user: " + e.getErrorCode());
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/**
@@ -752,6 +980,45 @@ public class DatabaseManager {
 			e.printStackTrace();
 			
 		}
+	}
+	
+	/**
+	 * This method is for deleting all of the recipes as well as 
+	 * deleting all of the ingredients and steps attached to the recipes.
+	 * @param user This is the user that we want to delete all of the recipes from.
+	 */
+	public void deleteAllRecipes(User user_1)
+	{
+		System.out.println( "Deleting All Recipes from User: " + user_1.getUsername() );
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM recipes WHERE user_id = '" + user_1.getAcc_id() + "'";
+		
+		ObservableList<Recipe> recipeList = getCurrentRecipeList(user_1);
+		if(recipeList != null)
+		{
+			for(Recipe recipe : recipeList)
+			{
+				deleteAllRecipeIngredient(user_1, recipe.getRecipe_num());
+				deleteAllRecipeSteps(user_1, recipe.getRecipe_num());
+			}
+			
+			try {
+				Statement statement = connection.createStatement();
+				
+				statement.execute(sql);
+				
+				statement.close();
+			} catch (SQLException e) {
+				System.out.println("Failed to delete all recipes: " + e.getErrorCode());
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	/**
@@ -924,8 +1191,35 @@ public class DatabaseManager {
 			
 			statement.close();
 		} catch (SQLException e) {
+			
 			System.out.println("Failed to delete step from recipeStep Table: " + e.getErrorCode());
+			
 			e.printStackTrace();
+		}
+	}
+	
+	public void deleteAllRecipeSteps(User user, String recipe_num)
+	{
+		System.out.println( "Deleting All Steps from recipe_num: " + recipe_num );
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "DELETE FROM recipeSteps WHERE user_id = '" + user.getAcc_id() + "' AND recipe_num = '" + recipe_num + "'";
+		
+		try {
+			Statement statement = connection.createStatement();
+			
+			statement.execute(sql);
+			
+			statement.close();
+		} catch (SQLException e) {
+			System.out.println("Failed to delete steps from recipeSteps list: " + e.getErrorCode());
+			
+			e.printStackTrace();
+			
 		}
 	}
 	
@@ -1018,6 +1312,54 @@ public class DatabaseManager {
 		
 		
 		return String.valueOf(autoGenItemNum);
+	}
+	
+	/**
+	 * This method is used to return a list of the credentials
+	 * in the database.
+	 * 
+	 * 	CREATE TABLE logins (
+	 * 		user_id INTEGER PRIMARY KEY autoincrement,
+	 * 		username varchar(20) NOT NULL UNIQUE,
+	 *  	pass_word varchar(20) NOT NULL
+	 * 	);
+	 * 
+	 * @return Returns an observable list of Type User.
+	 */
+	public ObservableList<User> getCurrentCredentials()
+	{
+		System.out.println("Getting Current Inventory");
+		ObservableList<User> currentCredentials = FXCollections.observableArrayList();
+		
+		if(!connectedStatus)
+		{
+			connectToDatabase();
+		}
+		
+		String sql = "SELECT * FROM logins ORDER BY user_id ASC";
+		try {
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) 
+			{
+				
+				Integer user_id = result.getInt("user_id"); //specified attribute name is "user_id" in sql db
+				String username = result.getString("username"); //specified attribute name is "pass_word" in sql db
+				String pass_word = result.getString("pass_word");
+			
+				System.out.println(user_id + " | " + username + " | " + pass_word);
+				currentCredentials.add( new User(user_id.toString(),username, pass_word) );
+			}
+			
+			statement.close();
+			result.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return currentCredentials;
 	}
 	
 	/**
@@ -1401,12 +1743,14 @@ public class DatabaseManager {
 					
 					if ( isExecutable ) 
 					{
-						String sql_Ex = "UPDATE recipes SET executable = '1' WHERE recipe_num = '" + currRecip.getRecipe_num()+"'";
+						String sql_Ex = "UPDATE recipes SET executable = '1' WHERE recipe_num = '" + currRecip.getRecipe_num() 
+						+"' and user_id = '" + user.getAcc_id() + "'" ;
 						statement.executeUpdate(sql_Ex);
 					}	
 					else
 					{	
-						String sql_Ex = "UPDATE recipes SET executable = '0' WHERE recipe_num = '" + currRecip.getRecipe_num()+"'";
+						String sql_Ex = "UPDATE recipes SET executable = '0' WHERE recipe_num = '" + currRecip.getRecipe_num()
+						+"' and user_id = '" + user.getAcc_id() + "'" ;
 						statement.executeUpdate(sql_Ex);
 					}
 						

@@ -34,8 +34,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * TODO: Write a description of the class here.
- * 
+ * This class handles the GUI of the main recipe table of all the recipes the current user has in database.
  * @author Eat_It(Summer 2021 Team)
  */
 public class RecipeListGUI {
@@ -56,6 +55,14 @@ public class RecipeListGUI {
 	    private Rectangle blockStageBackground;
 	    private Stage addIngredToRecipeStage;
 
+	    /**
+	     * The constructor has access to the current user, an inventory list and the executable or not GUI.
+	     * The Constructor method also is responsible for creating the table, textfields. and buttons in the view
+	     * the Buttons and texfiles have listeners that execute once clicked
+	     * @param user This hold an object that references the current user. 
+	     * @param mainInventoryListTable This is a TableView object that hold the data for the current inventory of the user.
+	     * @param executableANdNot This is an object of the GUI class that handles recipes that are executable and not.
+	     */
 	    public RecipeListGUI(User user, TableView mainInventoryListTable, ExecutableAndNotExecGUI_View executableAndNotExecGUI_View) {
 	    	this.user = user;
 	    	this.mainInventoryListTable = mainInventoryListTable;
@@ -64,6 +71,10 @@ public class RecipeListGUI {
 	    	createTable();
 	    }
 	    
+	    /**
+	     * This method creates a table to hold all the recipes.
+	     * The table is editable and the event listener assures the new data entered is within the constraints.
+	     */  
 	    @SuppressWarnings({ "rawtypes", "unchecked" })
 		public void createTable() {
 			tableView = new TableView();

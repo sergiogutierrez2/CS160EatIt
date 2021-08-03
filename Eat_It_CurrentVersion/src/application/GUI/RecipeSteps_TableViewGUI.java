@@ -32,7 +32,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 /**
- * TODO: Write a description of the class here.
+ * This class is used to build the Recipe Steps for when
+ * the Recipe are adding their ingredients
  * 
  * @author Eat_It(Summer 2021 Team)
  */
@@ -57,13 +58,20 @@ public class RecipeSteps_TableViewGUI
     private Button addButton;
     private Button deleteButton;
     
-    
+    /**
+     * This is to accept the user and the recipe.
+     * @param user Of the user.
+     * @param recipe Of the recipe.
+     */
     public RecipeSteps_TableViewGUI(User user, Recipe recipe) {
     	this.user = user;
     	this.recipe = recipe;
     	createTable();
     }
     
+    /** 
+     * This is to create the table.
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void createTable() {
     	tableView = new TableView();

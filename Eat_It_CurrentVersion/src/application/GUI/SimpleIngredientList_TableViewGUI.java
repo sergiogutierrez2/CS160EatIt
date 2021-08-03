@@ -27,8 +27,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * TODO: Write a description of the class here.
- * 
+ * This class is used for the stage that opens when you click the Add Ingredient.
  * @author Eat_It(Summer 2021 Team)
  */
 public class SimpleIngredientList_TableViewGUI 
@@ -57,12 +56,18 @@ public class SimpleIngredientList_TableViewGUI
     private Button deleteButton;
     private Button updateButton;
     
-    
+    /**
+     * Creates the view of the table for the ingredients in a recipe.
+     * @param user From the user.
+     */
     public SimpleIngredientList_TableViewGUI(User user) {
     	this.user = user;
     	createTable();
     }
     
+    /**
+     * Creates the table for the ingredient list.
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void createTable() {
 		tableView = new TableView();
@@ -260,6 +265,10 @@ public class SimpleIngredientList_TableViewGUI
     	return null;
     }
     
+    /**
+     * This adds an item to the list.
+     * @param item From item.
+     */
     public void addToTable(Item item)
     {
     	Boolean successfulInsertion = dbm.insertIngredient(user, item.getItem_num(), item.getItem_name(), item.getItem_Exp(), item.getItem_Par(), item.getItem_Quantity(), item.getItem_Quantity_Type());

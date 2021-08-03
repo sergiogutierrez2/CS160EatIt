@@ -74,7 +74,7 @@ public class Item
 	/**
 	 * This method returns the expiration date of the item.
 	 * @return The expiration date of the item.
-	 */
+	 */	
 	public String getItem_Exp()
 	{
 		return item_Exp;

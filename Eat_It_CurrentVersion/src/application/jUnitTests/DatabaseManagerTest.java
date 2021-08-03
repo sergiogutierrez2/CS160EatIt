@@ -11,6 +11,7 @@ import application.Recipe;
 import application.RecipeStep;
 import application.User;
 import javafx.collections.ObservableList;
+import sun.util.resources.cldr.bn.CalendarData_bn_BD;
 
 class DatabaseManagerTest {
 	
@@ -35,18 +36,6 @@ class DatabaseManagerTest {
 	}
 	
 	@Test
-	void connectToDatabaseTest2() {
-		
-		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
-		
-		dbm.setJdbcUrl("jdbc:sqlite:schema_v2.db");
-		
-		assertFalse(dbm.connectToDatabase(), "connectToDatabase() should return false, but was found to be true");
-		
-		dbm.closeConnection();
-	}
-	
-	@Test
 	void closeConnectionTest() {
 		
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
@@ -63,7 +52,20 @@ class DatabaseManagerTest {
 		
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 		
-		dbm.deleteCredentials("TestCred_1");
+
+		User user = new User("1009", "TestCred_1", "pass_word");
+		
+		if(!dbm.isCredentialsValid("TestCred_1", "pass_word") )
+		{
+			dbm.insertCredentials("TestCred_1", "pass_word", "pass_word");
+			user = dbm.getUser("TestCred_1");
+		}
+		else
+		{
+			user = dbm.getUser("TestCred_1");
+		}
+		
+		dbm.deleteCredentials(user);
 		
 		assertFalse(dbm.isCredentialsValid("TestCred_1", "pass_word"), "isCredentialsValid() should return false, but was found to be true");
 		
@@ -75,14 +77,24 @@ class DatabaseManagerTest {
 		//this test also tests the insertCredential Function
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 		
-		dbm.deleteCredentials("TestCred_1");
+		User user = new User("1009", "TestCred_1", "pass_word");
+		
+		if(!dbm.isCredentialsValid("TestCred_1", "pass_word") )
+		{
+			dbm.insertCredentials("TestCred_1", "pass_word", "pass_word");
+		}
+		else
+		{
+			user = dbm.getUser("TestCred_1");
+		}
 		
 		dbm.insertCredentials("TestCred_1", "pass_word", "pass_word");
 		
+		user = dbm.getUser("TestCred_1");
 		
 		assertTrue(dbm.isCredentialsValid("TestCred_1", "pass_word"), "isCredentialsValid() should return true, but was found to be false");
 		
-		dbm.deleteCredentials("TestCred_1");
+		dbm.deleteCredentials(user);
 		
 		dbm.closeConnection();
 	}
@@ -92,14 +104,26 @@ class DatabaseManagerTest {
 		//this test also tests the insertCredential Function
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 		
-		dbm.deleteCredentials("TestCred_1");
+		User user = new User("1009", "TestCred_1", "pass_word");
+		
+		if(!dbm.isCredentialsValid("TestCred_1", "pass_word") )
+		{
+			dbm.insertCredentials("TestCred_1", "pass_word", "pass_word");
+		}
+		else
+		{
+			user = dbm.getUser("TestCred_1");
+		}
+		
 		
 		dbm.insertCredentials("TestCred_1", "pass_word", "pass_word");
+		
+		user = dbm.getUser("TestCred_1");
 		
 		assertFalse(dbm.insertCredentials("TestCred_1", "pass_word", "pass_word")
 						, "insertCredentials() should return false, but was found to be true");
 		
-		dbm.deleteCredentials("TestCred_1");
+		dbm.deleteCredentials(user);
 		
 		dbm.closeConnection();
 	}
@@ -109,16 +133,29 @@ class DatabaseManagerTest {
 		//this test also tests the insertCredential Function
 		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
 		
-		dbm.deleteCredentials("TestCred_1");
+		User user = new User("1009", "TestCred_1", "pass_word");
+		
+		if(!dbm.isCredentialsValid("TestCred_1", "pass_word") )
+		{
+			dbm.insertCredentials("TestCred_1", "pass_word", "pass_word");
+		}
+		else
+		{
+			user = dbm.getUser("TestCred_1");
+		}
+		
+		dbm.deleteCredentials(user);
 		
 		dbm.insertCredentials("TestCred_1", "pass_word", "pass_word");
 		
-		dbm.deleteCredentials("TestCred_1");
+		user = dbm.getUser("TestCred_1");
+		
+		dbm.deleteCredentials(user);
 		
 		assertFalse(dbm.isCredentialsValid("TestCred_1", "pass_word"), 
 				"isCredentialsValid() should return false, but was found to be true");
 		
-		dbm.deleteCredentials("TestCred_1");
+		dbm.deleteCredentials(user);
 		
 		dbm.closeConnection();
 	}
@@ -391,10 +428,308 @@ class DatabaseManagerTest {
 		
 		dbm.deleteRecipe(user, "99");
 		dbm.deleteRecipe(user, "100");
+		dbm.deleteRecipe(user, "98");
 		
 		dbm.getCurrentRecipeList(user);
 		
 		System.out.println("END getExecutableRecipesTest() TEST\n");
 		
+	}
+	
+	@Test
+	void getCurrentCredentialsTest()
+	{
+		System.out.println("\nSTART getCurrentCredentialsTest() TEST");
+		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+		
+		//User user = new User("1", "zuber1", "password");
+		
+		//dbm.insertCredentials( user.getAcc_id(), user.getUsername(), user.getPassword() ); 
+		
+		dbm.getCurrentCredentials();
+		
+		
+		
+		System.out.println("END getCurrentCredentialsTest() TEST\n");
+		
+	}
+	
+	@Test
+	void deleteCredentialsWithUserIdTest()
+	{
+		System.out.println("\nSTART deleteCredentialsWithUserIdTest() TEST");
+		
+		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+		
+		dbm.connectToDatabase();
+		
+		User user = new User("150", "testUser", "password");
+		
+		dbm.deleteCredentials(user);
+		
+		dbm.insertCredentials(user.getUsername(), user.getPassword(), user.getPassword());
+		
+		dbm.printCredentials();
+		
+		dbm.deleteCredentials(user);
+		
+		dbm.printCredentials();
+		
+		dbm.closeConnection();
+		
+		System.out.println("END deleteCredentialsWithUserIdTest() TEST\n");
+	}
+	
+	@Test
+	void usernameExistsTest()
+	{
+		System.out.println("\nSTART usernameExistsTest() TEST");
+		
+		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+		
+		dbm.connectToDatabase();
+		
+		User user = new User("150", "testUser", "password");
+		
+		dbm.deleteCredentials(user);
+		
+		dbm.insertCredentials(user.getUsername(), user.getPassword(), user.getPassword());
+		
+		dbm.printCredentials();
+		
+		User userTemp = dbm.getUser(user.getUsername());
+		if(userTemp != null)
+		{
+			assertFalse( dbm.usernameExists( userTemp.getAcc_id(), userTemp.getUsername() ), "dbm.usernameExists return false, when it should have returned true." );
+			
+			dbm.deleteCredentials(user);
+			
+			dbm.printCredentials();
+			
+			dbm.closeConnection();
+			
+			System.out.println("END usernameExistsTest() TEST\n");
+		}
+		else
+		{
+			assertTrue(false, "userTemp was null!");
+		}
+	}
+	
+	@Test
+	void usernameExistsTest2()
+	{
+		System.out.println("\nSTART usernameExistsTest2() TEST");
+		
+		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+		
+		dbm.connectToDatabase();
+		
+		User user = new User("150", "testUser", "password");
+		
+		dbm.deleteCredentials(user);
+		
+		dbm.insertCredentials(user.getUsername(), user.getPassword(), user.getPassword());
+		
+		dbm.printCredentials();
+		
+		User userTemp = dbm.getUser(user.getUsername());
+		if(userTemp != null)
+		{
+			assertTrue( dbm.usernameExists( userTemp.getAcc_id(), "demo" ), "dbm.usernameExists return false, when it should have returned true." );
+			
+			dbm.deleteCredentials(user);
+			
+			dbm.printCredentials();
+			
+			dbm.closeConnection();
+			
+			System.out.println("END usernameExistsTest() TEST\n");
+		}
+		else
+		{
+			assertTrue(false, "userTemp was null!");
+		}
+	}
+	
+	@Test
+	void deleteCredentialTest()
+	{
+		//make sure that when we delete a credential that all
+		//of that credentials recipes and all of the recipes 
+		//ingredients get deleted. It is a full wipe of the users
+		//children.
+		System.out.println("\nSTART deleteCredentialTest TEST");
+		
+		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+		
+		dbm.connectToDatabase();
+		
+		User user = new User("150", "testUser", "password");
+		
+		Recipe recipe1 = new Recipe("1", "Cereal", "2 min", "2 min");
+		Recipe recipe2 = new Recipe("2", "Toast", "2 min", "2 min");
+		
+		dbm.deleteCredentials(user);
+		
+		dbm.insertCredentials(user.getUsername(), user.getPassword(), user.getPassword());
+		
+		user = dbm.getUser("testUser");
+		if(user != null)
+		{
+			dbm.insertIngredient(user, "1", "frosted flakes", "12/12/2021", "20", "10", "cups");
+			dbm.insertIngredient(user, "2", "bread", "12/12/2021", "20", "10", "cups");
+			dbm.insertIngredient(user, "3", "milk", "12/12/2021", "20", "10", "cups");
+			
+			dbm.insertRecipe(user, recipe1);
+			
+			dbm.insertRecipe(user, recipe2);
+			
+			dbm.insertRecipeIngredient(user, "1", "1", "frosted flakes", "10");
+			dbm.insertRecipeIngredient(user, "1", "3", "milk", "10");
+			dbm.insertRecipeIngredient(user, "2", "2", "bread", "10");
+			
+			dbm.printCredentials();
+			
+			System.out.println( dbm.getCurrentInventory(user).toString() );
+			System.out.println( dbm.getCurrentRecipeList(user).toString() );
+			System.out.println( dbm.getRecipesIngredientList(user, recipe1).toString() );
+			System.out.println( dbm.getRecipesIngredientList(user, recipe2).toString() );
+			
+			System.out.println( dbm.getRecipesStepList(user, recipe1).toString() );
+			System.out.println( dbm.getRecipesStepList(user, recipe2).toString() );
+			
+			dbm.deleteCredentials(user);
+			
+			dbm.printCredentials();
+			
+			dbm.closeConnection();
+		}
+		else
+		{
+			System.out.println("user == null");
+		}
+		
+		
+		
+		System.out.println("END deleteCredentialTest() TEST\n");
+	}
+	
+	@Test
+	void updateUsernameCredentialTest()
+	{
+		//make sure that when we delete a credential that all
+		//of that credentials recipes and all of the recipes 
+		//ingredients get deleted. It is a full wipe of the users
+		//children.
+		System.out.println("\nSTART updateUsernameCredentialTest TEST");
+		
+		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+		
+		dbm.connectToDatabase();
+		
+		//delete testUser cred if exists
+		if( dbm.isCredentialsValid("testUser1", "password") )
+		{
+			dbm.deleteCredentials(dbm.getUser("testUser1"));
+		}
+		
+		if( dbm.isCredentialsValid("testUser2", "password") )
+		{
+			dbm.deleteCredentials(dbm.getUser("testUser2"));
+		}
+		
+		//insert testUser credential
+		dbm.insertCredentials("testUser1", "password", "password");
+		
+		//set up temp user var
+		User user = new User("150", "testUser1", "password");
+		
+		//update temp user var with credential from database
+		user = dbm.getUser("testUser1");
+		
+		if(user != null)
+		{
+			System.out.println( user.toString() );
+			
+			assertTrue(dbm.isCredentialsValid("testUser1", "password"));
+			
+			dbm.updateCredentialUsername(user.getAcc_id(), "testUser2");
+			
+			assertTrue(dbm.isCredentialsValid("testUser2", "password"));
+			
+			dbm.deleteCredentials(user);
+			
+			dbm.printCredentials();
+			
+			dbm.closeConnection();
+		}
+		else
+		{
+			System.out.println("user == null");
+		}
+		
+		
+		
+		System.out.println("END updateUsernameCredentialTest() TEST\n");
+	}
+	
+	@Test
+	void updatePasswordCredentialTest()
+	{
+		//make sure that when we delete a credential that all
+		//of that credentials recipes and all of the recipes 
+		//ingredients get deleted. It is a full wipe of the users
+		//children.
+		System.out.println("\nSTART updatePasswordCredentialTest TEST");
+		
+		DatabaseManager dbm = DatabaseManager.getSingleDatabaseManagerInstance();
+		
+		dbm.connectToDatabase();
+		
+		//delete testUser cred if exists
+		if( dbm.isCredentialsValid("testUser", "password") )
+		{
+			dbm.deleteCredentials(dbm.getUser("testUser"));
+		}
+		
+		if( dbm.isCredentialsValid("testUser", "pass1") )
+		{
+			dbm.deleteCredentials(dbm.getUser("testUser"));
+		}
+		
+		//insert testUser credential
+		dbm.insertCredentials("testUser", "password", "password");
+		
+		//set up temp user var
+		User user = new User("150", "testUser", "password");
+		
+		//update temp user var with credential from database
+		user = dbm.getUser("testUser");
+		
+		if(user != null)
+		{
+			System.out.println( user.toString() );
+			
+			assertTrue(dbm.isCredentialsValid("testUser", "password"));
+			
+			dbm.updateCredentialPassword(user.getAcc_id(), "pass1");
+			
+			assertTrue(dbm.isCredentialsValid("testUser", "pass1"));
+			
+			dbm.deleteCredentials(user);
+			
+			dbm.printCredentials();
+			
+			dbm.closeConnection();
+		}
+		else
+		{
+			System.out.println("user == null");
+		}
+		
+		
+		
+		System.out.println("END updatePasswordCredentialTest() TEST\n");
 	}
 }
