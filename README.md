@@ -25,7 +25,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/sergiogutierrez2/CS160EatIt">
+  <a href="https://github.com/sergiogutierrez2/CS160EatIt" target="_blank">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -36,10 +36,11 @@
     <br />
     <a href="https://www.youtube.com/watch?v=TDy7UStrL_Y">View Demo</a>
   </p>
-  
-  <a href="https://github.com/sergiogutierrez2/CS160EatIt">
-    <img src="images/screenshot.png" alt="homepage" width="686" height="396">
-  </a>
+  <p align="center">
+    <a href="https://github.com/sergiogutierrez2/CS160EatIt">
+      <img src="images/screenshot.png" alt="homepage" width="686" height="396">
+    </a>
+  </p>
 </p>
 
 
