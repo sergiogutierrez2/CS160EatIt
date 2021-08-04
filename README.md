@@ -37,6 +37,13 @@
     <a href="https://www.youtube.com/watch?v=TDy7UStrL_Y" target="_blank" rel="noopener noreferrer">View Demo</a>
   </p>
   <p align="center">
+    Login Page
+    <a href="https://github.com/sergiogutierrez2/CS160EatIt">
+      <img src="images/loginpage.png" alt="homepage" width="686" height="396">
+    </a>
+  </p>
+  <p align="center">
+    Homepage
     <a href="https://github.com/sergiogutierrez2/CS160EatIt">
       <img src="images/screenshot.png" alt="homepage" width="686" height="396">
     </a>
