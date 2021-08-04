@@ -25,7 +25,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/sergiogutierrez2/CS160EatIt" target="_blank">
+  <a href="https://github.com/sergiogutierrez2/CS160EatIt">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -34,7 +34,7 @@
   <p align="center">
     This is an Inventory Management Stand Alone Application meant to reduce food waste.
     <br />
-    <a href="https://www.youtube.com/watch?v=TDy7UStrL_Y">View Demo</a>
+    <a href="https://www.youtube.com/watch?v=TDy7UStrL_Y" target="_blank">View Demo</a>
   </p>
   <p align="center">
     <a href="https://github.com/sergiogutierrez2/CS160EatIt">
